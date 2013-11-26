@@ -24,7 +24,6 @@ def copy_image_subset(source_dir, target_dir, subset_inds):
         if os.path.exists(os.path.join(source_dir, frames_list[i])):
             shutil.copy2(os.path.join(source_dir, frames_list[i]), os.path.join(target_dir, frames_list[i]))
  
-
 def histshow(img):
     hist, bins = np.histogram(img)
     width = 0.7 * (bins[1] - bins[0])

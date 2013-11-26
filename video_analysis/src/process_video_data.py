@@ -27,10 +27,11 @@ import code_written_to_run_once
 # convert mask_res300.png -crop 150x100+150+0 mask_res300_crop_150x100+150+0.png
 
 def main():
-    config.set_config(base_dir = '/home/oferb/docs/train_project', experiment_id='webcam4', lowres=300)#, crop='150x100+150+0')
+    config.set_config(base_dir = '/home/oferb/docs/train_project', experiment_id='webcam2_first2000', lowres=300)#, crop='150x100+150+0')
     
     #code_written_to_run_once.rename_image_files()
     datafile = process_video(motion_thresh=2)
+    #utils.copy_image_subset(os.path.join(config.all_data, 'webcam2', 'frames_res300'), os.path.join(config.all_data, 'webcam2_first2000', 'frames_res300'), range(0,2000))
     
     datafile = shelve.open(os.path.join(config.experiment_output, 'shelve.data'))
     train_spotted = use_hmm(datafile['img_times'], datafile['change_vals'])

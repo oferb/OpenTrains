@@ -7,13 +7,13 @@ def set_config(base_dir, experiment_id, lowres, crop=None):
     config.lowres = lowres
     
     # data folders
-    config.all_data = os.path.join(config.base, 'data')
+    config.all_data = os.path.join(config.base, 'shared', 'video_recordings')
     config.experiment_data = os.path.join(config.all_data, experiment_id)
     config.experiment_data_frames_fullres = os.path.join(config.experiment_data, 'frames_fullres')
     config.mask_fullres = os.path.join(config.experiment_data, 'mask_fullres.png')
     
     # output folders
-    config.all_output = os.path.join(config.base, 'output')
+    config.all_output = os.path.join(config.base, 'video_results')
     config.experiment_output = os.path.join(config.all_output, experiment_id)
     config.experiment_output_frames_fullres = os.path.join(config.experiment_output, 'frames_fullres')
     config.experiment_output_frames_hmm_fullres = os.path.join(config.experiment_output, 'frames_hmm_fullres')

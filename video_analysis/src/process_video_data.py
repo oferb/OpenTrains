@@ -29,7 +29,7 @@ import code_written_to_run_once
 def main():
     config.set_config(base_dir = '/home/oferb/docs/train_project', experiment_id='webcam4', lowres=300)#, crop='150x100+150+0')
     
-    code_written_to_run_once.rename_image_files()
+    #code_written_to_run_once.rename_image_files()
     datafile = process_video(motion_thresh=2)
     
     datafile = shelve.open(os.path.join(config.experiment_output, 'shelve.data'))

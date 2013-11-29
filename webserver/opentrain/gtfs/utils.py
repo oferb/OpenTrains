@@ -14,7 +14,7 @@ def download_gtfs_file():
     ot_utils.mkdir_p(local_dir)
     local_path = os.path.join(local_dir,FILE_NAME)
     ot_utils.ftp_get_file(MOT_FTP,FILE_NAME,local_path)
-    
+    #ot_utils.unzip_file(local_path,local_dir)
     
         
     

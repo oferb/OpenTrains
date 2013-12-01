@@ -7,6 +7,6 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'opentrain.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-
+    url(r'^gtfs/',include('gtfs.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )

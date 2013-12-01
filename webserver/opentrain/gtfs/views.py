@@ -12,14 +12,14 @@ def create_all(req):
         for cls in cls_list: 
             cls.read_from_csv(dirname)
         return HttpResponse(status=201)
-    return HttpResponseNotAllowed()
+    return HttpResponseNotAllowed(permitted_methods=['GET'])
 
 @csrf_exempt
 def download_gtfs(req):
     if req.method == "POST":
         utils.download_gtfs_file()
         return HttpResponse(status=201)
-    return HttpResponseNotAllowed()
+    return HttpResponseNotAllowed(permitted_methods=['GET'])
 
 @csrf_exempt
 def create_superuser(req):
@@ -27,5 +27,5 @@ def create_superuser(req):
     if req.method == 'POST':
         User.objects.create_superuser('root','hasadna.opentrain@gmail.com','opentrain')
         return HttpResponse(status=201)
-    return HttpResponseNotAllowed()
+    return HttpResponseNotAllowed(permitted_methods=['GET'])
 

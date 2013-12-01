@@ -1,0 +1,27 @@
+import requests
+import urlparse
+
+SERVER = 'http://localhost:8000/'
+
+def call_and_check(func,url,*args,**kwargs):
+    if not url.startswith('http'):
+        url = urlparse.join(SERVER,url)
+
+    if (resp >= 400):
+        print(resp.content)
+        raise Exception("Failed in %s for url = %s" % (func.__name__,url)) 
+    else:
+        return resp
+
+
+def post_and_check(url,*args,**kwargs):
+    func = requests.post
+    return call_and_check(func,url,*args,**kwargs)
+    
+def download_csv():
+    post_and_check('/gtfs/download/')
+    
+def create_models():
+    post_and_check('/gtfs/create-models/')
+
+

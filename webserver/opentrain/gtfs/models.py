@@ -45,7 +45,7 @@ class Agency(GTFSModel):
       
 class Route(GTFSModel):
     filename = "routes.txt"
-    route_id = models.CharField(max_length=255)
+    route_id = models.IntegerField(primary_key=True)
     agency_id = models.CharField(max_length=255)
     route_short_name = models.CharField(max_length=255)
     route_long_name = models.CharField(max_length=255)
@@ -55,7 +55,7 @@ class Route(GTFSModel):
     
 class Trip(GTFSModel):
     filename = "trips.txt"
-    route_id = models.CharField(max_length=255) # Route.route_id
+    route = models.ForeignKey('Route')
     service_id = models.CharField(max_length=255) # Calendar.service_id
     trip_id = models.CharField(max_length=255) # stop_times
     direction_id = models.IntegerField()

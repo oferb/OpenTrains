@@ -47,7 +47,7 @@ class GTFSModel(models.Model):
             
 class Agency(GTFSModel):
     filename = "agency.txt"
-    agency_id = models.CharField(max_length=255)
+    agency_id = models.IntegerField(primary_key=True,default=1,max_length=255)
     agency_name = models.TextField()
     agency_url = models.TextField()
     agency_timezone = models.TextField()
@@ -56,7 +56,7 @@ class Agency(GTFSModel):
 class Route(GTFSModel):
     filename = "routes.txt"
     route_id = models.IntegerField(primary_key=True)
-    agency_id = models.CharField(max_length=255)
+    agency_id = models.ForeignKey('Agency',default=1)
     route_short_name = models.CharField(max_length=255)
     route_long_name = models.CharField(max_length=255)
     route_desc = models.TextField()

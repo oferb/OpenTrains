@@ -1,13 +1,15 @@
 from tastypie.resources import ModelResource
 from tastypie import fields
 import models
+import json
 
 class RawReportResource(ModelResource):
-    text = fields.DictField(models.RawReport.get_text_as_dict)
+    def dehydrate(self, bundle):
+        bundle.data['text'] = json.loads('{"a": 100}')
+        return bundle
     class Meta:
         queryset = models.RawReport.objects.all()
         resource_name = 'raw-reports'
-        fields = []
         
 def register_all(tp):
     tp.register(RawReportResource())

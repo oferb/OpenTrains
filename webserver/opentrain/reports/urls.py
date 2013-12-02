@@ -1,14 +1,9 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url, include
 
-from django.contrib import admin
-admin.autodiscover()
+import views
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'opentrain.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-    url(r'^','gtfs.views.home'),
-    url(r'^gtfs/',include('gtfs.urls')),
-    url(r'^reports/add',include('reports.views')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'add/$',views.add),
 )
+
+

@@ -36,4 +36,5 @@ def create_superuser(req):
 def home(req):
     return HttpResponse(content="hello and good day")
 
-
+def gtfs_home(req):
+    return HttpResponse("in gtfs")

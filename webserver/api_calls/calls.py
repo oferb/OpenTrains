@@ -1,5 +1,6 @@
 import requests
 import urlparse
+import json
 
 SERVER = 'http://localhost:8000/'
 ERROR_FILE_NAME = '/tmp/error.html'
@@ -20,6 +21,10 @@ def call_and_check(func,url,*args,**kwargs):
 def post_and_check(url,*args,**kwargs):
     func = requests.post
     return call_and_check(func,url,*args,**kwargs)
+
+def post_and_check_json(*args,**kwargs):
+    kwargs['headers'] = {'content-type' : 'application/json'}
+    return post_and_check(*args,**kwargs)
     
 def download_csv():
     post_and_check('/gtfs/download/')
@@ -29,5 +34,9 @@ def create_models():
 
 def create_superuser():
     post_and_check('/gtfs/create-superuser/')
+
+def add_report():
+    post_and_check_json('/reports/add/',data=json.dumps(dict(user='eran',wifis=[dict(loc="loc1",name="hello1"),
+                                                                     dict(loc="loc2",name="hello2")])))
 
 

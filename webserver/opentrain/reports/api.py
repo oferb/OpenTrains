@@ -8,8 +8,9 @@ class RawReportResource(ModelResource):
         bundle.data['text'] = json.loads(bundle.obj.text)
         return bundle
     class Meta:
-        queryset = models.RawReport.objects.all().reverse()
+        queryset = models.RawReport.objects.all()
         resource_name = 'raw-reports'
+        ordering = 'id'
         
 def register_all(tp):
     tp.register(RawReportResource())

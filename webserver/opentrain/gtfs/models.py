@@ -29,7 +29,7 @@ class GTFSModel(models.Model):
                         raise Exception('key %s is not a field of %s' % (key,cls.__name__))  
                     setattr(m,key_decoded,value_decoded)
                 objs_to_save.append(m)
-                if index % 10000 == 0:
+                if index % 50000 == 0:
                     cls.objects.bulk_create(objs_to_save)
                     print('%s: Saved %d rows so far' % (cls.__name__,index))
                     objs_to_save = []

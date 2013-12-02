@@ -33,3 +33,7 @@ def create_superuser(req):
         return HttpResponse(status=201)
     return HttpResponseNotAllowed(permitted_methods=['GET'])
 
+def home(req):
+    return HttpResponse(content="hello and good day")
+
+

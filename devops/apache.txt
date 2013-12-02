@@ -1,0 +1,10 @@
+WSGIPassAuthorization On
+WSGIScriptAlias / /home/ubuntu/workspace/OpenTrains/webserver/opentrain/opentrain/wsgi.py
+WSGIPythonPath  /home/ubuntu/workspace/OpenTrains/webserver/opentrain/
+<Directory /home/ubuntu/workspace/OpenTrains/webserver/opentrain/>
+  <Files wsgi.py>
+    Order deny,allow
+    Allow from all
+  </Files>
+</Directory>
+

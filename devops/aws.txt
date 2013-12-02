@@ -1,0 +1,8 @@
+sudo apt-get install apache2
+sudo apt-get install libapache2-mod-wsgi
+
+sudo (cat apache.txt >> /etc/apache2/apache2.conf)
+
+
+
+

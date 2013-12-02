@@ -56,7 +56,7 @@ class Agency(GTFSModel):
 class Route(GTFSModel):
     filename = "routes.txt"
     route_id = models.IntegerField(primary_key=True)
-    agency_id = models.ForeignKey('Agency',default=1)
+    agency = models.ForeignKey('Agency',default=1)
     route_short_name = models.CharField(max_length=255)
     route_long_name = models.CharField(max_length=255)
     route_desc = models.TextField()
@@ -78,13 +78,13 @@ class Trip(GTFSModel):
 class Service(GTFSModel):
     filename = "calendar.txt"
     service_id = models.CharField(max_length=100,primary_key=True)
-    monday = models.BooleanField()
-    tuesday = models.BooleanField()
-    wednesday = models.BooleanField()
-    thursday = models.BooleanField()
-    friday = models.BooleanField()
-    saturday = models.BooleanField()
-    sunday = models.BooleanField()
+    monday = models.IntegerField()
+    tuesday = models.IntegerField()
+    wednesday = models.IntegerField()
+    thursday = models.IntegerField()
+    friday = models.IntegerField()
+    saturday = models.IntegerField()
+    sunday = models.IntegerField()
     start_date = models.CharField(max_length=100)
     end_date = models.CharField(max_length=100)
     

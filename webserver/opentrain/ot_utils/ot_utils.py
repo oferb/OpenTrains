@@ -1,6 +1,7 @@
 import datetime
 import zipfile
 import os
+import time
 
 def get_utc_time_underscored():
     t = datetime.datetime.utcnow()
@@ -21,11 +22,21 @@ def ftp_get_file(host,remote_name,local_path):
     print("Copied from host %s: %s => %s" % (host,remote_name,local_path))
     
     
-def unzip_file(fname,dir):
+def unzip_file(fname,dirname):
     zf = zipfile.ZipFile(fname)
-    zf.extractall(path=dir)
+    zf.extractall(path=dirname)
     print("Unzipped %s => %s" % (fname,dir))
     
         
-    
+def benchit(func):
+    def wrap(*args,**kwargs):
+        time_start = time.time()
+        res = func(*args,**kwargs)
+        time_end = time.time()
+        delta = time_end - time_start
+        print('Function %s took %.2f seconds' % (func.__name__,delta))
+        return res
+    return wrap
+
+
 

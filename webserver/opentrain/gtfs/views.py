@@ -1,10 +1,14 @@
 from django.http import HttpResponse
 import models
-import utils
 from django.http.response import HttpResponseNotAllowed
 from django.views.decorators.csrf import csrf_exempt
 
+import utils
+import ot_utils.ot_utils
+
+
 @csrf_exempt
+@ot_utils.ot_utils.benchit
 def create_all(req):
     if req.method == "POST":
         dirname = utils.find_gtfs_data_dir()

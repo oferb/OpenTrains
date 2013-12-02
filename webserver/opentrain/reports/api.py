@@ -5,7 +5,7 @@ import json
 
 class RawReportResource(ModelResource):
     def dehydrate(self, bundle):
-        bundle.data['text'] = json.loads('{"a": 100}')
+        bundle.data['text'] = json.loads(bundle.obj.text)
         return bundle
     class Meta:
         queryset = models.RawReport.objects.all()

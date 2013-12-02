@@ -19,7 +19,8 @@ urlpatterns = patterns('',
     url(r'^gtfs/',include('gtfs.urls')),
     url(r'^reports/',include('reports.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^api/', include(tp.urls))
+    url(r'^api/', include(tp.urls)),
 )
+
 
 

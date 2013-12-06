@@ -5,11 +5,11 @@
 		{% csrf_token %}
 		<div class="form-group">
 			<label for="from_station">From:&nbsp;</label>
-			{% include "gtfs/select_stations.html" with name="from_station"%}
+			{% include "gtfs/select_stations.html" with name="from_station" selected_id=from_id %}
 		</div>
 		<div class="form-group">
 			<label for="to_station">To:&nbsp;</label>
-			{% include "gtfs/select_stations.html" with name="to_station"%}
+			{% include "gtfs/select_stations.html" with name="to_station" selected_id=to_id %}
 		</div>
 		<button type="submit" class="btn btn-success btn-sm">
 			<span class="glyphicon glyphicon-search"></span>

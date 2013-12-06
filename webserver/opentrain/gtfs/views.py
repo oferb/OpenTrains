@@ -46,6 +46,10 @@ class GtfsSearch(View):
         import logic
         ctx = dict()
         ctx['stations'] = logic.get_stations()  
+        from_id = req.GET.get('from_station',0)
+        to_id = req.GET.get('to_station',0)
+        ctx['from_id'] = int(from_id)
+        ctx['to_id'] = int(to_id)
         return render(req, 'gtfs/search.html', ctx)
         
     def post(self,req,*args,**kwargs):

@@ -1,6 +1,11 @@
 <select name="{{name}}" id="{{name}}">
 	{% for station in stations %}
-		<option>{{ station.stop_name }}</option>
+		{% ifequal selected_id station.stop_id %}
+			<option value="{{station.stop_id}}" selected>
+		{% else %}
+			<option value="{{station.stop_id}}">
+		{% endifequal %}
+		{{ station.stop_name }}</option>
 	{% endfor %}
 </select>
 

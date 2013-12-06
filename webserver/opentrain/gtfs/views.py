@@ -60,13 +60,14 @@ class GtfsSearch(View):
     def post(self,req,*args,**kwargs):
         import urllib
         form = self.FormClass(req.POST)
-        #if form.is_valid():
-        params = dict()
-        for f in self.fields:
-            params[f] = req.POST[f]
-        qs = urllib.urlencode(params)
-        url = reverse(self.url_name)
-        return HttpResponseRedirect('%s?%s' % (url,qs))
+        if form.is_valid():
+            params = dict()
+            params.update(form.cleaned_data)
+            params['when'] = req.POST['when']
+            qs = urllib.urlencode(params)
+            url = reverse(self.url_name)
+            return HttpResponseRedirect('%s?%s' % (url,qs))
+        raise Exception('Illegal Form')
 
 class GtfsSearchBetween(GtfsSearch):
     import forms

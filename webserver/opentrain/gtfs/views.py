@@ -41,6 +41,9 @@ def gtfs_home(req):
     return HttpResponse("in gtfs")
 
 def gtfs_search(req):
-    return render(req, 'gtfs/search.html', {})
+    import logic
+    ctx = dict()
+    ctx['stations'] = logic.get_stations() 
+    return render(req, 'gtfs/search.html', ctx)
             
 

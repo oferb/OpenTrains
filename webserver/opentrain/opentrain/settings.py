@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'tastypie',
     'gtfs',
     'ot_utils',
+    'ot_global',
     'reports'
 )
 

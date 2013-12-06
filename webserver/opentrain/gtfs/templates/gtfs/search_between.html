@@ -1,7 +1,7 @@
 {% include "common/page_top.html" %}
 <div class="container">
-	<h2>Search</h2>
-	<form class="form-inline" action="{% url 'gtfs:search' %}" method="post" role="form">
+	<h2>Search Between</h2>
+	<form class="form-inline" action="{% url 'gtfs:search-between' %}" method="post" role="form">
 		{% csrf_token %}
 		<div class="form-group">
 			<label for="from_station">From:&nbsp;</label>
@@ -19,4 +19,5 @@
 </div>
 
 {% include "common/page_bottom.html" %}
+
 

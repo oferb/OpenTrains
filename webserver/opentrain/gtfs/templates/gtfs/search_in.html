@@ -1,0 +1,19 @@
+
+{% include "common/page_top.html" %}
+<div class="container">
+	<h2>Search In</h2>
+	<form class="form-inline" action="{% url 'gtfs:search-in' %}" method="post" role="form">
+		{% csrf_token %}
+		<div class="form-group">
+			<label for="in_station">From:&nbsp;</label>
+			{% include "gtfs/select_stations.html" with name="in_station" selected_id=in_id %}
+		</div>
+		<button type="submit" class="btn btn-success btn-sm">
+			<span class="glyphicon glyphicon-search"></span>
+		</button>
+	</form>
+	
+</div>
+
+{% include "common/page_bottom.html" %}
+

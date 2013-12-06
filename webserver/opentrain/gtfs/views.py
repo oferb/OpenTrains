@@ -7,7 +7,7 @@ from django.views.generic import View
 
 import utils
 import ot_utils.ot_utils
-
+from ot_global.ctx import get_global_context 
 
 @csrf_exempt
 @ot_utils.ot_utils.benchit
@@ -41,22 +41,37 @@ def home(req):
 def gtfs_home(req):
     return HttpResponse("in gtfs")
 
-class GtfsSearch(View):
+class GtfsSearchBetween(View):
     def get(self,req,*args,**kwargs):
         import logic
-        ctx = dict()
+        ctx = get_global_context('gtfs:search-between')
         ctx['stations'] = logic.get_stations()  
         from_id = req.GET.get('from_station',0)
         to_id = req.GET.get('to_station',0)
         ctx['from_id'] = int(from_id)
         ctx['to_id'] = int(to_id)
-        return render(req, 'gtfs/search.html', ctx)
+        
+        return render(req, 'gtfs/search_between.html', ctx)
         
     def post(self,req,*args,**kwargs):
         import urllib
         params=dict(from_station=req.POST['from_station'],
                     to_station=req.POST['to_station'])
         qs = urllib.urlencode(params)
-        return HttpResponseRedirect('/gtfs/search?%s' % (qs))
+        return HttpResponseRedirect('/gtfs/search-between?%s' % (qs))
 
+class GtfsSearchIn(View):
+    def get(self,req,*args,**kwargs):
+        import logic
+        ctx = get_global_context('gtfs:search-in')
+        ctx['stations'] = logic.get_stations()  
+        in_id = req.GET.get('in_station',0)
+        ctx['in_id'] = int(in_id) 
+        return render(req, 'gtfs/search_in.html', ctx)
+        
+    def post(self,req,*args,**kwargs):
+        import urllib
+        params=dict(from_station=req.POST['in_station'])
+        qs = urllib.urlencode(params)
+        return HttpResponseRedirect('/gtfs/search-in?%s' % (qs))
 

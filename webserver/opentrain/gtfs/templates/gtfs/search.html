@@ -1,19 +1,21 @@
 {% include "common/page_top.html" %}
 <div class="container">
 	<h2>Search</h2>
-	<form class="form-inline" role="form">
+	<form class="form-inline" action="{% url 'gtfs:search' %}" method="post" role="form">
+		{% csrf_token %}
 		<div class="form-group">
-			<label for="fromStation">From:&nbsp;</label>
-			{% include "gtfs/select_stations.html" %}
+			<label for="from_station">From:&nbsp;</label>
+			{% include "gtfs/select_stations.html" with name="from_station"%}
 		</div>
 		<div class="form-group">
-			<label for="toStation">To:&nbsp;</label>
-			{% include "gtfs/select_stations.html" %}
+			<label for="to_station">To:&nbsp;</label>
+			{% include "gtfs/select_stations.html" with name="to_station"%}
 		</div>
 		<button type="submit" class="btn btn-success btn-sm">
 			<span class="glyphicon glyphicon-search"></span>
 		</button>
 	</form>
+	
 </div>
 
 {% include "common/page_bottom.html" %}

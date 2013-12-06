@@ -1,8 +1,9 @@
 from django.http import HttpResponse
 import models
-from django.http.response import HttpResponseNotAllowed
+from django.http.response import HttpResponseNotAllowed,HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
+from django.views.generic import View
 
 import utils
 import ot_utils.ot_utils
@@ -40,10 +41,18 @@ def home(req):
 def gtfs_home(req):
     return HttpResponse("in gtfs")
 
-def gtfs_search(req):
-    import logic
-    ctx = dict()
-    ctx['stations'] = logic.get_stations() 
-    return render(req, 'gtfs/search.html', ctx)
-            
+class GtfsSearch(View):
+    def get(self,req,*args,**kwargs):
+        import logic
+        ctx = dict()
+        ctx['stations'] = logic.get_stations()  
+        return render(req, 'gtfs/search.html', ctx)
+        
+    def post(self,req,*args,**kwargs):
+        import urllib
+        params=dict(from_station=req.POST['from_station'],
+                    to_station=req.POST['to_station'])
+        qs = urllib.urlencode(params)
+        return HttpResponseRedirect('/gtfs/search?%s' % (qs))
+
 

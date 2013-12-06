@@ -52,6 +52,8 @@ class Agency(GTFSModel):
     agency_url = models.TextField()
     agency_timezone = models.TextField()
     agency_lang = models.CharField(max_length=20)
+    def __unicode__(self):
+        return self.agency_name
       
 class Route(GTFSModel):
     filename = "routes.txt"
@@ -63,6 +65,8 @@ class Route(GTFSModel):
     route_type = models.IntegerField()
     route_color = models.CharField(max_length=10)
     route_text_color = models.CharField(max_length=20)
+    def __unicode__(self):
+        return '%s : %s' % (self.route_id,self.route_long_name)
     
 class Trip(GTFSModel):
     filename = "trips.txt"
@@ -73,7 +77,8 @@ class Trip(GTFSModel):
     shape_id = models.CharField(max_length=100)
     wheelchair_accessible = models.IntegerField()
     trip_headsign = models.CharField(max_length=100)
-    
+    def __unicode__(self):
+        return self.trip_id
     
 class Service(GTFSModel):
     filename = "calendar.txt"
@@ -87,6 +92,8 @@ class Service(GTFSModel):
     sunday = models.IntegerField()
     start_date = models.CharField(max_length=100)
     end_date = models.CharField(max_length=100)
+    def __unicode__(self):
+        return self.service_id
     
 class StopTime(GTFSModel):
     filename = "stop_times.txt"
@@ -95,6 +102,8 @@ class StopTime(GTFSModel):
     departure_time = models.CharField(max_length=20)
     stop = models.ForeignKey('Stop')
     stop_sequence = models.IntegerField()
+    def __unicode__(self):
+        return self.arrival_time
     
 class Stop(GTFSModel):
     filename = "stops.txt"
@@ -104,6 +113,8 @@ class Stop(GTFSModel):
     stop_lon = models.CharField(max_length=20)
     stop_url = models.URLField()
     location_type = models.IntegerField()
+    def __unicode__(self):
+        return self.stop_name
     
     
 class Shape(GTFSModel):
@@ -112,5 +123,9 @@ class Shape(GTFSModel):
     shape_pt_lat = models.CharField(max_length=20)
     shape_pt_lon = models.CharField(max_length=20)
     shape_pt_sequence = models.IntegerField()
+    def __unicode__(self):
+        return self.shape_id
+    
+    
     
     

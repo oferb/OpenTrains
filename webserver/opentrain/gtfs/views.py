@@ -2,6 +2,7 @@ from django.http import HttpResponse
 import models
 from django.http.response import HttpResponseNotAllowed
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render
 
 import utils
 import ot_utils.ot_utils
@@ -38,3 +39,8 @@ def home(req):
 
 def gtfs_home(req):
     return HttpResponse("in gtfs")
+
+def gtfs_search(req):
+    return render(req, 'gtfs/search.html', {})
+            
+

@@ -38,5 +38,6 @@ def benchit(func):
         return res
     return wrap
 
-
+def parse_dt(dt_str):
+    return datetime.datetime.strptime(dt_str, '%Y-%m-%d %H:%M')
 

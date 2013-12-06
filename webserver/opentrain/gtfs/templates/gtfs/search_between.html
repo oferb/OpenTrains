@@ -1,23 +1,19 @@
 {% include "common/page_top.html" %}
+{{ form.media }}
 <div class="container">
 	<h2>Search Between</h2>
-	<form class="form-inline" action="{% url 'gtfs:search-between' %}" method="post" role="form">
+	<form method="post" role="form" action="{% url 'gtfs:search-between' %}">
+		<table>
+			<tr><td>From:</td><td>{{form.from_station}}</td></tr>
+			<tr><td>To:</td><td>{{form.to_station}}</td></tr>
+			<tr><td>When:</td><td>{{form.when}}</td></tr>
+		</table>
 		{% csrf_token %}
-		<div class="form-group">
-			<label for="from_station">From:&nbsp;</label>
-			{% include "gtfs/select_stations.html" with name="from_station" selected_id=from_id %}
-		</div>
-		<div class="form-group">
-			<label for="to_station">To:&nbsp;</label>
-			{% include "gtfs/select_stations.html" with name="to_station" selected_id=to_id %}
-		</div>
 		<button type="submit" class="btn btn-success btn-sm">
 			<span class="glyphicon glyphicon-search"></span>
 		</button>
 	</form>
-	
 </div>
 
 {% include "common/page_bottom.html" %}
-
 

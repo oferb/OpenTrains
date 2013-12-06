@@ -1,18 +1,17 @@
-
 {% include "common/page_top.html" %}
+{{ form.media }}
 <div class="container">
-	<h2>Search In</h2>
-	<form class="form-inline" action="{% url 'gtfs:search-in' %}" method="post" role="form">
+	<h2>Search Between</h2>
+	<form method="post" role="form" action="{% url 'gtfs:search-in' %}">
+		<table>
+			<tr><td>In:</td><td>{{form.in_station}}</td></tr>
+			<tr><td>When:</td><td>{{form.when}}</td></tr>
+		</table>
 		{% csrf_token %}
-		<div class="form-group">
-			<label for="in_station">From:&nbsp;</label>
-			{% include "gtfs/select_stations.html" with name="in_station" selected_id=in_id %}
-		</div>
 		<button type="submit" class="btn btn-success btn-sm">
 			<span class="glyphicon glyphicon-search"></span>
 		</button>
 	</form>
-	
 </div>
 
 {% include "common/page_bottom.html" %}

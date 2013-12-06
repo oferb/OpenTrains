@@ -4,6 +4,7 @@ from django.http.response import HttpResponseNotAllowed,HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.views.generic import View
+from django.core.urlresolvers import reverse
 
 import utils
 import ot_utils.ot_utils
@@ -41,37 +42,44 @@ def home(req):
 def gtfs_home(req):
     return HttpResponse("in gtfs")
 
-class GtfsSearchBetween(View):
+class GtfsSearch(View):
     def get(self,req,*args,**kwargs):
-        import logic
-        ctx = get_global_context('gtfs:search-between')
-        ctx['stations'] = logic.get_stations()  
-        from_id = req.GET.get('from_station',0)
-        to_id = req.GET.get('to_station',0)
-        ctx['from_id'] = int(from_id)
-        ctx['to_id'] = int(to_id)
-        
-        return render(req, 'gtfs/search_between.html', ctx)
-        
+        ctx = get_global_context('%s' % (self.url_name))
+        initial = dict()
+        for f in self.fields:
+            value = req.GET.get(f,None)
+            if value:
+                if f == 'when':
+                    initial[f] = ot_utils.ot_utils.parse_dt(value)
+                else:
+                    initial[f] = value
+        form = self.FormClass(initial=initial)
+        ctx['form'] = form        
+        return render(req, self.template_name, ctx)
+    
     def post(self,req,*args,**kwargs):
         import urllib
-        params=dict(from_station=req.POST['from_station'],
-                    to_station=req.POST['to_station'])
+        form = self.FormClass(req.POST)
+        #if form.is_valid():
+        params = dict()
+        for f in self.fields:
+            params[f] = req.POST[f]
         qs = urllib.urlencode(params)
-        return HttpResponseRedirect('/gtfs/search-between?%s' % (qs))
+        url = reverse(self.url_name)
+        return HttpResponseRedirect('%s?%s' % (url,qs))
 
-class GtfsSearchIn(View):
-    def get(self,req,*args,**kwargs):
-        import logic
-        ctx = get_global_context('gtfs:search-in')
-        ctx['stations'] = logic.get_stations()  
-        in_id = req.GET.get('in_station',0)
-        ctx['in_id'] = int(in_id) 
-        return render(req, 'gtfs/search_in.html', ctx)
-        
-    def post(self,req,*args,**kwargs):
-        import urllib
-        params=dict(from_station=req.POST['in_station'])
-        qs = urllib.urlencode(params)
-        return HttpResponseRedirect('/gtfs/search-in?%s' % (qs))
+class GtfsSearchBetween(GtfsSearch):
+    import forms
+    url_name = 'gtfs:search-between'
+    template_name = 'gtfs/search_between.html'
+    fields = ['to_station','from_station','when']
+    FormClass = forms.SearchBetweenForm
+    
+
+class GtfsSearchIn(GtfsSearch):
+    import forms
+    url_name = 'gtfs:search-in'
+    template_name = 'gtfs/search_in.html'
+    fields = ['in_station','when']
+    FormClass = forms.SearchInForm
 

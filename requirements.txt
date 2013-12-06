@@ -1,5 +1,6 @@
 Django==1.6
 argparse==1.2.1
+django-bootstrap3-datetimepicker==2.1.0
 django-tastypie==0.10.0
 ipython==1.1.0
 python-dateutil==2.2

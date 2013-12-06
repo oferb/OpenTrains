@@ -7,6 +7,7 @@ from django.views.generic import View
 from django.core.urlresolvers import reverse
 
 import utils
+import logic
 import ot_utils.ot_utils
 from ot_global.ctx import get_global_context 
 
@@ -55,6 +56,8 @@ class GtfsSearch(View):
                     initial[f] = value
         form = self.FormClass(initial=initial)
         ctx['form'] = form        
+        if initial:
+            ctx['results'] = logic.do_search(kind=self.url_name.split(':')[1],**initial) 
         return render(req, self.template_name, ctx)
     
     def post(self,req,*args,**kwargs):

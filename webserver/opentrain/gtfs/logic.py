@@ -12,5 +12,7 @@ def get_stations_choices():
     return tuple(result)
 
 
+def do_search(kind,in_station=None,from_station=None,to_station=None,when=None):
+    pass
 
 

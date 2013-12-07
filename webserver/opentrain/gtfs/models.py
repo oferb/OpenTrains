@@ -2,6 +2,8 @@ from django.db import models
 import csv
 import os
 
+import ot_utils.ot_utils
+
 class GTFSModel(models.Model):
     class Meta:
         abstract = True
@@ -26,8 +28,13 @@ class GTFSModel(models.Model):
                     if not is_field and key_decoded.endswith('_id') and key_decoded[:-3] in fields:
                         is_field = True
                     if not is_field:
-                        raise Exception('key %s is not a field of %s' % (key,cls.__name__))  
-                    setattr(m,key_decoded,value_decoded)
+                        raise Exception('key %s is not a field of %s' % (key,cls.__name__))
+                    # check if method set_<key> was defined
+                    setter = getattr(m,'set_%s' % (key_decoded),None)
+                    if setter:
+                        setter(value_decoded)
+                    else:
+                        setattr(m,key_decoded,value_decoded)
                 objs_to_save.append(m)
                 if index % 50000 == 0:
                     cls.objects.bulk_create(objs_to_save)
@@ -98,10 +105,16 @@ class Service(GTFSModel):
 class StopTime(GTFSModel):
     filename = "stop_times.txt"
     trip = models.ForeignKey('Trip')
-    arrival_time = models.CharField(max_length=20)
-    departure_time = models.CharField(max_length=20)
+    arrival_time = models.IntegerField()
+    departure_time = models.IntegerField()
     stop = models.ForeignKey('Stop')
-    stop_sequence = models.IntegerField()
+    stop_sequence = models.IntegerField() 
+    def set_arrival_time(self,value):
+        self.arrival_time = ot_utils.ot_utils.normalize_time(value)
+        
+    def set_departure_time(self,value):
+        self.departure_time = ot_utils.ot_utils.normalize_time(value)
+        
     def __unicode__(self):
         return self.arrival_time
     

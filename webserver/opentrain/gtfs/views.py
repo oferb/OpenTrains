@@ -54,7 +54,7 @@ class GtfsSearch(View):
             value = req.GET.get(f,None)
             if value:
                 if f == 'when':
-                    initial[f] = ot_utils.ot_utils.parse_dt(value)
+                    initial[f] = ot_utils.ot_utils.parse_form_date(value)
                 else:
                     initial[f] = value
                 

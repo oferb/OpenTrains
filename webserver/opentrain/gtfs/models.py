@@ -16,26 +16,36 @@ class GTFSModel(models.Model):
             reader = csv.DictReader(fh, delimiter=',')
             index = 0
             objs_to_save = []
+            fields_dict = dict()
+            for f in cls._meta.fields:
+                fields_dict[f.name] = f
+                
             for row in reader:
                 index+=1
                 m = cls()
-                fields = [f.name for f in cls._meta.fields]
+                
                 for (key,value) in row.iteritems():
                     key_decoded = key.decode('utf-8-sig')
                     value_decoded = value.decode('utf-8-sig')
                     is_field = False
-                    if key_decoded in fields:
+                    if key_decoded in fields_dict:
                         is_field = True
-                    if not is_field and key_decoded.endswith('_id') and key_decoded[:-3] in fields:
+                        field_name = key_decoded
+                    if not is_field and key_decoded.endswith('_id') and key_decoded[:-3] in fields_dict:
                         is_field = True
+                        field_name = key_decoded[:-3]
                     if not is_field:
                         raise Exception('key %s is not a field of %s' % (key,cls.__name__))
+                    field = fields_dict[field_name]
                     # check if method set_<key> was defined
-                    setter = getattr(m,'set_%s' % (key_decoded),None)
+                    setter = getattr(m,'set_%s' % (field_name),None)
                     if setter:
                         setter(value_decoded)
                     else:
-                        setattr(m,key_decoded,value_decoded)
+                        if isinstance(field,models.BooleanField):
+                            setattr(m,field_name,ot_utils.ot_utils.parse_bool(value))
+                        else:
+                            setattr(m,key_decoded,value_decoded)
                 objs_to_save.append(m)
                 if index % 50000 == 0:
                     cls.objects.bulk_create(objs_to_save)
@@ -91,15 +101,23 @@ class Trip(GTFSModel):
 class Service(GTFSModel):
     filename = "calendar.txt"
     service_id = models.CharField(max_length=100,primary_key=True)
-    monday = models.IntegerField()
-    tuesday = models.IntegerField()
-    wednesday = models.IntegerField()
-    thursday = models.IntegerField()
-    friday = models.IntegerField()
-    saturday = models.IntegerField()
-    sunday = models.IntegerField()
-    start_date = models.CharField(max_length=100)
-    end_date = models.CharField(max_length=100)
+    monday = models.BooleanField()
+    tuesday = models.BooleanField()
+    wednesday = models.BooleanField()
+    thursday = models.BooleanField()
+    friday = models.BooleanField()
+    saturday = models.BooleanField()
+    sunday = models.BooleanField()
+    start_date = models.DateField()
+    end_date = models.DateField()
+        
+    def set_start_date(self,value):
+        self.start_date = ot_utils.ot_utils.parse_gtfs_date(value)
+        
+    def set_end_date(self,value):
+        self.end_date = ot_utils.ot_utils.parse_gtfs_date(value)
+        
+    
     def __unicode__(self):
         return self.service_id
     

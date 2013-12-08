@@ -43,9 +43,20 @@ def benchit(func):
         return res
     return wrap
 
-def parse_dt(dt_str):
+def parse_form_date(dt_str):
     """ parse the datetime string as returned from the form """
     return datetime.datetime.strptime(dt_str, '%Y-%m-%d %H:%M')
+
+
+def parse_gtfs_date(value):
+    year = int(value[0:4])
+    month = int(value[4:6])
+    day = int(value[6:8])
+    return datetime.date(year,month,day)
+
+def parse_bool(value):
+    int_value = int(value)
+    return True if int_value else False 
 
 def normalize_time(value):
     """ we normalize time (without date) into integer based on minutes

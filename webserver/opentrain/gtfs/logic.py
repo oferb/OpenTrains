@@ -21,7 +21,10 @@ def do_search(kind,in_station=None,from_station=None,to_station=None,when=None):
         raise Exception('Illegal kind %s' % (kind))
 
 def do_search_in(in_station,when):
-    pass
+    trip_ids = models.StopTime.objects.filter(stop_id=in_station).values_list('trip_id')
+    route_ids = models.Trip.objects.filter(trip_id__in=trip_ids).values_list('route_id')
+    routes = models.Route.objects.filter(route_id__in=route_ids)
+    return routes
 
 def do_seatch_between(from_station,to_station,when):
     pass

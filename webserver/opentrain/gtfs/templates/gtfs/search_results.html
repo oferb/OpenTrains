@@ -1,5 +1,18 @@
-{% if results %}
-<h3>Results</h3>
+{% if results %} <h3>Results</h3>
+{% for result in results %}
+<div>
+	<table border="1">
+		{% for k,v in result.to_json.items %}
+		<tr>
+			<td>{{k}}</td>
+			<td>{{v}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+<br/>
+{% endfor %}
+
 {% else %}
 <h3>No Results</h3>
 {% endif %}

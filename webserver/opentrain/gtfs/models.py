@@ -7,6 +7,7 @@ import ot_utils.ot_utils
 class GTFSModel(models.Model):
     class Meta:
         abstract = True
+    
     @classmethod
     def read_from_csv(cls,dirname):
         full = os.path.join(dirname,cls.filename)

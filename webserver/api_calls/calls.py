@@ -1,6 +1,8 @@
 import requests
 import urlparse
 import json
+import sys
+import time
 
 SERVER = 'http://localhost:8000/'
 ERROR_FILE_NAME = '/tmp/error.html'
@@ -39,4 +41,16 @@ def add_report():
     post_and_check_json('/reports/add/',data=json.dumps(dict(user='eran',wifis=[dict(loc="loc1",name="hello1"),
                                                                      dict(loc="loc2",name="hello2")])))
 
+
+if __name__ == '__main__':
+    for arg in sys.argv[1:]:
+        print 'Doing %s' % (arg)
+        m = globals()[arg]
+        start_time = time.time()
+        m()
+        end_time = time.time()
+        print('\ttook %.2f seconds' % (end_time - start_time))
+
+
+        
 

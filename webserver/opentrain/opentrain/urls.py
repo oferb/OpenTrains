@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'opentrain.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
-    url(r'^$',RedirectView.as_view(url='/gtfs/search-betweem/')),
+    url(r'^$',RedirectView.as_view(url='/gtfs/search-between/')),
     url(r'^gtfs/',include('gtfs.urls',namespace='gtfs')),
     url(r'^reports/',include('reports.urls')),
     url(r'^admin/', include(admin.site.urls)),

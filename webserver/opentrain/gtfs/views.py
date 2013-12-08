@@ -1,10 +1,12 @@
 from django.http import HttpResponse
-import models
+import datetime
 from django.http.response import HttpResponseNotAllowed,HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.views.generic import View
 from django.core.urlresolvers import reverse
+
+import models
 
 import utils
 import logic
@@ -47,6 +49,7 @@ class GtfsSearch(View):
     def get(self,req,*args,**kwargs):
         ctx = get_global_context('%s' % (self.url_name))
         initial = dict()
+        defaultForm = dict(when=datetime.datetime.now())
         for f in self.fields:
             value = req.GET.get(f,None)
             if value:
@@ -54,7 +57,8 @@ class GtfsSearch(View):
                     initial[f] = ot_utils.ot_utils.parse_dt(value)
                 else:
                     initial[f] = value
-        form = self.FormClass(initial=initial)
+                
+        form = self.FormClass(initial=initial if initial else defaultForm)
         ctx['form'] = form        
         if initial:
             ctx['results'] = logic.do_search(kind=self.url_name.split(':')[1],**initial) 

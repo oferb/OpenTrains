@@ -61,10 +61,13 @@ WSGI_APPLICATION = 'opentrain.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
+#if not os.path.exists('/tmp/opentrain'):
+#    os.mkdir('/tmp/opentrain')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/tmp/db.sqlite3',
+        'NAME': '/tmp/opentrain/db.sqlite3',
     }
 }
 

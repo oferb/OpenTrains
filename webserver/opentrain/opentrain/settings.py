@@ -103,3 +103,5 @@ try:
 except ImportError:
     pass
 
+print 'DJANGO: DEUBG = %s' % (DEBUG)
+

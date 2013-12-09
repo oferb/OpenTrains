@@ -2,7 +2,7 @@ import os
 import glob
 
 from django.conf import settings
-from ot_utils import ot_utils
+from common import ot_utils
 
 MOT_FTP = "199.203.58.18"
 FILE_NAME = "irw_gtfs.zip"

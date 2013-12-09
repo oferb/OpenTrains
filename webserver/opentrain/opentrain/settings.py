@@ -40,7 +40,7 @@ INSTALLED_APPS = (
     'bootstrap3_datetime', 
     'tastypie',
     'gtfs',
-    'ot_utils',
+    'common',
     'reports',
     'django.contrib.staticfiles',
 )
@@ -91,7 +91,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR,'all_static')
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
 TEMPLATE_DIRS = (os.path.join(BASE_DIR,'templates')
                  )

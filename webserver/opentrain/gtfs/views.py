@@ -10,11 +10,11 @@ import models
 
 import utils
 import logic
-import ot_utils.ot_utils
-from ot_utils.ctx import get_global_context 
+import common.ot_utils
+from common.ctx import get_global_context 
 
 @csrf_exempt
-@ot_utils.ot_utils.benchit
+@common.ot_utils.benchit
 def create_all(req):
     if req.method == "POST":
         dirname = utils.find_gtfs_data_dir()
@@ -54,7 +54,7 @@ class GtfsSearch(View):
             value = req.GET.get(f,None)
             if value:
                 if f == 'when':
-                    initial[f] = ot_utils.ot_utils.parse_form_date(value)
+                    initial[f] = common.ot_utils.parse_form_date(value)
                 else:
                     initial[f] = value
                 

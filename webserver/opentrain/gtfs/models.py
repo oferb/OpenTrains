@@ -2,7 +2,7 @@ from django.db import models
 import csv
 import os
 
-import ot_utils.ot_utils
+import common.ot_utils
 
 class GTFSModel(models.Model):
     class Meta:
@@ -43,7 +43,7 @@ class GTFSModel(models.Model):
                         setter(value_decoded)
                     else:
                         if isinstance(field,models.BooleanField):
-                            setattr(m,field_name,ot_utils.ot_utils.parse_bool(value))
+                            setattr(m,field_name,common.ot_utils.parse_bool(value))
                         else:
                             setattr(m,key_decoded,value_decoded)
                 objs_to_save.append(m)
@@ -119,10 +119,10 @@ class Service(GTFSModel):
     end_date = models.DateField()
         
     def set_start_date(self,value):
-        self.start_date = ot_utils.ot_utils.parse_gtfs_date(value)
+        self.start_date = common.ot_utils.parse_gtfs_date(value)
         
     def set_end_date(self,value):
-        self.end_date = ot_utils.ot_utils.parse_gtfs_date(value)
+        self.end_date = common.ot_utils.parse_gtfs_date(value)
         
     
     def __unicode__(self):
@@ -136,16 +136,16 @@ class StopTime(GTFSModel):
     stop = models.ForeignKey('Stop')
     stop_sequence = models.IntegerField() 
     def set_arrival_time(self,value):
-        self.arrival_time = ot_utils.ot_utils.normalize_time(value)
+        self.arrival_time = common.ot_utils.normalize_time(value)
         
     def json_arrival_time(self):
-        return ot_utils.ot_utils.denormalize_time_to_string(self.arrival_time) 
+        return common.ot_utils.denormalize_time_to_string(self.arrival_time) 
         
     def set_departure_time(self,value):
-        self.departure_time = ot_utils.ot_utils.normalize_time(value)
+        self.departure_time = common.ot_utils.normalize_time(value)
     
     def json_departure_time(self):
-        return ot_utils.ot_utils.denormalize_time_to_string(self.departure_time)
+        return common.ot_utils.denormalize_time_to_string(self.departure_time)
     
         
     def __unicode__(self):

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+  {% load staticfiles %}
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,10 +12,10 @@
     <title>Open Train</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="/static/bs3/css/bootstrap.css" rel="stylesheet">
+    <link href="{% static 'common/bs3/css/bootstrap.css' %}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="/static/style/open-train.css" rel="stylesheet">
+    <link href="{% static 'common/style/open-train.css' %}" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -28,7 +29,7 @@
 
   <body>
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="/static/bs3/js/bootstrap.min.js"></script>
+    <script src="{% static 'common/bs3/js/bootstrap.min.js' %}"></script>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
 	<div class="navbar-header">

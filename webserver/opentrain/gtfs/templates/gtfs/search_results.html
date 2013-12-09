@@ -4,12 +4,22 @@
 {% for result in results %}
 <div>
 	<table border="1">
-		{% for k,v in result.to_json.items %}
 		<tr>
-			<td>{{k}}</td>
-			<td>{{v}}</td>
+			<td>Route name</td>
+			<td>{{result.trip.route.route_long_name}}</td>
 		</tr>
-		{% endfor %}
+		<tr>
+			<td>Direction</td>
+			<td>{{result.trip.direction_id | direction_to_string }}</td>
+		</tr>
+		<tr>
+			<td>Arrives</td>
+			<td>{{result.arrival_time | denorm_time }}</td>
+		</tr>
+		<tr>
+			<td>Departs</td>
+			<td>{{result.departure_time | denorm_time }}</td>
+		</tr>
 	</table>
 </div>
 <br/>

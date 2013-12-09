@@ -64,7 +64,10 @@ class GTFSModel(models.Model):
             if jsoner:
                 result[f.name] = jsoner()
             else:
-                result[f.name] = getattr(self,f.name)
+                if isinstance(f,models.ForeignKey):
+                    result[f.name] = getattr(self,f.name).to_json()
+                else:
+                    result[f.name] = getattr(self,f.name)
         return result
             
 class Agency(GTFSModel):

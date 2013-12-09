@@ -49,7 +49,7 @@ class GtfsSearch(View):
     def get(self,req,*args,**kwargs):
         ctx = get_global_context('%s' % (self.url_name))
         initial = dict()
-        defaultForm = dict(when=datetime.datetime.now())
+        defaultForm = dict(when=datetime.datetime.now(),offset=30)
         for f in self.fields:
             value = req.GET.get(f,None)
             if value:
@@ -60,10 +60,12 @@ class GtfsSearch(View):
                 
         form = self.FormClass(initial=initial if initial else defaultForm)
         ctx['form'] = form        
+        ctx['title'] = self.title
+        ctx['url_name'] = self.url_name 
         if initial: 
             ctx['when'] = initial['when']
             ctx['results'] = logic.do_search(kind=self.url_name.split(':')[1],**initial) 
-        return render(req, self.template_name, ctx)
+        return render(req, 'gtfs/search_form.html', ctx)
     
     def post(self,req,*args,**kwargs):
         import urllib
@@ -80,15 +82,14 @@ class GtfsSearch(View):
 class GtfsSearchBetween(GtfsSearch):
     import forms
     url_name = 'gtfs:search-between'
-    template_name = 'gtfs/search_between.html'
-    fields = ['to_station','from_station','when']
+    fields = ['to_station','from_station','when','offset']
     FormClass = forms.SearchBetweenForm
+    title = 'Search Between'
     
 
 class GtfsSearchIn(GtfsSearch):
     import forms
     url_name = 'gtfs:search-in'
-    template_name = 'gtfs/search_in.html'
-    fields = ['in_station','when']
+    fields = ['in_station','when','offset']
     FormClass = forms.SearchInForm
-
+    title = 'Search In'

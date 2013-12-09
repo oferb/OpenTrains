@@ -1,12 +1,12 @@
 {% include "common/page_top.html" %}
 {{ form.media }}
 <div class="container">
-	<h2>Search Between</h2>
-	<form method="post" role="form" action="{% url 'gtfs:search-between' %}">
+	<h2>{{title}}</h2>
+	<form method="post" role="form" action="{% url url_name %}">
 		<table>
-			<tr><td>From:</td><td>{{form.from_station}}</td></tr>
-			<tr><td>To:</td><td>{{form.to_station}}</td></tr>
-			<tr><td>When:</td><td>{{form.when}}</td></tr>
+			{% for field in form %}
+			<tr><td>{{field.label_tag}}</td><td>{{ field }}</td></tr>
+			{% endfor %}
 		</table>
 		{% csrf_token %}
 		<button type="submit" class="btn btn-success btn-sm">

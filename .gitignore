@@ -39,4 +39,7 @@ nosetests.xml
 
 *~
 
+tmp_data
+local_settings.py
+
 

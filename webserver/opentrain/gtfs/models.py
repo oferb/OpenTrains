@@ -102,6 +102,8 @@ class Trip(GTFSModel):
     shape_id = models.CharField(max_length=100)
     wheelchair_accessible = models.IntegerField()
     trip_headsign = models.CharField(max_length=100)
+    def get_stop_times(self):
+        return self.stoptime_set.all().order_by('stop_sequence')
     def __unicode__(self):
         return self.trip_id
     
@@ -146,10 +148,9 @@ class StopTime(GTFSModel):
     
     def json_departure_time(self):
         return common.ot_utils.denormalize_time_to_string(self.departure_time)
-    
         
     def __unicode__(self):
-        return self.arrival_time
+        return '%s %s' % (self.arrival_time,self.stop.stop_name)
     
 class Stop(GTFSModel):
     filename = "stops.txt"

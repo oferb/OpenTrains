@@ -18,8 +18,8 @@ def denorm_time(t):
 
 @register.filter(name="direction_to_string")
 def direction_to_string(d):
-    if d == 0: return 'Forward'
-    if d == 1: return 'Backward'
+    if d == 0: return 'Backward'
+    if d == 1: return 'Forward'
     return '???'
 
  

@@ -50,7 +50,7 @@ def add_report():
 if __name__ == '__main__':
     for arg in sys.argv[1:]:
         if arg.startswith('-port'):
-            port = arg.split('=')[1]
+            PORT = arg.split('=')[1]
     print 'Using server = %s' % (get_server())
     for arg in sys.argv[1:]:
         if not arg.startswith('-'):

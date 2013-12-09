@@ -1,11 +1,12 @@
 import os
 import glob
 
+from django.conf import settings
 from ot_utils import ot_utils
 
 MOT_FTP = "199.203.58.18"
 FILE_NAME = "irw_gtfs.zip"
-DATA_DIR = os.path.join('/tmp','opentrain','gtfs','data')
+GTFS_DATA_DIR = os.path.join(settings.DATA_DIR,'gtfs','data')
 
 def download_gtfs_file():
     """ download gtfs zip file from mot, and put it in DATA_DIR in its own subfolder """

@@ -39,4 +39,6 @@ nosetests.xml
 
 *~
 
+tmp_data
+
 

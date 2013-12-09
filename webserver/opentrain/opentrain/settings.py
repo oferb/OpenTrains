@@ -21,6 +21,7 @@ DATA_DIR = os.path.join(BASE_DIR,'tmp_data')
 SECRET_KEY = 'sjwt&eblxp_hkl*u9=p3xg2)xh)e_ar6sy_^i(n+7pfec%24oz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
 DEBUG = True
 
 TEMPLATE_DEBUG = True
@@ -96,4 +97,9 @@ STATIC_ROOT = os.path.join(BASE_DIR,'static')
 TEMPLATE_DIRS = (os.path.join(BASE_DIR,'templates')
                  )
 
+# override settings using local_settings.py
+try:
+    from local_settings import *
+except ImportError:
+    pass
 

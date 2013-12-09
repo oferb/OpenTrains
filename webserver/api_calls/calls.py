@@ -4,12 +4,17 @@ import json
 import sys
 import time
 
-SERVER = 'http://localhost:8000/'
 ERROR_FILE_NAME = '/tmp/error.html'
+
+SERVER = 'localhost'
+PORT = '8000'
+
+def get_server():
+    return 'http://%s:%s' % (SERVER,PORT)
 
 def call_and_check(func,url,*args,**kwargs):
     if not url.startswith('http'):
-        url = urlparse.urljoin(SERVER,url)
+        url = urlparse.urljoin(get_server(),url)
     resp = func(url,*args,**kwargs)
     if (resp.status_code >= 400):
         fh = open(ERROR_FILE_NAME,'w')
@@ -43,13 +48,20 @@ def add_report():
 
 
 if __name__ == '__main__':
+    for (i,arg) in enumerate(sys.argv):
+        if arg == '-port':
+            PORT = sys.argv[i+1]
+    print 'Using server = %s' % (get_server())
     for arg in sys.argv[1:]:
-        print 'Doing %s' % (arg)
-        m = globals()[arg]
-        start_time = time.time()
-        m()
-        end_time = time.time()
-        print('\ttook %.2f seconds' % (end_time - start_time))
+        if not arg.startswith('-'):
+            print 'Doing %s' % (arg)
+            m = globals()[arg]
+            start_time = time.time()
+            m()
+            end_time = time.time()
+            print('\ttook %.2f seconds' % (end_time - start_time))
+        else:
+            print 'Skipping %s' % (arg)
 
 
         

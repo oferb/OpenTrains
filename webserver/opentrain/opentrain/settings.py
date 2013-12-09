@@ -21,11 +21,11 @@ DATA_DIR = os.path.join(BASE_DIR,'tmp_data')
 SECRET_KEY = 'sjwt&eblxp_hkl*u9=p3xg2)xh)e_ar6sy_^i(n+7pfec%24oz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,7 +42,8 @@ INSTALLED_APPS = (
     'gtfs',
     'ot_utils',
     'ot_global',
-    'reports'
+    'reports',
+    'django.contrib.staticfiles',
 )
 
 MIDDLEWARE_CLASSES = (

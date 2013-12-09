@@ -21,7 +21,7 @@ DATA_DIR = os.path.join(BASE_DIR,'tmp_data')
 SECRET_KEY = 'sjwt&eblxp_hkl*u9=p3xg2)xh)e_ar6sy_^i(n+7pfec%24oz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 TEMPLATE_DEBUG = True
 
@@ -91,6 +91,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR,'all_static')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),

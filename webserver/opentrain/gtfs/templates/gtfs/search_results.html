@@ -9,6 +9,12 @@
 			<td>{{result.trip.route.route_long_name}}</td>
 		</tr>
 		<tr>
+			<td>Route Details</td>
+			<td>
+			{% include "gtfs/trip_details.html" with trip=result.trip %}
+			</td>
+		</tr>
+		<tr>
 			<td>Direction</td>
 			<td>{{result.trip.direction_id | direction_to_string }}</td>
 		</tr>

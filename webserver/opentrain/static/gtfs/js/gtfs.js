@@ -1,30 +1,30 @@
 "use strict";
 
-function SearchResult() {
+function SearchResult(index) {
+	console.log("index = " + index);
 	var that = this;
-	this.ready = function() {
-		this.details = $("#trip-details-in-result");
-		this.detailsButton = $("#trip-details-in-result-toggle");
-		this.detailsOn = false;
+	this.index = index;
+	this.state = true;
+	this.btn = $("#trip_details_button_" + index);
+	this.details = $("#trip_details_" + index);
+	this.btn.click(function() {
+		that.clicked();
+	});
+	this.clicked = function() {
+		this.state = !this.state;
 		this.refresh();
-		this.detailsButton.click(function() {
-			that.detailsOn = !that.detailsOn;
-			that.refresh();
-		});
 	};
 	this.refresh = function() {
-		if (this.detailsOn) {
-			this.details.removeClass("hidden");
-			this.details.addClass("show");
+		if (this.state) {
+			this.details.addClass('show');
+			this.details.removeClass('hidden');
+			this.btn.html('<span class="glyphicon glyphicon-minus-sign"></span>');
 		} else {
-			this.details.removeClass("hidden");
-			this.details.addClass("show");
-		};
+			this.details.addClass('hidden');
+			this.details.removeClass('show');
+			this.btn.html('<span class="glyphicon glyphicon-plus-sign"></span>');
+		}
 	};
+	this.refresh();
 }
 
-
-$(document).ready(function() {
-	var seachResult = SearchResult();
-	seachResult.ready();
-});

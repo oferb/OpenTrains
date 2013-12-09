@@ -60,7 +60,8 @@ class GtfsSearch(View):
                 
         form = self.FormClass(initial=initial if initial else defaultForm)
         ctx['form'] = form        
-        if initial:
+        if initial: 
+            ctx['when'] = initial['when']
             ctx['results'] = logic.do_search(kind=self.url_name.split(':')[1],**initial) 
         return render(req, self.template_name, ctx)
     

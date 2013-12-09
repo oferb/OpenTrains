@@ -64,6 +64,9 @@ def normalize_time(value):
     h,m,s = [int(x) for x in value.split(':')]  # @UnusedVariable
     return h * 60 + m
     
-
+def get_weekdayname(dt):
+    return dt.strftime('%A')
     
+def format_date(dt):
+    return dt.strftime('%A, %b %d, %Y, %H:%M')
     

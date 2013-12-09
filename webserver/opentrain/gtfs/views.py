@@ -11,7 +11,7 @@ import models
 import utils
 import logic
 import ot_utils.ot_utils
-from ot_global.ctx import get_global_context 
+from ot_utils.ctx import get_global_context 
 
 @csrf_exempt
 @ot_utils.ot_utils.benchit

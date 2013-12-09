@@ -9,8 +9,8 @@
 			<td>{{result.trip.route.route_long_name}}</td>
 		</tr>
 		<tr>
-			<td>Route Details</td>
-			<td>
+			<td>Route Details<br/><button id="trip-details-in-result-toggle">Toggle</button></td>
+			<td id="trip-details-in-result">
 			{% include "gtfs/trip_details.html" with trip=result.trip %}
 			</td>
 		</tr>

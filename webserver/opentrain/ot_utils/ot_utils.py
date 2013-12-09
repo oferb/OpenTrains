@@ -29,7 +29,7 @@ def unzip_file(fname,dirname):
     """ unzip file fname into dirname """
     zf = zipfile.ZipFile(fname)
     zf.extractall(path=dirname)
-    print("Unzipped %s => %s" % (fname,dir))
+    print("Unzipped %s => %s" % (fname,dirname))
     
         
 def benchit(func):

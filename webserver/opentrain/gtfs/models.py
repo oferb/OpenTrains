@@ -60,7 +60,11 @@ class GTFSModel(models.Model):
     def to_json(self):
         result = dict()
         for f in self.__class__._meta.fields:
-            result[f.name] = getattr(self,f.name)
+            jsoner = getattr(self,'json_%s' % (f.name),None)
+            if jsoner:
+                result[f.name] = jsoner()
+            else:
+                result[f.name] = getattr(self,f.name)
         return result
             
 class Agency(GTFSModel):
@@ -131,8 +135,15 @@ class StopTime(GTFSModel):
     def set_arrival_time(self,value):
         self.arrival_time = ot_utils.ot_utils.normalize_time(value)
         
+    def json_arrival_time(self):
+        return ot_utils.ot_utils.denormalize_time_to_string(self.arrival_time) 
+        
     def set_departure_time(self,value):
         self.departure_time = ot_utils.ot_utils.normalize_time(value)
+    
+    def json_departure_time(self):
+        return ot_utils.ot_utils.denormalize_time_to_string(self.departure_time)
+    
         
     def __unicode__(self):
         return self.arrival_time

@@ -64,6 +64,9 @@ def normalize_time(value):
     h,m,s = [int(x) for x in value.split(':')]  # @UnusedVariable
     return h * 60 + m
     
+def denormalize_time_to_string(value):
+    return '%02d:%02d' % (value / 60,value % 60)
+    
 def get_weekdayname(dt):
     return dt.strftime('%A')
     

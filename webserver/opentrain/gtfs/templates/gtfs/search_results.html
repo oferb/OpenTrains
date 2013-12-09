@@ -1,6 +1,6 @@
 {% load ot_filters %}
 
-{% if results %} <h3>Results for {{when | nicedate }}</h3>
+{% if results %} <h3>{{results | length }} results for {{when | nicedate }}</h3>
 {% for result in results %}
 <div>
 	<table border="1">

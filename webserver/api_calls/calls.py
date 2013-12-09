@@ -48,9 +48,9 @@ def add_report():
 
 
 if __name__ == '__main__':
-    for (i,arg) in enumerate(sys.argv):
-        if arg == '-port':
-            PORT = sys.argv[i+1]
+    for arg in sys.argv[1:]:
+        if arg.startswith('-port'):
+            port = arg.split('=')[1]
     print 'Using server = %s' % (get_server())
     for arg in sys.argv[1:]:
         if not arg.startswith('-'):

@@ -49,7 +49,7 @@ class GtfsSearch(View):
     def get(self,req,*args,**kwargs):
         ctx = get_global_context('%s' % (self.url_name))
         initial = dict()
-        defaultForm = dict(when=datetime.datetime.now(),offset=30)
+        defaultForm = dict(when=datetime.datetime.now(),before=30,after=30)
         for f in self.fields:
             value = req.GET.get(f,None)
             if value:
@@ -82,7 +82,7 @@ class GtfsSearch(View):
 class GtfsSearchBetween(GtfsSearch):
     import forms
     url_name = 'gtfs:search-between'
-    fields = ['to_station','from_station','when','offset']
+    fields = ['to_station','from_station','when','before','after']
     FormClass = forms.SearchBetweenForm
     title = 'Search Between'
     
@@ -90,6 +90,6 @@ class GtfsSearchBetween(GtfsSearch):
 class GtfsSearchIn(GtfsSearch):
     import forms
     url_name = 'gtfs:search-in'
-    fields = ['in_station','when','offset']
+    fields = ['in_station','when','before','after']
     FormClass = forms.SearchInForm
     title = 'Search In'

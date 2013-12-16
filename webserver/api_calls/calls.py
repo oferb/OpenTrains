@@ -7,7 +7,7 @@ import time
 ERROR_FILE_NAME = '/tmp/error.html'
 
 SERVER = 'localhost'
-PORT = '8001'
+PORT = '8000'
 
 def get_server():
     return 'http://%s:%s' % (SERVER,PORT)

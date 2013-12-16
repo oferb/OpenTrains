@@ -4,7 +4,9 @@ import views
 
 urlpatterns = patterns('',
     url(r'add/$',views.add),
+    url(r'get/$',views.show)
 )
+
 
 
 

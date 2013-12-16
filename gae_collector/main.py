@@ -28,6 +28,7 @@ def add_reports():
     text = json.dumps(json.loads(body))
     rep = models.RawReport(text=text)
     rep.save()
+    response.status = 201
     
 @get('/')
 @guard
@@ -38,7 +39,7 @@ def home():
 @get('/reports/get/')
 @guard
 def get_reports():
-	q = db.GqlQuery("SELECT * FROM RawReport")
+	q = db.GqlQuery("SELECT * FROM RawReport order by timestamp DESC")
 	rrs = []
 	for rr in q:
 		rrs.append(rr)

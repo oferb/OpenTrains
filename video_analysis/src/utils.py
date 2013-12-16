@@ -1,14 +1,9 @@
-import PIL
-import cv
-import cv2
-from PIL import Image
 import numpy as np
 import os
 import matplotlib.image as mpimg
 import time
 import matplotlib.pyplot as plt
 import gc
-from guppy import hpy
 import datetime as dt
 import shelve
 import config

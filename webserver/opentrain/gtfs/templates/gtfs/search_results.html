@@ -1,0 +1,49 @@
+{% load ot_filters %}
+{% load staticfiles %}
+
+<script src="{% static 'gtfs/js/gtfs.js' %}"></script>
+
+{% if results %} <h3>{{results | length }} results for {{when | nicedate }}</h3>
+{% for result in results %}
+<div>
+	<table border="1">
+		<tr>
+			<td>Route name</td>
+			<td>{{result.trip.route.route_long_name}}</td>
+		</tr>
+		<tr>
+			<td>Route Details
+			<br/>
+			<button id="trip_details_button_{{forloop.counter}}">
+				Toggle
+			</button></td>
+			<td id="trip_details_{{forloop.counter}}"> {% include "gtfs/trip_details.html" with trip=result.trip %} </td>
+			<script type="text/javascript">
+				$(document).ready(function() {
+					var seachResult = new SearchResult({{forloop.counter}});
+				});
+			</script>
+		</tr>
+		<tr>
+			<td>Trip Id</td>
+			<td>{{result.trip.trip_id}}</td>
+		</tr>
+		<tr>
+			<td>Direction</td>
+			<td>{{result.trip.direction_id | direction_to_string }}</td>
+		</tr>
+		<tr>
+			<td>Arrives</td>
+			<td>{{result.arrival_time | denorm_time }}</td>
+		</tr>
+		<tr>
+			<td>Departs</td>
+			<td>{{result.departure_time | denorm_time }}</td>
+		</tr>
+	</table>
+</div>
+<br/>
+{% endfor %}
+{% else %}
+<h3>No Results</h3>
+{% endif %}

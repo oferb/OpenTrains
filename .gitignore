@@ -3,6 +3,7 @@
 # C extensions
 *.so
 
+webserver/opentrain/db.sqlite3
 # Packages
 *.egg
 *.egg-info
@@ -34,3 +35,11 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+
+*~
+
+tmp_data
+local_settings.py
+
+

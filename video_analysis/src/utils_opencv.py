@@ -1,11 +1,7 @@
 import cv
 import cv2
 import os
-#import PIL
-
-#from PIL import Image
 import numpy as np
-
 import matplotlib.image as mpimg
 import time
 import matplotlib.pyplot as plt

@@ -17,6 +17,7 @@ from enums import Directions
 from utils import imshow
 import code_written_to_run_once
 
+# useful linux commands for processing images:
 # streamer -t 1000000 -s 1280x720 -r 10 -c /dev/video1 -o /home/oferb/docs/train_project/data/webcam3/frames_fullres/image0000000.jpeg
 # ls|xargs -I X convert X -resize 300 ~/docs/train_project/data/webcam3/frames_res300/X
 # convert mask.png -resize 300 mask_res300.png
@@ -27,26 +28,25 @@ import code_written_to_run_once
 def main():
     config.set_config(base_dir = '/home/oferb/docs/train_project', experiment_id='webcam2_first2000', lowres=300, crop='150x100+150+0')
     
+    # first time image processing:
     #code_written_to_run_once.rename_image_files()
-    datafile = process_video(motion_thresh=2)
     #utils.copy_image_subset(os.path.join(config.all_data, 'webcam2', 'frames_res300_crop_150x100+150+0'), os.path.join(config.all_data, 'webcam2_first2000', 'frames_res300_crop_150x100+150+0'), range(0,2000))
-    
+
+    datafile = process_video(motion_thresh=2)    
     datafile = shelve.open(os.path.join(config.experiment_output, 'shelve.data'))
     train_spotted = use_hmm(datafile['img_times'], datafile['change_vals'])
     datafile['train_spotted'] = train_spotted
     datafile.close()
     
+    # detection step:
     #datafile = shelve.open(os.path.join(config.experiment_output, 'shelve.data'))
     #train_spotted_filtered2 = filter_out_short_motions(datafile['train_spotted'], min_secs_for_train_to_pass=15, fps=10)
     #save_positive_negative_examples(datafile['img_times'], train_spotted_filtered2)
-    
     #detect()
     
-    
+    # create 'promotional video':
     #create_video_cv(os.path.join(config.experiment_output, 'frames_hmm_nomask'), max_frame = 3500)
-    #stuff(os.path.join(config.experiment_output, 'frames_hmm_nomask'))
-    #recalc_final_result()
-    #rename_image_files()
+
 
 def detect():
 
@@ -150,16 +150,10 @@ def process_video(background_alpha=0.1, motion_thresh=0.5, skip_frames=0, fps_pe
         
         img_filename = frames_list.pop()
         img = np.flipud(mpimg.imread(os.path.join(config.experiment_data_frames, img_filename)))
-        #img = np.mean(img,2)*mask
         img = img * mask
-        # get time from filename:
         
         img_times.append(get_datetime_from_filename(img_filename))
-        #astr = fullres_datetimes[0].strftime('%Y-%m-%d--%H-%M-%S')
-        #print(astr)
-        #astr2 = atime.strftime('%Y-%m-%d--%H-%M-%S')
-        #print(astr2)        
-        
+
         
         #prevs.append(img)
         #if len(prevs) > 10:
@@ -170,24 +164,15 @@ def process_video(background_alpha=0.1, motion_thresh=0.5, skip_frames=0, fps_pe
         #diff = abs(img.astype('float32') - prev.astype('float32')) * mask
         change_val = np.mean(img_without_background)#np.percentile(img_without_background.flatten(), 90)
         change_vals.append(change_val)
-        #print('%d %f' % (count, change_val))
         if change_val > motion_thresh:  
-            #imshow(np.hstack((background, img)))
-            #flow = cv2.calcOpticalFlowFarneback(cv2.cvtColor(background.astype('uint8'), cv2.COLOR_BGR2GRAY), cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), None, 0.5, 3, 15, 3, 5, 1.2, 0)
-            #background_alpha_img_display = (1-background_alpha_img/background_alpha)*mask
-            #background_alpha_img_display = img_without_background
-            
-
             stacked_image = np.hstack((np.hstack((img, background)), img_without_background))
             utils.imsave(os.path.join(config.experiment_output_frames, img_filename), stacked_image)
-
-
             train_spotted.append(True)
         else:
             train_spotted.append(False)
-            
+        
+	# alternative update options in the following comments:    
         #if len(prevs) == 10: # update background
-            
         #beta = 1
             #background_alpha_img = 1/(beta*(np.abs(background - img)**2) + 1/background_alpha) new
             #background_alpha_img = 1/((beta*((background - img)**2) + 1)/background_alpha) old
@@ -220,7 +205,6 @@ def use_hmm(img_times, change_vals, fps=10, min_secs_for_train_to_pass=8):
     model = GaussianHMM(n_components, covariance_type="diag", n_iter=1000)
     model.fit([X.T])
     
-    
     #thresh = 10**-15
     #model.transmat_ = np.array([[1-thresh,thresh],[1-thresh,thresh]])
     hidden_states = model.predict(X.T)
@@ -252,7 +236,7 @@ def use_hmm(img_times, change_vals, fps=10, min_secs_for_train_to_pass=8):
 def plot_timeline(img_times, change_vals, hidden_states, train_spotted):
     fig = plt.figure()
     plt.plot_date(img_times, change_vals, 'b-')
-    #plt.plot_date(img_times, 2*hidden_states, 'g-')
+    plt.plot_date(img_times, 2*hidden_states, 'g-')
     plt.plot_date(img_times, train_spotted, 'r-')    
     import gt_data
     gt = gt_data.get_gt(config.experiment)
@@ -278,9 +262,7 @@ def plot_timeline(img_times, change_vals, hidden_states, train_spotted):
 def filter_out_short_motions(hidden_states, min_secs_for_train_to_pass, fps):
     from itertools import groupby
     grouped_L = [(k, sum(1 for i in g)) for k,g in groupby(hidden_states)]
-    # Or (k, len(list(g))), but that creates an intermediate list
-    grouped_L
-    [(0, 3), (3, 2), (2, 1), (5, 1), (2, 1), (6, 2)] 
+
     hidden_states2 = []
     for g in grouped_L:
         
@@ -315,12 +297,6 @@ def load_mask():
         mask = temp
         mask = mask.astype('bool')
     return mask
-
-
-   
-
-
-
 
 
     

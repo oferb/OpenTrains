@@ -1,2 +1,0 @@
-﻿agency_name,agency_url,agency_timezone,agency_lang
-Israel Railways Ltd.,http://www.rail.co.il,Asia/Jerusalem,he

@@ -43,7 +43,9 @@ INSTALLED_APPS = (
     'gtfs',
     'common',
     'reports',
+    'analysis',
     'django.contrib.staticfiles',
+    'django_extensions'
 )
 
 MIDDLEWARE_CLASSES = (

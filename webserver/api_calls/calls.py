@@ -43,8 +43,8 @@ def create_superuser():
     post_and_check('/gtfs/create-superuser/')
 
 def add_report():
-    post_and_check_json('/reports/add/',data=json.dumps(dict(user='eran',wifis=[dict(loc="loc1",name="hello1"),
-                                                                     dict(loc="loc2",name="hello2")])))
+    r = post_and_check_json('/reports/add/',data=json.dumps(dict(user='eran',wifis=[dict(loc="loc1",name="hello1"),dict(loc="loc2",name="hello2")])))
+    assert r.status_code == 201,'got status code = %s' % ( r.status_code )
 
 
 if __name__ == '__main__':

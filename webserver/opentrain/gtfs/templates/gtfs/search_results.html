@@ -3,26 +3,35 @@
 
 <script src="{% static 'gtfs/js/gtfs.js' %}"></script>
 
-{% if results %} <h3>{{results | length }} results for {{when | nicedate }}</h3>
+{% if results %}
+<h3>{{results | length }} results for {{when | nicedate }}</h3>
+<button id="trip_details_button_global">
+	Toggle
+</button>
 {% for result in results %}
-<div>
-	<table border="1">
+<div class="row">
+	<table class="table-bordered table-hover table-striped col-md-6 results-table">
 		<tr>
 			<td>Route name</td>
 			<td>{{result.trip.route.route_long_name}}</td>
 		</tr>
 		<tr>
-			<td>Route Details
-			<br/>
-			<button id="trip_details_button_{{forloop.counter}}">
-				Toggle
-			</button></td>
-			<td id="trip_details_{{forloop.counter}}"> {% include "gtfs/trip_details.html" with trip=result.trip %} </td>
+			<td>Trip Details</td>
+			<td>
+			<p class="text-center">
+				<button id="trip_details_button_{{forloop.counter}}">
+					Toggle
+				</button>
+				Trip Details
+			</p>
+			<div id="trip_details_{{forloop.counter}}">
+				{% include "gtfs/trip_details.html" with trip=result.trip %}
+			</div>
 			<script type="text/javascript">
-				$(document).ready(function() {
-					var seachResult = new SearchResult({{forloop.counter}});
+								$(document).ready(function() {
+				var seachResult = new SearchResult({{forloop.counter}});
 				});
-			</script>
+			</script></td>
 		</tr>
 		<tr>
 			<td>Trip Id</td>
@@ -43,7 +52,14 @@
 	</table>
 </div>
 <br/>
+<br/>
 {% endfor %}
+<script type="text/javascript">
+$(document).ready(function() {
+	console.log("init");
+	window.GLOBAL_SEARCH_RESULTS.init();
+});
+</script>
 {% else %}
 <h3>No Results</h3>
 {% endif %}

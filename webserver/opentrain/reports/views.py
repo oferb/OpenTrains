@@ -1,4 +1,5 @@
-from django.http.response import HttpResponseNotAllowed, HttpResponse
+from django.http.response import HttpResponseNotAllowed, HttpResponse,\
+    HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 import models
 import json
@@ -21,3 +22,7 @@ def add(req):
     
     return HttpResponse(status=201,content="report accepted")
 
+def show(req):
+    return HttpResponseRedirect('/api/v1/raw-reports/?format=json')
+
+    

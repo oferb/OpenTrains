@@ -2,6 +2,8 @@ import datetime
 import zipfile
 import os
 import time
+import datetime
+from django.utils import timezone
 
 def get_utc_time_underscored():
     """ return UTC time as underscored, to timestamp folders """
@@ -72,4 +74,16 @@ def get_weekdayname(dt):
     
 def format_date(dt):
     return dt.strftime('%A, %b %d, %Y, %H:%M')
+
+def get_utc_time_from_timestamp(ts):
+    return datetime.datetime.utcfromtimestamp(ts).replace(tzinfo=timezone.utc)
     
+def delete_from_model(model):
+    from django.db import connection
+    cursor = connection.cursor()
+    table_name = model._meta.db_table 
+    sql = "DELETE FROM %s;" % (table_name, )
+    cursor.execute(sql)    
+    print 'DELETED %s' % (table_name)
+
+

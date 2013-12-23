@@ -1,0 +1,2 @@
+/appcfg.py update --oauth2 .
+dev_appserver.py --port 8001 --log_level debug --logs_path a.log --automatic_restart=yes --clear_datastore=yes .

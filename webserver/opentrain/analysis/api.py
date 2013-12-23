@@ -18,7 +18,7 @@ class ReportResource(ModelResource):
         queryset = models.Report.objects.all()
         resource_name = "reports"
         ordering = 'id'
-        filter = {'device_id' : ALL}
+        filtering = {'device_id' : ALL}
 
         
 def register_all(tp):

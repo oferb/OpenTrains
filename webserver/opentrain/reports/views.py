@@ -24,7 +24,7 @@ def add(req):
     return HttpResponse(status=201,content="report accepted")
 
 def show(req):
-    rrs = list(models.RawReport.objects.all().reverse())
+    rrs = list(models.RawReport.objects.order_by('-id'))
     data = dict(rrs=rrs)
     return render(req,'reports/results.html',data)
 

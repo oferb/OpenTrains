@@ -6,7 +6,7 @@ class Report(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     
 class LocationInfo(models.Model):
-    report = models.ForeignKey(Report,related_name='my_loc')
+    report = models.OneToOneField(Report,related_name='my_loc')
     accuracy = models.FloatField()
     lat = models.FloatField()
     lng = models.FloatField()

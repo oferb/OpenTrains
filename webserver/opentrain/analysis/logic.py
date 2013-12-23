@@ -3,7 +3,9 @@ import json
 import reports.models
 import common.ot_utils
 
-def analyze_raw_reports():
+def analyze_raw_reports(clean=True):
+    if clean:
+        delete_all_reports()
     items = _collect_all_items()
     for (idx,item) in enumerate(items):
         if idx % 100 == 0:
@@ -25,7 +27,6 @@ def delete_all_reports():
     common.ot_utils.delete_from_model(models.WifiReport)
     
 def _collect_all_items():
-    delete_all_reports()
     all_reports = reports.models.RawReport.objects.all()
     result = []
     for rj in all_reports:

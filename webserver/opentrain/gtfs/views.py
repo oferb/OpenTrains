@@ -14,13 +14,10 @@ import common.ot_utils
 from common.ctx import get_global_context 
 
 @csrf_exempt
-@common.ot_utils.benchit
 def create_all(req):
+    import logic
     if req.method == "POST":
-        dirname = utils.find_gtfs_data_dir()
-        cls_list = models.GTFSModel.__subclasses__()  # @UndefinedVariable
-        for cls in cls_list: 
-            cls.read_from_csv(dirname)
+        logic.create_all(download=False)
         return HttpResponse(status=201)
     return HttpResponseNotAllowed(permitted_methods=['GET'])
 

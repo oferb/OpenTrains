@@ -16,6 +16,7 @@ class ReportResource(ModelResource):
     class Meta:
         queryset = models.Report.objects.all()
         resource_name = "reports"
+        ordering = 'id'
 
         
 def register_all(tp):

@@ -2,7 +2,8 @@ from django.db import models
 
 class WifiReport(models.Model):
     device_id = models.CharField(max_length=50)
-    timestamp = models.FloatField()
+    timestamp = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
 
 class WifiInReport(models.Model):
     report = models.ForeignKey(WifiReport,related_name='wifi_set')

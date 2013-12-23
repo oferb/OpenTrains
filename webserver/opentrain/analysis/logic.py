@@ -1,14 +1,16 @@
 import models
 import json
 import reports.models
+import common.ot_utils
 
 def analyze_raw_reports():
-    items = collect_all_items()
+    items = _collect_all_items()
     for (idx,item) in enumerate(items):
         if idx % 100 == 0:
             print '%d/%d' % (idx,len(items))
         if 'wifi' in item.keys():
-            m = models.WifiReport(device_id=item['device_id'],timestamp=item['time'])
+            dt = common.ot_utils.get_utc_time_from_timestamp(float(item['time'])/1000)
+            m = models.WifiReport(device_id=item['device_id'],timestamp=dt)
             m.save()
             for wifi in item['wifi']:
                 w = models.WifiInReport(SSID=wifi['SSID'],
@@ -17,19 +19,12 @@ def analyze_raw_reports():
                                  key=wifi['key'])
                 m.wifi_set.add(w)
 
-    
+
 def delete_all_reports():
-    delete_from_model(models.WifiInReport)
-    delete_from_model(models.WifiReport)
+    common.ot_utils.delete_from_model(models.WifiInReport)
+    common.ot_utils.delete_from_model(models.WifiReport)
     
-def delete_from_model(model):
-    from django.db import connection
-    cursor = connection.cursor()
-    table_name = model._meta.db_table 
-    sql = "DELETE FROM %s;" % (table_name, )
-    cursor.execute(sql)    
-    print 'DELETED %s' % (table_name)
-def collect_all_items():
+def _collect_all_items():
     delete_all_reports()
     all_reports = reports.models.RawReport.objects.all()
     result = []

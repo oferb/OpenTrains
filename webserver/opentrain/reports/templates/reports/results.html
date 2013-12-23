@@ -5,13 +5,14 @@
 	<title>Results</title>
 </head>	
 <body>
-	<h1>{{rrs|length}} Results</h1>
+	<h1>{{total}} Results</h1>
 	{% for rr in rrs%}
 		<div>
-			{{rr.timestamp}}
-			<br/>
-			{{rr.get_text_nice | linebreaks}}
-			<hr/>
+		  <h2>START ID = {{rr.id}}</h2>
+		  <br/>
+		  {{rr.get_text_nice | linebreaks}}
+		  <h2>END ID = {{rr.id}}</h2>
+		  <hr/>
 		</div>
 	{% endfor %}
 </body>

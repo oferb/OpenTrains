@@ -24,8 +24,9 @@ def add(req):
     return HttpResponse(status=201,content="report accepted")
 
 def show(req):
-    rrs = list(models.RawReport.objects.order_by('-id'))
-    data = dict(rrs=rrs)
+    rrs = list(models.RawReport.objects.order_by('-id'))[0:20]
+    total = models.RawReport.objects.count()
+    data = dict(rrs=rrs,total=total)
     return render(req,'reports/results.html',data)
 
     

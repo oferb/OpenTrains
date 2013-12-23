@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Results</title>
+</head>	
+<body>
+	<h1>{{rrs|length}} Results</h1>
+	{% for rr in rrs%}
+		<div>
+			{{rr.timestamp}}
+			<br/>
+			{{rr.get_text_nice | linebreaks}}
+			<hr/>
+		</div>
+	{% endfor %}
+</body>
+</html>

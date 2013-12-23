@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load ot_filters %}
 <html>
 <head>
 	<meta charset="utf-8">
@@ -10,7 +11,7 @@
 		<div>
 		  <h2>START ID = {{rr.id}}</h2>
 		  <br/>
-		  {{rr.get_text_nice | linebreaks}}
+		  {{rr.get_text_nice | spacify | linebreaks}}
 		  <h2>END ID = {{rr.id}}</h2>
 		  <hr/>
 		</div>

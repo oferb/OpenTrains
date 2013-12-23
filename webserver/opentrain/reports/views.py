@@ -1,6 +1,6 @@
-from django.http.response import HttpResponseNotAllowed, HttpResponse,\
-    HttpResponseRedirect
+from django.http.response import HttpResponseNotAllowed, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import render
 import models
 import json
 
@@ -23,6 +23,20 @@ def add(req):
     return HttpResponse(status=201,content="report accepted")
 
 def show(req):
-    return HttpResponseRedirect('/api/v1/raw-reports/?format=json')
+    count = int(req.GET.get('count',20))
+    rrs = list(models.RawReport.objects.order_by('-id'))[0:count-1]
+    total = models.RawReport.objects.count()
+    data = dict(rrs=rrs,total=total)
+    return render(req,'reports/results.html',data)
 
+def download(req):
+    rrs = models.RawReport.objects.all()
+    objects = []
+    for rr in rrs:
+        objects.append(rr.to_json())
     
+    resp = HttpResponse(content=json.dumps(objects),content_type='application/json')
+    #resp['Content-Disposition'] = 'attachment; filename=download.json'
+    return resp
+
+

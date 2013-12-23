@@ -4,8 +4,11 @@ import views
 
 urlpatterns = patterns('',
     url(r'add/$',views.add),
-    url(r'get/$',views.show)
+    url(r'get/$',views.show),
+    url(r'download/$',views.download)
 )
+
+
 
 
 

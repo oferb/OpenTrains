@@ -48,5 +48,21 @@ def do_search_in(in_station,when,before,after):
 def do_seatch_between(from_station,to_station,when,before,after):
     pass
 
+def create_all(clean=True,download=True):
+    import utils
+    import common.ot_utils
+    cls_list = models.GTFSModel.__subclasses__()  # @UndefinedVariable
+    if clean:
+        for cls in cls_list:
+            common.ot_utils.delete_from_model(cls)
+    if download:
+        print 'Downloading gtfs file from web'
+        utils.download_gtfs_file()
+    dirname = utils.find_gtfs_data_dir()
+    
+    for cls in cls_list: 
+        cls.read_from_csv(dirname)
+
+
 
 

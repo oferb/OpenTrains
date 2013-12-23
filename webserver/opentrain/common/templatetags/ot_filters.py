@@ -22,4 +22,19 @@ def direction_to_string(d):
     if d == 1: return 'Forward'
     return '???'
 
- 
+from django.template import Library
+from django.template.defaultfilters import stringfilter
+from django.utils.html import conditional_escape
+from django.utils.safestring import mark_safe
+import re
+
+@stringfilter
+def spacify(value, autoescape=None):
+    if autoescape:
+	esc = conditional_escape
+    else:
+	esc = lambda x: x
+    return mark_safe(esc(value).replace(' ','&nbsp;'))
+
+spacify.needs_autoescape = True
+register.filter(spacify)

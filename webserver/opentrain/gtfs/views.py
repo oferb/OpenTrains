@@ -36,6 +36,11 @@ def create_superuser(req):
         return HttpResponse(status=201)
     return HttpResponseNotAllowed(permitted_methods=['GET'])
 
+def show_map(req,trip_id):
+    ctx = dict()
+    ctx['trip'] = models.Trip.objects.get(trip_id=trip_id)
+    return render(req, 'gtfs/trip_map.html', ctx)
+
 def home(req):
     return HttpResponse(content="hello and good day")
 

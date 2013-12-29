@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<title>Map for {{trip.trip_id}}</title>
+		<script src="http://openlayers.org/api/OpenLayers.js"></script>
+	</head>
+	<body>
+		<h1>Map for {{trip.trip_id}}</h1>
+		<div style="width:100%; height:100%" id="tripMap"></div>
+		<script defer="defer" type="text/javascript">
+			var map = new OpenLayers.Map('tripMap');
+			map.addLayer(new OpenLayers.Layer.OSM());
+			map.zoomToMaxExtent();
+		</script>
+	</body>
+</html>

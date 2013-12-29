@@ -104,6 +104,12 @@ class Trip(GTFSModel):
     trip_headsign = models.CharField(max_length=100)
     def get_stop_times(self):
         return self.stoptime_set.all().order_by('stop_sequence')
+    
+    def get_first_stop(self):
+        return self.get_stop_times()[0].stop;
+    
+    def get_last_stop(self):
+        return list(self.get_stop_times())[-1].stop;
     def __unicode__(self):
         return self.trip_id
     

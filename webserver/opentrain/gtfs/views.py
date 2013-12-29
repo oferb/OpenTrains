@@ -15,7 +15,6 @@ from common.ctx import get_global_context
 
 @csrf_exempt
 def create_all(req):
-    import logic
     if req.method == "POST":
         logic.create_all(download=False)
         return HttpResponse(status=201)
@@ -38,6 +37,11 @@ def create_superuser(req):
 
 def show_map(req,trip_id):
     ctx = dict()
+    zoom_stop_id = req.GET.get('zoom_stop_id',0)
+    if zoom_stop_id > 0:
+        ctx['zoom_stop'] = models.Stop.objects.get(stop_id=zoom_stop_id)
+    else:
+        ctx['zoom_stop'] = None
     ctx['trip'] = models.Trip.objects.get(trip_id=trip_id)
     return render(req, 'gtfs/trip_map.html', ctx)
 

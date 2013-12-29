@@ -1,3 +1,5 @@
+{% load staticfiles %}
+{% load ot_filters %}
 <html>
 	<head>
 		<title>Map for {{trip.trip_id}}</title>
@@ -7,9 +9,35 @@
 		<h1>Map for {{trip.trip_id}}</h1>
 		<div style="width:100%; height:100%" id="tripMap"></div>
 		<script defer="defer" type="text/javascript">
-			var map = new OpenLayers.Map('tripMap');
-			map.addLayer(new OpenLayers.Layer.OSM());
-			map.zoomToMaxExtent();
+			var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
+        	var toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
+        	var center       = new OpenLayers.LonLat({{zoom_stop.stop_lon}},{{zoom_stop.stop_lat}}).transform( fromProjection, toProjection);
+        	//var zoom           = 15; 
+			var markers = new OpenLayers.Layer.Markers( "Markers" );
+			var otIcon = new OpenLayers.Icon("{% static 'common/img/open-train.png' %}",{w:26,h:26});
+			var popups = [];
+			//var otIcon = new OpenLayers.Icon("http://www.openlayers.org/dev/img/marker.png",{w:26,h:26});
+			{%for stop_time in trip.get_stop_times%}
+			{
+				var lat = {{stop_time.stop.stop_lat}};
+				var lon = {{stop_time.stop.stop_lon}};
+				var pos = new OpenLayers.LonLat(lon,lat).transform( fromProjection, toProjection);
+				var marker = new OpenLayers.Marker(pos.clone(),otIcon.clone());
+    			markers.addMarker(marker);
+    			/*
+    			var popup = new OpenLayers.Popup.FramedCloud("stop_id_{{stop_time.stop.stop_id}}", 
+      			  	pos.clone(), null,
+        			'Stop {{stop_time.stop.stop_name}}<br/>@ {{stop_time.arrival_time | denorm_time}}',null,true);
+    			popups.push(popup);
+    			*/
+    			
+    		}
+    		{% endfor %}
+    		var map = new OpenLayers.Map('tripMap');
+    		console.log("cnter = " + center);
+    		map.addLayer(new OpenLayers.Layer.OSM());
+    		map.setCenter(center, 15 );
+    		map.addLayer(markers);
 		</script>
 	</body>
 </html>

@@ -22,19 +22,22 @@
 				var pos = getLonLat({{stop_time.stop.stop_lon}},{{stop_time.stop.stop_lat}});
 				var marker = new OpenLayers.Marker(pos,otIcon.clone());
     			markers.addMarker(marker);
-    			/*
+    			
     			var popup = new OpenLayers.Popup.FramedCloud("stop_id_{{stop_time.stop.stop_id}}", 
       			  	pos.clone(), null,
         			'Stop {{stop_time.stop.stop_name}}<br/>@ {{stop_time.arrival_time | denorm_time}}',null,true);
     			popups.push(popup);
-    			*/
+  			
     			
     		}
     		{% endfor %}
     		var map = new OpenLayers.Map('tripMap');
-    		console.log("cnter = " + center);
     		map.addLayer(new OpenLayers.Layer.OSM());
     		map.setCenter(center, 15 );
+    		console.log("cnter = " + center);
+    		popups.forEach(function(it) {
+    			map.addPopup(it);
+    		});
     		map.addLayer(markers);
 		</script>
 	</body>

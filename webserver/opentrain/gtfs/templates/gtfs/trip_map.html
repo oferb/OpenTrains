@@ -5,26 +5,22 @@
 	<head>
 		<title>Map for {{trip.trip_id}}</title>
 		<script src="http://openlayers.org/api/OpenLayers.js"></script>
+		<script src="{% static 'common/js/ot_map_utils.js' %}"></script>
 	</head>
 	<body>
 		<h1>Map for {{trip.trip_id}}</h1>
 		<h1>From {{trip.get_first_stop.stop_name}} To {{trip.get_last_stop.stop_name}}</h1>
 		<div style="width:70%; height:100%" id="tripMap"></div>
 		<script defer="defer" type="text/javascript">
-			var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
-        	var toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
-        	var center       = new OpenLayers.LonLat({{zoom_stop.stop_lon}},{{zoom_stop.stop_lat}}).transform( fromProjection, toProjection);
-        	//var zoom           = 15; 
+        	var center       = getLonLat({{zoom_stop.stop_lon}},{{zoom_stop.stop_lat}}); 
 			var markers = new OpenLayers.Layer.Markers( "Markers" );
 			var otIcon = new OpenLayers.Icon("{% static 'common/img/open-train.png' %}",{w:26,h:26});
 			var popups = [];
 			//var otIcon = new OpenLayers.Icon("http://www.openlayers.org/dev/img/marker.png",{w:26,h:26});
 			{%for stop_time in trip.get_stop_times%}
 			{
-				var lat = {{stop_time.stop.stop_lat}};
-				var lon = {{stop_time.stop.stop_lon}};
-				var pos = new OpenLayers.LonLat(lon,lat).transform( fromProjection, toProjection);
-				var marker = new OpenLayers.Marker(pos.clone(),otIcon.clone());
+				var pos = getLonLat({{stop_time.stop.stop_lon}},{{stop_time.stop.stop_lat}});
+				var marker = new OpenLayers.Marker(pos,otIcon.clone());
     			markers.addMarker(marker);
     			/*
     			var popup = new OpenLayers.Popup.FramedCloud("stop_id_{{stop_time.stop.stop_id}}", 

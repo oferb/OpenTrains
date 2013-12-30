@@ -22,7 +22,6 @@
 				var pos = getLonLat({{stop_time.stop.stop_lon}},{{stop_time.stop.stop_lat}});
 				var marker = new OpenLayers.Marker(pos,otIcon.clone());
     			markers.addMarker(marker);
-    			
     			var popup = new OpenLayers.Popup.FramedCloud("stop_id_{{stop_time.stop.stop_id}}", 
       			  	pos.clone(), null,
         			'Stop {{stop_time.stop.stop_name}}<br/>@ {{stop_time.arrival_time | denorm_time}}',null,true);
@@ -33,11 +32,11 @@
     		{% endfor %}
     		var map = new OpenLayers.Map('tripMap');
     		map.addLayer(new OpenLayers.Layer.OSM());
-    		map.setCenter(center, 15 );
-    		console.log("cnter = " + center);
+			map.setCenter(center, 15 );
     		popups.forEach(function(it) {
     			map.addPopup(it);
     		});
+    		map.setCenter(center, 15 );
     		map.addLayer(markers);
 		</script>
 	</body>

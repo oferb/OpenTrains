@@ -1,0 +1,15 @@
+You can use the json api to browse results.
+
+To show raw results (use limit=5, otherwise it sometime crashes):
+http://54.221.246.54/api/v1/raw-reports/?format=json&limit=5 
+
+To get recent reports:
+http://54.221.246.54/api/v1/raw-reports/?format=json&order_by=-id
+
+In pretty formatting:
+http://54.221.246.54/reports/get/
+
+To show analyzed reports:
+http://54.221.246.54/api/v1/reports/?format=json
+
+

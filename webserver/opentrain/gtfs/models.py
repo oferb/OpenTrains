@@ -83,7 +83,7 @@ class Agency(GTFSModel):
 class Route(GTFSModel):
     filename = "routes.txt"
     route_id = models.IntegerField(primary_key=True)
-    agency = models.ForeignKey('Agency',default=1)
+    agency = models.ForeignKey('Agency',null=True,blank=True)
     route_short_name = models.CharField(max_length=255)
     route_long_name = models.CharField(max_length=255)
     route_desc = models.TextField()
@@ -92,6 +92,31 @@ class Route(GTFSModel):
     route_text_color = models.CharField(max_length=20)
     def __unicode__(self):
         return '%s : %s' % (self.route_id,self.route_long_name)
+
+
+class Service(GTFSModel):
+    filename = "calendar.txt"
+    service_id = models.CharField(max_length=100,primary_key=True)
+    monday = models.BooleanField()
+    tuesday = models.BooleanField()
+    wednesday = models.BooleanField()
+    thursday = models.BooleanField()
+    friday = models.BooleanField()
+    saturday = models.BooleanField()
+    sunday = models.BooleanField()
+    start_date = models.DateField()
+    end_date = models.DateField()
+        
+    def set_start_date(self,value):
+        self.start_date = common.ot_utils.parse_gtfs_date(value)
+        
+    def set_end_date(self,value):
+        self.end_date = common.ot_utils.parse_gtfs_date(value)
+        
+    
+    def __unicode__(self):
+        return self.service_id
+
     
 class Trip(GTFSModel):
     filename = "trips.txt"
@@ -117,28 +142,17 @@ class Trip(GTFSModel):
     def __unicode__(self):
         return self.trip_id
     
-class Service(GTFSModel):
-    filename = "calendar.txt"
-    service_id = models.CharField(max_length=100,primary_key=True)
-    monday = models.BooleanField()
-    tuesday = models.BooleanField()
-    wednesday = models.BooleanField()
-    thursday = models.BooleanField()
-    friday = models.BooleanField()
-    saturday = models.BooleanField()
-    sunday = models.BooleanField()
-    start_date = models.DateField()
-    end_date = models.DateField()
-        
-    def set_start_date(self,value):
-        self.start_date = common.ot_utils.parse_gtfs_date(value)
-        
-    def set_end_date(self,value):
-        self.end_date = common.ot_utils.parse_gtfs_date(value)
-        
-    
+class Stop(GTFSModel):
+    filename = "stops.txt"
+    stop_id = models.IntegerField(primary_key=True)
+    stop_name = models.CharField(max_length=200)
+    stop_lat = models.CharField(max_length=20)
+    stop_lon = models.CharField(max_length=20)
+    stop_url = models.URLField()
+    location_type = models.IntegerField()
     def __unicode__(self):
-        return self.service_id
+        return self.stop_name
+
     
 class StopTime(GTFSModel):
     filename = "stop_times.txt"
@@ -162,18 +176,7 @@ class StopTime(GTFSModel):
     def __unicode__(self):
         return '%s %s' % (self.arrival_time,self.stop.stop_name)
     
-class Stop(GTFSModel):
-    filename = "stops.txt"
-    stop_id = models.IntegerField(primary_key=True)
-    stop_name = models.CharField(max_length=200)
-    stop_lat = models.CharField(max_length=20)
-    stop_lon = models.CharField(max_length=20)
-    stop_url = models.URLField()
-    location_type = models.IntegerField()
-    def __unicode__(self):
-        return self.stop_name
-    
-    
+        
 class Shape(GTFSModel):
     filename = "shapes.txt"
     shape_id = models.CharField(max_length=100)

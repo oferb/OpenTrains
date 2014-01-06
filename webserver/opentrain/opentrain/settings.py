@@ -70,9 +70,16 @@ WSGI_APPLICATION = 'opentrain.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(DATA_DIR,'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'opentrain',                      
+        'USER': 'postgres',
+        'PASSWORD': 'eran12345',
+        'HOST': 'localhost'
     }
+    #'default': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': os.path.join(DATA_DIR,'db.sqlite3'),
+    #}
 }
 
 # Internationalization

@@ -82,7 +82,7 @@ def delete_from_model(model):
     from django.db import connection
     cursor = connection.cursor()
     table_name = model._meta.db_table 
-    sql = "DELETE FROM %s;" % (table_name, )
+    sql = "DELETE FROM %s CASCADE;" % (table_name, )
     cursor.execute(sql)    
     print 'DELETED %s' % (table_name)
 

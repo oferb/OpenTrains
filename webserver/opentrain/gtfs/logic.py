@@ -53,7 +53,7 @@ def create_all(clean=True,download=True):
     import common.ot_utils
     cls_list = models.GTFSModel.__subclasses__()  # @UndefinedVariable
     if clean:
-        for cls in cls_list:
+        for cls in reversed(cls_list):
             common.ot_utils.delete_from_model(cls)
     if download:
         print 'Downloading gtfs file from web'

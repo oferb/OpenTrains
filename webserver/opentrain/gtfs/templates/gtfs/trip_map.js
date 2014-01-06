@@ -11,6 +11,14 @@ function initMap() {
 								stopId : {{stop_time.stop.stop_id}},
 								seqId : {{stop_time.stop_sequence}}
 								});
+	var shapes = [];
+	{% for shape in trip.get_shapes %}
+		shapes.push([{{shape.shape_pt_lat}},{{shape.shape_pt_lon}}]);
+	{% endfor %}
+	otMap.createLine(shapes,{
+		color: 'red',
+		weight : 2
+		});
 	{% endfor %}
 	
 }

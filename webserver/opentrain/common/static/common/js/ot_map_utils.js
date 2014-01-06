@@ -9,10 +9,13 @@ function MapWrapper() {
 	this.createTrainMarker = function(stop) {
 		var popup = L.marker([stop.lat, stop.lon],{
 			icon : this.trainIcon
-		}).addTo(this.map).bindPopup(stop.name + " @" + stop.time);
+		}).addTo(this.map).bindPopup('(' + stop.seqId + ') ' + stop.name + " @" + stop.time);
 		if (stop.stopId == this.zoomStopId) {
 			popup.openPopup();
 		}
+	};
+	this.createLine = function(shapes,options) {
+		var polyline = L.polyline(shapes, options).addTo(this.map);
 	};
 }
 

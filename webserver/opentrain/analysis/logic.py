@@ -6,7 +6,15 @@ import common.ot_utils
 def analyze_raw_reports(clean=True):
     if clean:
         delete_all_reports()
-    items = _collect_all_items()
+    analyze_raw_reports_subset(0,100)
+    
+def analyze_raw_reports_subset(offset,count):
+    items = _collect_items(offset,count)
+    if items:
+        dump_items(items)
+        analyze_raw_reports_subset(offset+count,count)
+    
+def dump_items(items):
     wifis = []
     locs = []
     for (idx,item) in enumerate(items):
@@ -43,8 +51,10 @@ def delete_all_reports():
     common.ot_utils.delete_from_model(models.LocationInfo)
     common.ot_utils.delete_from_model(models.Report)
     
-def _collect_all_items():
-    all_reports = reports.models.RawReport.objects.all()
+def _collect_items(offset,count):
+    all_reports_count = reports.models.RawReport.objects.count()
+    print '*** offset = %d count = %d all_reports_count = %d' % (offset,count,all_reports_count)
+    all_reports = reports.models.RawReport.objects.all()[offset:offset+count]
     result = []
     for rj in all_reports:
         items = json.loads(rj.text)['items']

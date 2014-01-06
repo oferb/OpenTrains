@@ -1,0 +1,24 @@
+I've created several functions that you can run from python manage.py shell to have "clean" data.
+
+First, if you have to reset the data totally, you need to run 
+% ./recreate_all.sh
+
+This will clean all the data and run syncdb. If you need to clean partially, then you can just drop tables manually and run syncdb (we should move to south sometime...)
+
+From python manage.py shell you can run
+
+1. to download gtfs from ministry of transportation and recreate all GTFS models:
+(this will clean all existing gtfs data)
+
+python> import gtfs.logic
+python> gtfs.logic.create_all()
+
+To download raw-reports from server do:
+(this will clean all current raw reports)
+python> import reports.logic
+python> reports.logic.download_reports()
+
+To  analyze all the raw reports you just downloaded:
+python> import analysis.logic
+python> analysis.logic.analyze_raw_reports()
+

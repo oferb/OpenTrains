@@ -22,6 +22,11 @@ def direction_to_string(d):
     if d == 1: return 'Forward'
     return '???'
 
+@register.filter(name="shapes_to_points")
+def shapes_to_points(shapes):
+    return "[" + ",".join(["[%s,%s]" % (shape.shape_pt_lat,shape.shape_pt_lon) for shape in shapes]) + "]"
+    
+
 from django.template import Library
 from django.template.defaultfilters import stringfilter
 from django.utils.html import conditional_escape

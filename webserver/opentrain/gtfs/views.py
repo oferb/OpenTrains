@@ -11,8 +11,7 @@ import models
 import utils
 import logic
 import common.ot_utils
-from common.ctx import get_global_context 
-
+ 
 @csrf_exempt
 def create_all(req):
     if req.method == "POST":
@@ -53,7 +52,7 @@ def gtfs_home(req):
 
 class GtfsSearch(View):
     def get(self,req,*args,**kwargs):
-        ctx = get_global_context('%s' % (self.url_name))
+        ctx = dict()
         initial = dict()
         defaultForm = dict(when=datetime.datetime.now(),before=30,after=30)
         for f in self.fields:

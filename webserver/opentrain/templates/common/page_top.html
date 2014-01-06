@@ -43,7 +43,7 @@
 	</div>
 	<div class="collapse navbar-collapse">
 	  <ul class="nav navbar-nav">
-	    {% for mi in ot_global.menu_items %}
+	    {% for mi in menu_items %}
 	    <li {% if mi.active %} class="active" {% endif %}>
 	      <a href="{% url mi.name %}">{{mi.title}}</a>
 	    </li>

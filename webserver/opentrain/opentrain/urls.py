@@ -23,5 +23,7 @@ urlpatterns = patterns('',
     url(r'^reports/',include('reports.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include(tp.urls)),
+    url(r'^analysis/',include('analysis.urls',namespace='analysis'))
 )
+
 

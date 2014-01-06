@@ -20,4 +20,10 @@ class SingleWifiReport(models.Model):
     key = models.CharField(max_length=20)
     signal = models.IntegerField()
     
+class AnalysisMarker(models.Model):
+    label = models.CharField(max_length=30)
+    text = models.TextField()
+    lat = models.CharField(max_length=10)
+    lon = models.CharField(max_length=10)
+    
     

@@ -36,10 +36,11 @@ import re
 @stringfilter
 def spacify(value, autoescape=None):
     if autoescape:
-	esc = conditional_escape
+        esc = conditional_escape
     else:
-	esc = lambda x: x
+        esc = lambda x: x
     return mark_safe(esc(value).replace(' ','&nbsp;'))
 
 spacify.needs_autoescape = True
 register.filter(spacify)
+

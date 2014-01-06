@@ -96,14 +96,20 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
-TEMPLATE_DIRS = (os.path.join(BASE_DIR,'templates')
-                 )
+TEMPLATE_DIRS = (os.path.join(BASE_DIR,'templates'),)
+
+from django.conf import global_settings
+TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
+    "common.ctx.menu",
+)
+
 
 # override settings using local_settings.py
 try:
     from local_settings import *
 except ImportError:
     pass
+
 
 print '#DJANGO: DEBUG = %s' % (DEBUG)
 

@@ -1,0 +1,12 @@
+{% include "common/page_top.html" %}
+<div class="container">
+	<h2>Search Labels</h2>
+	<form method="post" role="form">
+		{{form.as_p}}
+		{% csrf_token %}
+		<button type="submit" class="btn btn-success btn-sm">
+			<span class="glyphicon glyphicon-search"></span>
+		</button>
+	</form>
+</div>
+

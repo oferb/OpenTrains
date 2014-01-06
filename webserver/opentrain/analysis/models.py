@@ -9,7 +9,7 @@ class LocationInfo(models.Model):
     report = models.OneToOneField(Report,related_name='my_loc')
     accuracy = models.FloatField()
     lat = models.FloatField()
-    lng = models.FloatField()
+    lon = models.FloatField()
     provider = models.CharField(max_length=100)
     timestamp = models.DateTimeField()
     

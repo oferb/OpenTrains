@@ -20,7 +20,7 @@ def analyze_raw_reports(clean=True):
             if item_loc:
                 loc = models.LocationInfo(report=m,
                                           lat=item_loc['lat'],
-                                          lng=item_loc['long'],
+                                          lon=item_loc['long'],
                                           provider=item_loc['provider'],
                                           timestamp = common.ot_utils.get_utc_time_from_timestamp(float(item_loc['time'])/1000),
                                           accuracy = item_loc['accuracy'])

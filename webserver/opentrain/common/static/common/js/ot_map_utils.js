@@ -1,25 +1,30 @@
 // utility functions for open layers
 "use strict";
 
-function getLonLat(lon,lat) {
-	var fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
-    var toProjection   = new OpenLayers.Projection("EPSG:900913"); // to Spherical Mercator Projection
-    var result = new OpenLayers.LonLat(lon,lat);
-    return result.transform( fromProjection, toProjection);
-}
-     
-function getPoint(lon,lat) {
-	var lonlat = getLonLat(lon,lat);
-	return new OpenLayers.Geometry.Point(lonlat.lon,lonlat.lat);
-}
-
-
-function getOtIcon() {
-	return new OpenLayers.Icon("/static/common/img/open-train.png", {
-		w : 26,
-		h : 26
-	});
+function MapWrapper() {
+	this.trainIcon = L.icon({
+			iconUrl : '/static/common/img/open-train.png',
+			iconSize : [26, 26]
+		});
+	this.createTrainMarker = function(stop) {
+		var popup = L.marker([stop.lat, stop.lon],{
+			icon : this.trainIcon
+		}).addTo(this.map).bindPopup(stop.name + " @" + stop.time);
+		if (stop.stopId == this.zoomStopId) {
+			popup.openPopup();
+		}
+	};
 }
 
-
+function otCreateMap(mapDiv, lat,lon,zoomStopId) {
+	var map = L.map(mapDiv).setView([lat,lon], 13);
+	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		maxZoom : 18,
+		attribution : 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>'
+	}).addTo(map);
+	var result = new MapWrapper();
+	result.zoomStopId = zoomStopId;
+	result.map = map;
+	return result;
+}
 

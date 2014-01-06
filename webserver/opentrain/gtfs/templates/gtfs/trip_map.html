@@ -1,20 +1,27 @@
 {% load staticfiles %}
 {% load ot_filters %}
-<!DOCTYPE  html>
+<!DOCTYPE html>
 <html>
-	<head>
-		<title>Map for {{trip.trip_id}}</title>
-		<link rel="stylesheet" href="{% static 'common/style/ot_map.css' %}">
-		<script src="http://openlayers.org/api/OpenLayers.js"></script>
-		<script src="{% static 'common/js/ot_map_utils.js' %}"></script>
-		<script>
+<head>
+	<title>Trip Map for {{trip.trip_id}}</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{% static 'common/style/ot_map.css' %}">
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css" />
+</head>
+<body onload="initMap()">
+	<h2>From {{trip.get_first_stop.stop_name}} To {{trip.get_last_stop.stop_name}}
+	(Zoom on {{zoom_stop.stop_name}})</h2>
+	<div id="tripMap" style="width: 600px; height: 400px"></div>
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
+	<script src="{% static 'common/js/ot_map_utils.js' %}"></script>
+	<script>
 		{% include 'gtfs/trip_map.js' %}
-		</script>
-	</head>
-	<body onload="initMap()">
-		<h2>Map for {{trip.trip_id}}</h2>
-		<h2>From {{trip.get_first_stop.stop_name}} To {{trip.get_last_stop.stop_name}}
-			(Zoom on {{zoom_stop.stop_name}})</h2>
-		<div id="tripMap"></div>
-		</body>
+	</script>
+</body>
 </html>
+
+
+		
+		
+	

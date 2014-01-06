@@ -112,7 +112,7 @@ class Trip(GTFSModel):
         return list(self.get_stop_times())[-1].stop;
     
     def get_shapes(self):
-        return Shape.objects.filter(shape_id=self.shape_id).order_by('shape_pt_sequence')[0:100]
+        return Shape.objects.filter(shape_id=self.shape_id).order_by('shape_pt_sequence')
     
     def __unicode__(self):
         return self.trip_id

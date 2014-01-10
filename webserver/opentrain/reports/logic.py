@@ -28,17 +28,20 @@ def backup_reports(filename):
     
     with open(filename,'w') as fh:
         fh.write('[\n')
+        is_first = True
         while True:
             reports = models.RawReport.objects.all()[index:index+chunk]
             reports_len = reports.count()
             if reports_len == 0:
                 break
             for rr in reports:
+                if not is_first:
+                    fh.write(',')
+                    fh.write('\n')
+                    is_first = False
                 fh.write(json.dumps(rr.to_json()))
-                fh.write(',')
-                fh.write('\n')
             index += reports_len
-        fh.write(']\n')
+        fh.write('\n]\n')
     print 'Backup %s reports to %s' % (index,filename)
             
     

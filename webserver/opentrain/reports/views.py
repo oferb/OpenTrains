@@ -30,8 +30,9 @@ def show(req):
     return render(req,'reports/results.html',data)
 
 def download(req):
-    count = req.GET.get('count',1000)
-    rrs = models.RawReport.objects.order_by('-id')[0:count]
+    count = req.GET.get('count',50)
+    offset = req.GET.get('offset',0)
+    rrs = models.RawReport.objects.order_by('-id')[offset:offset+count]
     objects = []
     for rr in rrs:
         objects.append(rr.to_json())

@@ -11,7 +11,7 @@ def download_reports(clean=True):
         print 'Deleting current raw reports'
         common.ot_utils.delete_from_model(models.RawReport)
     print 'Downloading json from %s' % (MAIN_SERVER)
-    items = requests.get('http://%s/reports/download/' % (MAIN_SERVER)).json()
+    items = requests.get('http://%s/reports/download/' % (MAIN_SERVER),params=dict(count=50,offset=0)).json()
     print 'Downloaded %s items' % (len(items))
     print 'Start to add to DB'
     rrs = []

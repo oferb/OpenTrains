@@ -38,6 +38,7 @@ def backup_reports(filename):
                 if not is_first:
                     fh.write(',')
                     fh.write('\n')
+                else:
                     is_first = False
                 fh.write(json.dumps(rr.to_json()))
             index += reports_len

@@ -29,15 +29,14 @@ def show(req):
     data = dict(rrs=rrs,total=total)
     return render(req,'reports/results.html',data)
 
-def download(req,count=-1):
-    if count > 0:
-        rrs = reversed(models.RawReport.objects.order_by('-id')[0:count])
-    else:
-        rrs = models.RawReport.objects.all()
-    objects = []
-    for rr in rrs:
-        objects.append(rr.to_json())
-    resp = HttpResponse(content=json.dumps(objects),content_type='application/json')
+def download(req):
+    import logic 
+    logic.backup_reports('/tmp/bk.json')
+    resp = HttpResponse(content_type='application/json')
+    with open('/tmp/bk.json') as fh:
+        resp.write(fh.read())
     return resp
+
+    
 
 

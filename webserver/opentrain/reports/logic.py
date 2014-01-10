@@ -27,6 +27,7 @@ def backup_reports(filename):
     import json
     
     with open(filename,'w') as fh:
+        fh.write('[\n')
         while True:
             reports = models.RawReport.objects.all()[index:index+chunk]
             reports_len = reports.count()
@@ -34,8 +35,10 @@ def backup_reports(filename):
                 break
             for rr in reports:
                 fh.write(json.dumps(rr.to_json()))
+                fh.write(',')
                 fh.write('\n')
             index += reports_len
+        fh.write(']\n')
     print 'Backup %s reports to %s' % (index,filename)
             
     

@@ -2,7 +2,7 @@ import datetime
 import zipfile
 import os
 import time
-import datetime
+from django.conf import settings
 from django.utils import timezone
 
 def get_utc_time_underscored():
@@ -81,8 +81,12 @@ def get_utc_time_from_timestamp(ts):
 def delete_from_model(model):
     from django.db import connection
     cursor = connection.cursor()
-    table_name = model._meta.db_table 
-    sql = "DELETE FROM %s CASCADE;" % (table_name, )
+    table_name = model._meta.db_table
+    if 'sqlite3' not in settings.DATABASES['default']['ENGINE']:
+        cascade = ' CASCADE'
+    else:
+        cascade = ''
+    sql = "DELETE FROM %s%s;" % (table_name,cascade )
     cursor.execute(sql)    
     print 'DELETED %s' % (table_name)
 

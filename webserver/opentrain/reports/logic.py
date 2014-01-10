@@ -21,6 +21,22 @@ def download_reports(clean=True):
     models.RawReport.objects.bulk_create(rrs)
     print 'Saved to DB. # of items in DB = %s' % (models.RawReport.objects.count())
     
+def backup_reports(filename):
+    chunk = 100
+    index = 0
+    import json
+    
+    with open(filename,'w') as fh:
+        while True:
+            reports = models.RawReport.objects.all()[index:index+chunk]
+            reports_len = reports.count()
+            if reports_len == 0:
+                break
+            for rr in reports:
+                fh.write(json.dumps(rr.to_json))
+            index += reports_len
+    print 'Backup %s reports to %s' % (index,filename)
+            
     
         
         

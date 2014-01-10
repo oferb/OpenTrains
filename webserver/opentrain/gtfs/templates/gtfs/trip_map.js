@@ -1,7 +1,11 @@
 {% load staticfiles %}
 {% load ot_filters %}
 function initMap() {
-	var otMap = otCreateMap('tripMap',{{zoom_stop.stop_lat}},{{zoom_stop.stop_lon}},{{zoom_stop.stop_id}});
+	var otMap = otCreateMap('tripMap',{
+		lat : {{zoom_stop.stop_lat}},
+		lon : {{zoom_stop.stop_lon}},
+		zoomStopId : {{zoom_stop.stop_id}}
+	});
 	{%for stop_time in trip.get_stop_times%}
 		otMap.createTrainMarker({ 
 								lat : {{stop_time.stop.stop_lat}},

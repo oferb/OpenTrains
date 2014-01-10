@@ -1,0 +1,24 @@
+{% load staticfiles %}
+{% load ot_filters %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Map for device id {{device_id}} from {{timestamp}}</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{% static 'common/style/ot_map.css' %}">
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css" />
+</head>
+<body onload="initMap()">
+	<h2>Map for device id {{device_id}} <br/>from {{timestamp}}</h2>
+	<h3># of reports with loc: {{reports|length}}</h3>
+	<h3># of reports without loc: {{no_loc_reports_count}}</h3>
+	<div id="map" style="width: 600px; height: 400px"></div>
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
+	<script src="{% static 'common/js/ot_map_utils.js' %}"></script>
+	<script>
+		{% include 'analysis/analysis_map.js' %}
+	</script>
+</body>
+</html>
+

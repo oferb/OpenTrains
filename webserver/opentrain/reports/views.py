@@ -30,13 +30,12 @@ def show(req):
     return render(req,'reports/results.html',data)
 
 def download(req):
-    import logic 
-    logic.backup_reports('/tmp/bk.json')
-    resp = HttpResponse(content_type='application/json')
-    with open('/tmp/bk.json') as fh:
-        resp.write(fh.read())
+    count = req.GET.get('count',1000)
+    rrs = reversed(models.RawReport.objects.order_by('-id')[0:count])
+    objects = []
+    for rr in rrs:
+        objects.append(rr.to_json())
+    resp = HttpResponse(content=json.dumps(objects),content_type='application/json')
     return resp
-
-    
 
 

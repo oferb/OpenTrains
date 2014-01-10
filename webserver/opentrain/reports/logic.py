@@ -34,6 +34,7 @@ def backup_reports(filename):
                 break
             for rr in reports:
                 fh.write(json.dumps(rr.to_json()))
+                fh.write('\n')
             index += reports_len
     print 'Backup %s reports to %s' % (index,filename)
             

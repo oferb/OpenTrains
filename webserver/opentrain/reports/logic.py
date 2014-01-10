@@ -33,7 +33,7 @@ def backup_reports(filename):
             if reports_len == 0:
                 break
             for rr in reports:
-                fh.write(json.dumps(rr.to_json))
+                fh.write(json.dumps(rr.to_json()))
             index += reports_len
     print 'Backup %s reports to %s' % (index,filename)
             

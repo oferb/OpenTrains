@@ -31,7 +31,7 @@ def show(req):
 
 def download(req):
     count = req.GET.get('count',1000)
-    rrs = reversed(models.RawReport.objects.order_by('-id')[0:count])
+    rrs = models.RawReport.objects.order_by('-id')[0:count]
     objects = []
     for rr in rrs:
         objects.append(rr.to_json())

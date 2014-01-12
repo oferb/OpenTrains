@@ -6,14 +6,19 @@ import common.ot_utils
 def analyze_raw_reports(clean=True):
     if clean:
         delete_all_reports()
-    analyze_raw_reports_subset(0,100)
+    while True:
+        index = 0
+        cont = analyze_raw_reports_subset(index,100)
+        if not cont:
+            return 
     
 def analyze_raw_reports_subset(offset,count):
     items = _collect_items(offset,count)
     if items:
         dump_items(items)
-        analyze_raw_reports_subset(offset+count,count)
-    
+        return True
+    return False
+
 def dump_items(items):
     wifis = []
     locs = []

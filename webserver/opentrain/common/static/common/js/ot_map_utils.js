@@ -14,20 +14,30 @@ function MapWrapper() {
 			popup.openPopup();
 		}
 	};
+	this.createReportMarker = function(report) {
+		var text = 'report'; 
+		var popup = L.marker([report.lat, report.lon],{
+			icon : this.trainIcon
+		}).addTo(this.map).bindPopup(text);
+	};
 	this.createLine = function(shapes,options) {
 		var polyline = L.polyline(shapes, options).addTo(this.map);
 	};
 }
 
-function otCreateMap(mapDiv, lat,lon,zoomStopId) {
-	var map = L.map(mapDiv).setView([lat,lon], 13);
+function otCreateMap(mapDiv, options) {
+	options = options || {};
+	var map = L.map(mapDiv).setView([options.lat,options.lon], 13);
 	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		maxZoom : 18,
 		attribution : 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>'
 	}).addTo(map);
 	var result = new MapWrapper();
-	result.zoomStopId = zoomStopId;
+	if (options.zoomStopId) {
+		result.zoomStopId = options.zoomStopId;
+	}
 	result.map = map;
 	return result;
 }
+
 

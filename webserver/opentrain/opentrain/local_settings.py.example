@@ -1,0 +1,14 @@
+import os
+base_dir = os.path.dirname(os.path.dirname(__file__))
+
+data_dir = os.path.join(base_dir,'tmp_data')
+
+DATABASES = {
+             'default': {
+                         'ENGINE': 'django.db.backends.sqlite3',
+                         'NAME': os.path.join(data_dir,'db.sqlite3')
+                         }
+}
+
+
+

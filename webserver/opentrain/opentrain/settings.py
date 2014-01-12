@@ -72,8 +72,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'opentrain',                      
-        'USER': 'postgres',
-        'PASSWORD': 'eran12345',
+        'USER': 'opentrain',
+        'PASSWORD': 'opentrain',
         'HOST': 'localhost'
     }
     #'default': {

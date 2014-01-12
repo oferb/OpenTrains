@@ -6,9 +6,11 @@ import common.ot_utils
 def analyze_raw_reports(clean=True):
     if clean:
         delete_all_reports()
+    OFFSET = 100
     while True:
         index = 0
-        cont = analyze_raw_reports_subset(index,100)
+        cont = analyze_raw_reports_subset(index,OFFSET)
+        index = index + OFFSET
         if not cont:
             return 
     

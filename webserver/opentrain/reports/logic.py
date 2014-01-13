@@ -25,24 +25,21 @@ def backup_reports(filename):
     chunk = 100
     index = 0
     import json
+    import gzip
     
-    with open(filename,'w') as fh:
-        fh.write('[\n')
-        is_first = True
+    if not filename.endswith('.gz'):
+        raise Exception('filename must be gz file')
+    
+    with gzip.open(filename,'w') as fh:
         while True:
             reports = models.RawReport.objects.all()[index:index+chunk]
             reports_len = reports.count()
             if reports_len == 0:
                 break
             for rr in reports:
-                if not is_first:
-                    fh.write(',')
-                    fh.write('\n')
-                else:
-                    is_first = False
                 fh.write(json.dumps(rr.to_json()))
+                fh.write("\n")
             index += reports_len
-        fh.write('\n]\n')
     print 'Backup %s reports to %s' % (index,filename)
             
     

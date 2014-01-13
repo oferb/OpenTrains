@@ -9,9 +9,15 @@ env.user = 'ubuntu'
 env.key_filename = os.path.expanduser('~/chat.pem')
 env.django_base_dir = 'work/OpenTrains/webserver/opentrain'
 
-REPO = 'https://github.com/oferb/OpenTrains.git'
-REPO_DIR = 'work/OpenTrains'  #dir after clone
-
+def get_ctx():
+    ctx = {
+           'HOME' : '/home/' + env.user,
+            'IP' : env.host,
+            'USER' : env.user,
+            'REPO' : 'https://github.com/oferb/OpenTrains.git',
+            'REPO_DIR' : 'work/OpenTrains'  #dir after clone
+            }
+    return ctx
 
 @task
 def update_host():
@@ -46,12 +52,13 @@ def get_basedir(dir):
 @task
 def update_git():
     run('mkdir -p work')
-    clone = not fabric.contrib.files.exists(REPO_DIR)
+    ctx = get_ctx()
+    clone = not fabric.contrib.files.exists(ctx['REPO_DIR'])
     if clone:
-	   with cd(get_basedir(REPO_DIR)): 
-	       run('git clone %s' % (REPO))
+	   with cd(get_basedir(ctx['REPO_DIR'])): 
+	       run('git clone %s' % (ctx['REPO']))
     else:
-        with cd(REPO_DIR):
+        with cd(ctx['REPO_DIR']):
            run('git pull')
            
 @task
@@ -63,13 +70,11 @@ def update_pip():
     
 @task
 def update_conf():
+    
+    ctx = get_ctx()
+    
     run('mkdir -p log')
     run('mkdir -p bin')
-    
-    ctx = {'HOME' : '/home/' + env.user,
-            'IP' : env.host,
-            'USER' : env.user
-            }
     
     # collect static
     with cd(env.django_base_dir):
@@ -106,7 +111,20 @@ def update_conf():
 @task
 def db_first_time():
     with cd(env.django_base_dir):
-        run('python manage.py sqlcreate | sudo -u postgres psql')
+        run('python manage.py sqlcreate --router=default| sudo -u postgres psql')
+        run('python manage.py syncdb --noinput')
+        
+@task
+def db_reset():
+    with cd(env.django_base_dir):
+        run('echo "DROP DATABASE opentrain;" | sudo -u postgres psql')
+        run('python manage.py sqlcreate --router=default| grep -v "CREATE USER" | sudo -u postgres psql')
+        run('python manage.py syncdb --noinput')
+        
+@task
+def reload_gunicorn():
+    run('kill -HUP `cat %(HOME)s/opentrain.id`' % get_ctx())
+
 
 @task
 def download_db():

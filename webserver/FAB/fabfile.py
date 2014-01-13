@@ -30,6 +30,7 @@ def get_ctx():
 
 @task
 def create_new():
+    """ run all tasks to after new instance is created """
     update_host()
     update_apt()
     update_pip()
@@ -39,11 +40,13 @@ def create_new():
     
 @task
 def update_host():
+    """ general host update """
     sudo('apt-get update')
     sudo('apt-get --yes -q upgrade')
 
 @task
 def update_apt(package=None):
+    """ updates/install all apt packages """
     packages = ('git',
     			'nginx',
     			'postgresql-client',
@@ -69,6 +72,7 @@ def get_basedir(dir):
 
 @task
 def update_git():
+    """ clone/pull git repo """
     basedir = get_basedir(env.repo_dir)
     run('mkdir -p %s' % (basedir))
     clone = not fabric.contrib.files.exists(env.repo_dir)
@@ -81,6 +85,7 @@ def update_git():
            
 @task
 def update_pip():
+    """ updates/install all pip packages """
     sudo('pip install --upgrade pip')
     sudo('pip install setuptools --no-use-wheel --upgrade')
     put('files/requirements.txt','/tmp/requirements.txt')
@@ -88,7 +93,7 @@ def update_pip():
     
 @task
 def update_conf():
-    
+    """ update conf file for supervisor/nginx """
     ctx = get_ctx()
     
     run('mkdir -p log')
@@ -131,12 +136,14 @@ def update_conf():
 
 @task
 def db_first_time():
+    """ initialize Postgres DB """
     with cd(env.django_base_dir):
         run('python manage.py sqlcreate --router=default| sudo -u postgres psql')
         run('python manage.py syncdb --noinput')
         
 @task
 def db_reset():
+    """ Reset (deletes and recreate) Postgres DB """
     with cd(env.django_base_dir):
         run('echo "DROP DATABASE opentrain;" | sudo -u postgres psql')
         run('python manage.py sqlcreate --router=default| grep -v "CREATE USER" | sudo -u postgres psql')
@@ -144,11 +151,13 @@ def db_reset():
         
 @task
 def reload_gunicorn():
+    """ reload the gunicorn process """
     run('kill -HUP `cat %(HOME)s/opentrain.id`' % get_ctx())
 
 
 @task
 def download_db():
+    """ Opentrain only. backup db on remote server and donwload it locally """
     with cd(env.django_base_dir):
         run('./backup.py')
         import os

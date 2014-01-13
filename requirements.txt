@@ -5,6 +5,7 @@ django-bootstrap3-datetimepicker==2.1.0
 django-extensions==1.2.5
 django-tastypie==0.10.0
 ecdsa==0.10
+gunicorn==18.0
 ipython==1.1.0
 paramiko==1.12.1
 psycopg2==2.5.1

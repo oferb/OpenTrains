@@ -76,7 +76,7 @@ def download_db():
         get(remotefile,localfile)
         os.system('cd ../opentrain ; ./restore.py')
     
-        
+    
         
       
 

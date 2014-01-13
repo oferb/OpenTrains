@@ -20,10 +20,9 @@ class ShowDeviceReports(View):
         import urllib
         form = forms.ReportsForm(req.POST)
         if form.is_valid():
-            params=dict(timestamp=form.cleaned_data['timestamp'],
-                        device_id=form.cleaned_data['device_id']
-                        )
-            qs = urllib.urlencode(params)
+            pair = form.cleaned_data['pair']
+            device_id,timestamp = pair.split(' @')
+            qs = urllib.urlencode(dict(timestamp=timestamp,device_id=device_id))
             url = reverse('analysis:show-device-reports')
             return HttpResponseRedirect('%s?%s' % (url,qs))
         raise Exception('Illegal Form')

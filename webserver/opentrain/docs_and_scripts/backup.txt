@@ -1,0 +1,6 @@
+go to the FAB folder
+
+% fab backup
+
+THIS WILL DELETE ALL THE RAW REPORTS FOR CURRENT REPO
+

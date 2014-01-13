@@ -57,7 +57,14 @@ def update_conf():
     # SUPERVISOR
     
     # copy conf to /etc/supervisor
+    # restart conf
     
+    # DB initialization
+    
+    pass
 
+
+    
+    
 
 

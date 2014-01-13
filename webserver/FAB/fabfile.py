@@ -7,20 +7,25 @@ env.password = 'opentrain'
 
 
 @task
-def update_apt():
-	sudo('apt-get install -q --yes --upgrade python-software-properties')
-	sudo('add-apt-repository --yes ppa:nginx/stable')
-	sudo('apt-get update')
-
-   	packages = ('git',
+def update_apt(package=None):
+    packages = ('git',
     			'nginx',
     			'postgresql-client',
     			'postgresql',
-    			'supervisor'
+    			'supervisor',
+                'python-pip',
+                'libpq-dev',
+                'python-dev'
     	)
 
-	for p in packages:
-		sudo('apt-get install -q --yes --upgrade %s' % (p))
+    for p in packages:
+        if not package or p == package:
+            if p == 'nginx':
+                sudo('apt-get install -q --yes --upgrade python-software-properties')
+                sudo('add-apt-repository --yes ppa:nginx/stable')
+                sudo('apt-get update')
+            print 'Installing package ' + package
+            sudo('apt-get install -q --yes --upgrade %s' % (p))
 
 @task
 def update_git():
@@ -35,6 +40,9 @@ def update_git():
            
 @task
 def update_pip():
+    sudo('pip install --upgrade pip')
+    sudo('pip install setuptools --no-use-wheel --upgrade')
+    sudo('pip install -r ~/work/OpenTrains/requirements.txt')
     
                  
 

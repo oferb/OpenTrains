@@ -9,6 +9,7 @@ def get_stations_choices():
     result = []
     for station in stations:
         result.append((unicode(station.stop_id),station.stop_name))
+    print result
     return tuple(result)
 
 

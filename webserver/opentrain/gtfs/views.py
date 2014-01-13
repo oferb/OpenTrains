@@ -98,3 +98,4 @@ class GtfsSearchIn(GtfsSearch):
     fields = ['in_station','when','before','after']
     FormClass = forms.SearchInForm
     title = 'Search In'
+

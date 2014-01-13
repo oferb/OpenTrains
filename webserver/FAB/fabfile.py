@@ -4,21 +4,34 @@ import os
 
 #env.hosts = ['192.241.154.128']
 #env.user = 'opentrain'
-env.hosts = ['ec2-54-196-199-162.compute-1.amazonaws.com']
+env.hosts = ['ec2-50-16-67-1.compute-1.amazonaws.com']
 env.user = 'ubuntu'
 env.key_filename = os.path.expanduser('~/chat.pem')
-env.django_base_dir = 'work/OpenTrains/webserver/opentrain'
+env.django_base_dir = os.path.join('/home/%s/' % (env.user),'work/OpenTrains/webserver/opentrain')
+env.repo = 'https://github.com/oferb/OpenTrains.git'
+env.repo_dir = 'work/OpenTrains'  #dir after clone
+env.dns = 'opentrain.hasadna.org.il'
 
 def get_ctx():
     ctx = {
            'HOME' : '/home/' + env.user,
             'IP' : env.host,
             'USER' : env.user,
-            'REPO' : 'https://github.com/oferb/OpenTrains.git',
-            'REPO_DIR' : 'work/OpenTrains'  #dir after clone
+            'DJANGO_BASE_DIR' : env.django_base_dir,
+            'DNS' : env.dns
             }
     return ctx
 
+
+@task
+def create_new():
+    update_host()
+    update_apt()
+    update_pip()
+    update_git()
+    update_conf()
+    db_first_time()
+    
 @task
 def update_host():
     sudo('apt-get update')
@@ -51,14 +64,14 @@ def get_basedir(dir):
 
 @task
 def update_git():
-    run('mkdir -p work')
-    ctx = get_ctx()
-    clone = not fabric.contrib.files.exists(ctx['REPO_DIR'])
+    basedir = get_basedir(env.repo_dir)
+    run('mkdir -p %s' % (basedir))
+    clone = not fabric.contrib.files.exists(env.repo_dir)
     if clone:
-	   with cd(get_basedir(ctx['REPO_DIR'])): 
-	       run('git clone %s' % (ctx['REPO']))
+	   with cd(basedir): 
+	       run('git clone %s' % (env.repo))
     else:
-        with cd(ctx['REPO_DIR']):
+        with cd(env.repo_dir):
            run('git pull')
            
 @task
@@ -97,6 +110,7 @@ def update_conf():
     sudo('rm -f /etc/nginx/sites-enabled/default')
     sudo('ln -s /etc/nginx/sites-available/opentrain.conf /etc/nginx/sites-enabled/opentrain.conf')
     sudo('service nginx reload')
+    sudo('service nginx restart')
 
     # restart conf
     fabric.contrib.files.upload_template('files/supervisor/opentrain.conf',

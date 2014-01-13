@@ -44,8 +44,13 @@ def update_pip():
     sudo('pip install setuptools --no-use-wheel --upgrade')
     sudo('pip install -r ~/work/OpenTrains/requirements.txt')
     
-                 
-
+@task
+def update_conf():
+    # copy optrain.conf to site available
+    # link site availabe -> enabled
+    # delete default from enabled
+    
+    # restart nginx
 
 
 

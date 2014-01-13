@@ -20,6 +20,28 @@ def download_reports(clean=True):
         rrs.append(rr)
     models.RawReport.objects.bulk_create(rrs)
     print 'Saved to DB. # of items in DB = %s' % (models.RawReport.objects.count())
+
+
+def restore_reports(filename,clean=True):
+    """ restore reports from main server and restore them in
+    local server - cleans first """
+    import gzip
+    import json
+    if not filename.endswith('gz'):
+        raise Exception('%s must be gz file' % (filename))
+    if clean:
+        print 'Deleting current raw reports'
+        common.ot_utils.delete_from_model(models.RawReport)
+    rrs = []
+    with gzip.open(filename,'r') as fh:
+        for line in fh:
+            item = json.loads(line)
+            rr = models.RawReport(text=item['text'])
+            rrs.append(rr)
+    print 'Read %d raw reports from %s- saving to DB' % (len(rrs),filename)
+    models.RawReport.objects.bulk_create(rrs)
+    print 'Saved to DB. # of items in DB = %s' % (models.RawReport.objects.count())
+
     
 def backup_reports(filename):
     chunk = 100

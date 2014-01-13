@@ -65,18 +65,17 @@ def update_conf():
 
 
 @task
-def backup(restore=True):
+def download_db():
     with cd('work/OpenTrains/webserver/opentrain'):
         run('./backup.py')
         import os
         localfile = '/tmp/backup.gz'
         remotefile = '/tmp/backup.gz'
         if os.path.exists(localfile):
-            os.remove(localfile)
-        if restore:
-            get(remotefile,localfile)
-            os.system('cd ../opentrain ; ./restore.py')
-        
+            os.remove(localfile)    
+        get(remotefile,localfile)
+        os.system('cd ../opentrain ; ./restore.py')
+    
         
         
       

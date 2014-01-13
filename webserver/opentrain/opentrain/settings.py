@@ -118,6 +118,6 @@ except ImportError:
     pass
 
 
-print '#DJANGO: DEBUG = %s' % (DEBUG)
+#print '#DJANGO: DEBUG = %s' % (DEBUG)
 
 

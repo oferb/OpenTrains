@@ -109,6 +109,8 @@ def update_conf():
     sudo('rm -f /etc/nginx/sites-enabled/opentrain.conf')
     sudo('rm -f /etc/nginx/sites-enabled/default')
     sudo('ln -s /etc/nginx/sites-available/opentrain.conf /etc/nginx/sites-enabled/opentrain.conf')
+    # This is an issue in DigitalOcean
+    fabric.contrib.files.uncomment('/etc/nginx/nginx.conf','server_names_hash_bucket_size',use_sudo=True)
     sudo('service nginx reload')
     sudo('service nginx restart')
 

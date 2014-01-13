@@ -46,12 +46,18 @@ def update_pip():
     
 @task
 def update_conf():
+    # NGINX
+     
     # copy optrain.conf to site available
     # link site availabe -> enabled
     # delete default from enabled
     
     # restart nginx
 
+    # SUPERVISOR
+    
+    # copy conf to /etc/supervisor
+    
 
 
 

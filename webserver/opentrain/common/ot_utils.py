@@ -64,10 +64,15 @@ def normalize_time(value):
     """ we normalize time (without date) into integer based on minutes
     we ignore the seconds """
     h,m,s = [int(x) for x in value.split(':')]  # @UnusedVariable
-    return h * 60 + m
+    return h * 60*60 + m * 60 + s
     
 def denormalize_time_to_string(value):
-    return '%02d:%02d' % (value / 60,value % 60)
+    s = value % 60
+    value = value - s
+    value = value / 60
+    m = value % 60
+    h = value / 60
+    return '%02d:%02d:%02d' % (h,m,s)
     
 def get_weekdayname(dt):
     return dt.strftime('%A')

@@ -17,7 +17,7 @@ def do_search(kind,in_station=None,from_station=None,to_station=None,when=None,b
     before = int(before)
     after = int(after)
     if kind == 'search-in':
-        return do_search_in(in_station,when,before,after)
+        return do_search_in(in_station,when,before *60,after*60)
     elif kind == 'search-between':
         return do_seatch_between(from_station,to_station,when,before,after)
     else:
@@ -35,7 +35,7 @@ def do_search_in(in_station,when,before,after):
     trip_ids_on_date = models.Trip.objects.filter(service_id__in=service_ids).values_list('trip_id')
     
     stop_times = models.StopTime.objects.filter(stop_id=in_station).filter(trip_id__in=trip_ids_on_date)
-    normal_time = when.hour * 60 + when.minute
+    normal_time = when.hour * 3660 + when.minute * 60
     stop_times = stop_times.filter(arrival_time__gt=normal_time-before,arrival_time__lt=normal_time+after)
     stop_times = stop_times.order_by('arrival_time')
    

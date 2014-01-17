@@ -4,6 +4,8 @@ class Report(models.Model):
     device_id = models.CharField(max_length=50)
     timestamp = models.DateTimeField()
     created = models.DateTimeField(auto_now_add=True)
+    def __unicode__(self):
+        return '%s @%s' % (self.device_id,self.timestamp) 
     
 class LocationInfo(models.Model):
     report = models.OneToOneField(Report,related_name='my_loc')

@@ -6,30 +6,26 @@ def get_labels():
     result = [(x,x) for x in qs]
     return result
 
-def get_pairs():
-    import models
-    reports = models.Report.objects.all()
-    device_ids = set(reports.values_list('device_id',flat=True))
-    print '# of device ids = %d' % (len(device_ids))
-    pairs = []
-    for device_id in device_ids:
-        device_times =  list(models.Report.objects.filter(device_id=device_id).order_by('timestamp').values_list('timestamp',flat=True))
-        selected_times = []
-        selected_times.append(device_times[0])
-        pairs.append('%s @%s' % (device_id,device_times[0]))
-        #for t in device_times:
-        #    if (t - selected_times[-1]).total_seconds() > 7200:
-        #        selected_times.append(t)
-        #        pairs.append('%s %s' % (device_id,t))                         
-    result = [(p,p) for p in pairs]
-    print result
-    return result
-    
+def get_device_ids_summary():
+    result = []
+    from django.db import connection
+    cursor = connection.cursor()
+    cursor.execute("""
+        SELECT device_id,DATE(timestamp) as device_date,
+        COUNT(*) from analysis_report 
+        GROUP BY device_id,device_date 
+        ORDER BY device_date
+    """)
+    tuples = cursor.fetchall()
+    for tuple in tuples:
+        result.append('%s @%s (%d)' % (tuple[0],tuple[1],tuple[2]))
+    return [(x,x) for x in result]
+        
 class LabelsForm(forms.Form):
     labels = forms.ChoiceField(choices=get_labels())
     
 class ReportsForm(forms.Form):
-    pair = forms.ChoiceField(choices=get_pairs(),label='Device id')
+    pair = forms.ChoiceField(choices=get_device_ids_summary(),label='Device Id')
     
     
     

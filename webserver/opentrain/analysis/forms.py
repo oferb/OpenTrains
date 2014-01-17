@@ -18,14 +18,16 @@ def get_device_ids_summary():
     """)
     tuples = cursor.fetchall()
     for tuple in tuples:
-        result.append('%s @%s (%d)' % (tuple[0],tuple[1],tuple[2]))
-    return [(x,x) for x in result]
+        tuple_id = '%s::::%s::::%s' % tuple
+        tuple_print = '%s @%s (%d)' % tuple
+        result.append((tuple_id,tuple_print))
+    return result
         
 class LabelsForm(forms.Form):
     labels = forms.ChoiceField(choices=get_labels())
     
 class ReportsForm(forms.Form):
-    pair = forms.ChoiceField(choices=get_device_ids_summary(),label='Device Id')
+    device_desc = forms.ChoiceField(choices=get_device_ids_summary(),label='Device Id')
     
     
     

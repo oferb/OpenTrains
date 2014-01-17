@@ -7,7 +7,7 @@ function initMap() {
 		lon : {{center.lon}}
 	});
 	{%for report in reports %}
-		otMap.createReportMarker({ 
+		otMap.createReportDot({ 
 								lat : {{report.my_loc.lat}},
 								lon : {{report.my_loc.lon}},
 								});

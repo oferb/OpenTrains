@@ -1,4 +1,15 @@
 {% extends 'common/base.html' %}
+{% load staticfiles %}
+
+
+{% block headend %}
+{% if device_id %}
+<link rel="stylesheet" href="{% static 'common/style/ot_map.css' %}">
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css" />
+{% endif %}
+{% endblock %}
+
+
 {% block content %}
 <div class="container">
     <h2>Search Reports</h2>
@@ -9,6 +20,20 @@
             <span class="glyphicon glyphicon-search"></span>
         </button>
     </form>
+    {% if device_id %}
+	<h3>Map for device id {{device_id}} from {{device_date}}</h3>
+	<h4># of reports with loc: {{reports|length}}</h4>
+	<h4># of reports without loc: {{no_loc_reports_count}}</h4>
+	<div id="map" style="width: 600px; height: 400px"></div>
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
+	<script src="{% static 'common/js/ot_map_utils.js' %}"></script>
+	<script>
+		{% include 'analysis/analysis_map.js' %}
+		$(function() {
+			initMap();
+		});
+	</script>
+    {% endif %}
 </div>
 
 {% endblock %}

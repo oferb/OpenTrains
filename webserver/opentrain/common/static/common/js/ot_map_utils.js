@@ -41,7 +41,6 @@ function MapWrapper() {
 		});
 		points.forEach(function(pt, index) {
 			var text = toHourMinSec(reports[index].timestamp);
-			console.log(text);
 			L.circleMarker(pt, {
 				radius : 5,
 				color : '#0000CD',

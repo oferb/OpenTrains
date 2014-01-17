@@ -14,7 +14,7 @@
 <div class="container">
     <h2>Search Reports</h2>
     <form method="post" role="form">
-        {{form.as_p}}
+        {{form}}
         {% csrf_token %}
         <button type="submit" class="btn btn-success btn-sm">
             <span class="glyphicon glyphicon-search"></span>
@@ -27,7 +27,7 @@
 	<p># of reports with loc: {{reports|length}}</p>
 	<p># of reports without loc: {{no_loc_reports_count}}</p>
 	</div>
-	<div id="map" style="width: 600px; height: 400px"></div>
+	<div id="map"></div>
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
 	<script src="{% static 'common/js/ot_map_utils.js' %}"></script>
 	<script>
@@ -38,6 +38,7 @@
 		$(function() {
 			initMap();
 		});
+		
 	</script>
     {% endif %}
 </div>

@@ -17,7 +17,15 @@ function initMap() {
 	otMap.createReportsLine(reports);
 }
 
-
+var mapmargin = 200;
+$(window).on("resize", resize);
+resize();
+function resize(){
+	var height = ($(window).height() - 20 - $("#map").offset().top);
+	console.log(height);
+    $('#map').css("height", height);    
+    $('#map').css("margin-top",20);
+}
 
 
 

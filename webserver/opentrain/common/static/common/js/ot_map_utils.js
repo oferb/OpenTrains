@@ -1,6 +1,19 @@
 // utility functions for open layers
 "use strict";
 
+function toHourMinSec(dt) {
+	var h = dt.getHours();
+	var m = dt.getMinutes();
+	var s = dt.getSeconds();
+	m = m < 10 ? '0' + m : '' + m;
+	s = s < 10 ? '0' + s : '' + s;
+	return '' + h + ':' + m + ':' + s;
+};
+
+function toDate(dt) {
+	return dt.toDateString();
+}
+
 function MapWrapper() {
 	this.trainIcon = L.icon({
 		iconUrl : '/static/common/img/open-train.png',
@@ -21,37 +34,28 @@ function MapWrapper() {
 			points.push([r.lat, r.lon]);
 		});
 		var that = this;
-		var polyline = this.createLineAndZoom(points,{
-			color: '#0000CD',
+		var polyline = this.createLineAndZoom(points, {
+			color : '#0000CD',
 			weight : 3,
 			stroke : true,
 		});
-		points.forEach(function(pt,index) {
-			var text = that.toHourMinSec(reports[index].timestamp);
+		points.forEach(function(pt, index) {
+			var text = toHourMinSec(reports[index].timestamp);
 			console.log(text);
-			L.circleMarker(pt,{
-				radius: 5,
-				color: '#0000CD',
+			L.circleMarker(pt, {
+				radius : 5,
+				color : '#0000CD',
 				fill : true,
 			}).addTo(that.map).bindPopup(text);
 		});
-		
-		
-	};
-	this.toHourMinSec = function(dt) {
-		var h = dt.getHours();
-		var m = dt.getMinutes();
-		var s = dt.getSeconds();
-		m = m < 10 ? '0' + m : '' + m;
-		s = s < 10 ? '0' + s : '' + s;
-		return '' + h + ':' + m + ':' + s; 
+
 	};
 	this.createLine = function(points, options) {
 		var polyline = L.polyline(points, options).addTo(this.map);
 		return polyline;
 	};
 	this.createLineAndZoom = function(points, options) {
-		var polyline = this.createLine(points,options);
+		var polyline = this.createLine(points, options);
 		this.map.fitBounds(polyline.getBounds());
 		return polyline;
 	};
@@ -72,7 +76,7 @@ function otCreateMap(mapDiv, options) {
 		result.zoomStopId = options.zoomStopId;
 	}
 	result.map = map;
-	result.center = [options.lat,options.lon];
+	result.center = [options.lat, options.lon];
 	return result;
 }
 

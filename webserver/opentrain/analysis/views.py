@@ -22,6 +22,8 @@ class ShowDeviceReports(View):
             ctx['reports'] = list(models.Report.objects.filter(device_id=ctx['device_id'],my_loc__isnull=False).order_by('timestamp')) # TODO - add timestamp
             ctx['no_loc_reports_count'] = models.Report.objects.filter(device_id=ctx['device_id'],my_loc__isnull=True).count()
             ctx['center'] = dict(lon=ctx['reports'][0].my_loc.lon,lat=ctx['reports'][0].my_loc.lat)
+            ctx['start_time'] = ctx['reports'][0].timestamp
+            ctx['end_time'] = ctx['reports'][-1].timestamp
             f = forms.ReportsForm()
             f.fields['device_desc'].initial = device_desc
             ctx['form'] = f

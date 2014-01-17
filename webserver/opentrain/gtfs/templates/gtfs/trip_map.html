@@ -10,8 +10,7 @@
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css" />
 </head>
 <body onload="initMap()">
-	<h2>From {{trip.get_first_stop.stop_name}} To {{trip.get_last_stop.stop_name}}
-	(Zoom on {{zoom_stop.stop_name}})</h2>
+	<h2>From {{trip.get_first_stop.stop_name}} To {{trip.get_last_stop.stop_name}}</h2>
 	<div id="tripMap" style="width: 600px; height: 400px"></div>
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
 	<script src="{% static 'common/js/ot_map_utils.js' %}"></script>

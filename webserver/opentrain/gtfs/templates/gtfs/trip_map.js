@@ -6,6 +6,11 @@ function initMap() {
 		lon : {{zoom_stop.stop_lon}},
 		zoomStopId : {{zoom_stop.stop_id}}
 	});
+	var shapes = {{trip.get_shapes | shapes_to_points }};
+	otMap.createLineAndZoom(shapes,{
+		color: 'red',
+		weight : 2
+	});
 	{%for stop_time in trip.get_stop_times%}
 		otMap.createTrainMarker({ 
 								lat : {{stop_time.stop.stop_lat}},
@@ -16,13 +21,10 @@ function initMap() {
 								seqId : {{stop_time.stop_sequence}}
 								});
 	{% endfor %}
-	var shapes = {{trip.get_shapes | shapes_to_points }};
-	otMap.createLine(shapes,{
-		color: 'red',
-		weight : 2
-	});
 	
 }
+
+
 
 
 

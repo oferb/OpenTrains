@@ -8,9 +8,6 @@ env.hosts = ['192.241.154.128']
 env.user = 'opentrain'
 
 # Ec2 configuration
-#env.hosts = ['ec2-50-16-67-1.compute-1.amazonaws.com']
-#env.user = 'ubuntu'
-#env.key_filename = os.path.expanduser('~/key.pem')
 
 env.django_base_dir = os.path.join('/home/%s/' % (env.user),'work/OpenTrains/webserver/opentrain')
 env.repo = 'https://github.com/oferb/OpenTrains.git'

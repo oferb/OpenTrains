@@ -1,4 +1,5 @@
-{% include "common/page_top.html" %}
+{% extends 'common/base.html' %}
+{% block content %}
 {{ form.media }}
 <div class="container">
 	<h2>{{title}}</h2>
@@ -16,5 +17,7 @@
 	{% include "gtfs/search_results.html" %}
 </div>
 
-{% include "common/page_bottom.html" %}
+{% endblock %}
+
+
 

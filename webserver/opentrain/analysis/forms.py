@@ -29,7 +29,9 @@ class LabelsForm(forms.Form):
     labels = forms.ChoiceField(choices=get_labels())
     
 class ReportsForm(forms.Form):
-    pair = forms.ChoiceField(choices=get_pairs())
+    pair = forms.ChoiceField(choices=get_pairs(),label='Device id')
+    
+    
     
     
 

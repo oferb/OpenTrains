@@ -30,30 +30,39 @@ sampled_all_routes_inds, sampled_all_routes_tree = get_sampling_of_all_routes(sh
 stop_ids, stop_names, stop_coords, stop_point_tree = get_stops()
 
 # Loading trip
-device_id = '02090d12' # Eran's trip
-#device_id = 'f752c40d' # Ofer's trip
+#device_id = '02090d12' # Eran's trip
+device_id = 'f752c40d' # Ofer's trip
+#device_id = '1cb87f1e' # Udi's trip
 device_coords, device_timestamps, device_accuracies_in_meters, device_accuracies_in_coords = get_location_info_from_device_id(device_id)
 device_sampled_tracks_coords, device_sampled_tracks_accuracies_in_coords = get_device_sampled_tracks_coords(sampled_all_routes_tree, query_coords, device_coords, device_accuracies_in_coords, itertools, config)
 
 # Matching trip
 shape_probs, shape_matches_inds, shape_matches_int_inds = get_shape_probabilities(shape_point_tree, shape_int_ids, unique_shape_ids, device_sampled_tracks_coords, device_sampled_tracks_accuracies_in_coords)
+if False:
+    plot_and_save_shape_matches(shape_point_tree, sampled_all_routes_tree, shape_int_ids, device_coords, shape_probs)
+
 start_date = device_timestamps[0].strftime("%Y-%m-%d")
 device_stop_ids, device_stop_int_ids, device_stop_names, device_stops_arrival, device_stops_departure = get_device_stops(device_coords, device_timestamps, shape_matches_inds, stop_ids, stop_names, stop_point_tree)
 trips_filtered_by_stops_and_times = filter_trips_by_shape_date_stops_and_stop_times(start_date, shape_matches_inds, device_stop_ids, device_stop_int_ids, device_stops_arrival, device_stops_departure)
 
 for t in trips_filtered_by_stops_and_times:
     trip_stop_times = gtfs.models.StopTime.objects.filter(trip = t).order_by('arrival_time')
-    print "trip id: %s" % (t[0])
+    print "trip id: %s" % (t)
     for x in trip_stop_times:
         print db_time_to_datetime(x.arrival_time), db_time_to_datetime(x.departure_time), x.stop
     print
 
+for cur in zip(device_stops_arrival, device_stops_departure, device_stop_names):
+    print cur[0].strftime('%H:%M:%S'), cur[1].strftime('%H:%M:%S'), cur[2]
 
-
-
+# TODO: check that departure_time-arrival_time (stop time) make sense, especially for first and last stations.
+# TODO: check earliest and latest train, because of the 5am day change in user_id.
 
 # some code snippets:
 if False:
+    save_to_kml(device_coords, os.path.join(config.output_data, "shape_%s.kml" % (device_id)))    
+    
+    
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
     plot_coords(sampled_all_routes_tree.data, edgecolor='b', axis = ax1)

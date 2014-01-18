@@ -98,65 +98,6 @@ def get_field(services, name):
     return service_ids
 
 
-def validate_every_service_different_weekday(service_wednesdays, service_thursdays, service_tuesdays, service_mondays, service_sundays, service_fridays, service_saturdays, np):
-    service_sum_days = service_sundays+service_mondays+service_tuesdays+service_wednesdays+service_thursdays+service_fridays+service_saturdays
-    is_every_service_different_weekday = np.all(service_sum_days == 1)
-    return is_every_service_different_weekday
-
-
-def validate_date_fits_weekday(service_start_dates, service_end_dates, weekdays, weekday):
-    check = True
-    weekday_inds = np.where(weekdays)[0]
-    for i in weekday_inds:
-        if not service_start_dates[i].isoweekday() == weekday:
-            print('%s is on day %d, not on day %d' % (service_start_dates[i], service_start_dates[i].isoweekday(), weekday))
-            check = False
-
-    return check
-
-def validate_dates_fit_weekdays(service_start_dates, validate_date_fits_weekday, service_end_dates, service_sundays, service_mondays, service_tuesdays, service_wednesdays, service_thursdays, service_fridays, service_saturdays):
-    res = np.zeros(7)
-    res[0] = validate_date_fits_weekday(service_start_dates, service_end_dates, service_sundays, 7)
-    res[1] = validate_date_fits_weekday(service_start_dates, service_end_dates, service_mondays, 1)
-    res[2] = validate_date_fits_weekday(service_start_dates, service_end_dates, service_tuesdays, 2)
-    res[3] = validate_date_fits_weekday(service_start_dates, service_end_dates, service_wednesdays, 3)
-    res[4] = validate_date_fits_weekday(service_start_dates, service_end_dates, service_thursdays, 4)
-    res[5] = validate_date_fits_weekday(service_start_dates, service_end_dates, service_fridays, 5)
-    res[6] = validate_date_fits_weekday(service_start_dates, service_end_dates, service_saturdays, 6)
-    res = res == 1
-    return np.all(res)
-
-def validate_start_and_end_dates_the_same(service_start_dates, service_end_dates):
-    check = True
-    for dates in zip(service_start_dates, service_end_dates):
-        if dates[0] != dates[1]:
-            print('start date %s and end date %s are not the same' % (dates[0], dates[1]))
-            check = False
-    return check
-
-def validate_services():
-    services = gtfs.models.Service.objects.all()
-    service_ids = get_field(services, 'service_id')
-    service_sundays = np.array(get_field(services, 'sunday'))+0
-    service_mondays = np.array(get_field(services, 'monday'))+0
-    service_tuesdays = np.array(get_field(services, 'tuesday'))+0
-    service_wednesdays = np.array(get_field(services, 'wednesday'))+0
-    service_thursdays = np.array(get_field(services, 'thursday'))+0
-    service_fridays = np.array(get_field(services, 'friday'))+0
-    service_saturdays = np.array(get_field(services, 'saturday'))+0
-    service_start_dates = get_field(services, 'start_date')
-    service_end_dates = get_field(services, 'end_date')
-
-    is_start_and_end_dates_the_same = validate_start_and_end_dates_the_same(service_start_dates, service_end_dates)
-    dates_fit_weekdays = validate_dates_fit_weekdays(service_start_dates, validate_date_fits_weekday, service_end_dates, service_sundays, service_mondays, service_tuesdays, service_wednesdays, service_thursdays, service_fridays, service_saturdays)
-    is_every_service_different_weekday = validate_every_service_different_weekday(service_wednesdays, service_thursdays, service_tuesdays, service_mondays, service_sundays, service_fridays, service_saturdays, np)
-    
-    return is_start_and_end_dates_the_same and dates_fit_weekdays and is_every_service_different_weekday
-
-# TODO: add this to unit tests, email in case of problem
-is_services_valid = validate_services()
-
-
 def datetime_to_db_time(adatetime):
     return adatetime.hour * 3600 + 60 * adatetime.minute + adatetime.second
 

@@ -41,6 +41,6 @@ nosetests.xml
 tmp_data
 local_settings.py
 
-opentrain/static
+static
 
 a.log*

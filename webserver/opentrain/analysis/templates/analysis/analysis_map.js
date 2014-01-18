@@ -11,6 +11,7 @@ function initMap() {
 		reports.push({
 			lat : {{report.my_loc.lat}},
 			lon : {{report.my_loc.lon}}, 
+			is_station : {{report.is_station | truefalse }},
 			timestamp : new Date('{{report.timestamp.isoformat}}'),
 		});
 	{% endfor %}

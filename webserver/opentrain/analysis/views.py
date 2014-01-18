@@ -19,8 +19,10 @@ class ShowDeviceReports(View):
             (device_id,device_date,device_count) = device_desc.split('::::')
             ctx['device_id'] = device_id
             ctx['device_date'] = device_date
-            ctx['reports'] = list(models.Report.objects.filter(device_id=ctx['device_id'],my_loc__isnull=False).order_by('timestamp')) # TODO - add timestamp
+            reports = list(models.Report.objects.filter(device_id=ctx['device_id'],my_loc__isnull=False).prefetch_related('wifi_set','my_loc').order_by('timestamp'))
+            ctx['reports'] =  reports
             ctx['no_loc_reports_count'] = models.Report.objects.filter(device_id=ctx['device_id'],my_loc__isnull=True).count()
+            ctx['stop_points_count'] = sum(1 for r in reports if r.is_station())
             ctx['center'] = dict(lon=ctx['reports'][0].my_loc.lon,lat=ctx['reports'][0].my_loc.lat)
             ctx['start_time'] = ctx['reports'][0].timestamp
             ctx['end_time'] = ctx['reports'][-1].timestamp
@@ -29,7 +31,8 @@ class ShowDeviceReports(View):
             ctx['form'] = f
         else:
             ctx['form'] = forms.ReportsForm()
-        return render(req,'analysis/show_reports.html',ctx) 
+        result = render(req,'analysis/show_reports.html',ctx)
+        return result 
     
     def post(self,req,*args,**kwargs):
         import urllib

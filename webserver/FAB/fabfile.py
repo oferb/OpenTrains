@@ -167,7 +167,12 @@ def download_db():
     
     
         
-      
+@task
+def analyze_reports():
+    with cd(env.django_base_dir):
+        run('./reanalyze.py')
+        
+        
 
 
 

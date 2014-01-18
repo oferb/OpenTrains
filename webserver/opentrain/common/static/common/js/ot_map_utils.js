@@ -41,7 +41,7 @@ function MapWrapper() {
 		});
 		points.forEach(function(pt, index) {
 			var report = reports[index];
-			var text = toHourMinSec('' + report_id + '<br/>' + report.timestamp);
+			var text = toHourMinSec('' + report.report_id + '<br/>' + report.timestamp);
 			if (report.is_station) {
 				L.marker(pt, {
 					icon : that.trainIcon

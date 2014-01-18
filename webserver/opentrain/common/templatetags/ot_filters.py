@@ -26,6 +26,9 @@ def direction_to_string(d):
 def shapes_to_points(shapes):
     return "[" + ",".join(["[%s,%s]" % (shape.shape_pt_lat,shape.shape_pt_lon) for shape in shapes]) + "]"
     
+@register.filter(name="truefalse")
+def truefalse(val):
+    return 'true' if val else 'false'
 
 from django.template import Library
 from django.template.defaultfilters import stringfilter

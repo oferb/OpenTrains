@@ -40,12 +40,19 @@ function MapWrapper() {
 			stroke : true,
 		});
 		points.forEach(function(pt, index) {
-			var text = toHourMinSec(reports[index].timestamp);
-			L.circleMarker(pt, {
-				radius : 5,
-				color : '#0000CD',
-				fill : true,
-			}).addTo(that.map).bindPopup(text);
+			var report = reports[index];
+			var text = '' + report.id + '<br/>' + toHourMinSec(report.timestamp);
+			if (report.is_station) {
+				L.marker(pt, {
+					icon : that.trainIcon
+				}).addTo(that.map).bindPopup(text);
+			} else {
+				L.circleMarker(pt, {
+					radius : 5,
+					color : '#0000CD',
+					fill : true,
+				}).addTo(that.map).bindPopup(text);
+			}
 		});
 
 	};

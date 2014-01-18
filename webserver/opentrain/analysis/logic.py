@@ -49,9 +49,6 @@ def dump_items(items):
     print 'Saving all dependant objects'
     models.SingleWifiReport.objects.bulk_create(wifis)
     models.LocationInfo.objects.bulk_create(locs)
-    
-    
-
 
 def delete_all_reports():
     common.ot_utils.delete_from_model(models.SingleWifiReport)
@@ -61,7 +58,7 @@ def delete_all_reports():
 def _collect_items(offset,count):
     all_reports_count = reports.models.RawReport.objects.count()
     print '*** offset = %d count = %d all_reports_count = %d' % (offset,count,all_reports_count)
-    all_reports = reports.models.RawReport.objects.all()[offset:offset+count]
+    all_reports = reports.models.RawReport.objects.all().order_by('id')[offset:offset+count]
     result = []
     for rj in all_reports:
         items = json.loads(rj.text)['items']

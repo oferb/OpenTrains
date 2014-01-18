@@ -12,4 +12,11 @@ http://54.221.246.54/reports/get/
 To show analyzed reports:
 http://54.221.246.54/api/v1/reports/?format=json
 
+**************************************
+If you go to http://54.221.246.54/gtfs/search-in/ and search for trains in specific station, then as part of the result there is link to map ,leading to a map with markers for all the stations, and the zoom is in the station you searched for.
+
+For direct example, you can look here:
+http://54.221.246.54/gtfs/maps/301213_00102/?zoom_stop_id=3700
+
+**************************************
 

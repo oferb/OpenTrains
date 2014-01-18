@@ -8,6 +8,7 @@ import simplekml
 import config
 import itertools
 import os
+import datetime 
 
 from geo_utils import *
 
@@ -154,3 +155,10 @@ def validate_services():
 
 # TODO: add this to unit tests, email in case of problem
 is_services_valid = validate_services()
+
+
+def datetime_to_db_time(adatetime):
+    return adatetime.hour * 3600 + 60 * adatetime.minute + adatetime.second
+
+def db_time_to_datetime(db_time):
+    return datetime.time(db_time / 3600 % 24, (db_time % 3600) / 60, db_time % 60)

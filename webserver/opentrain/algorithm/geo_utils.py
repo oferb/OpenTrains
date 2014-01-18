@@ -32,3 +32,10 @@ def meter_distance_to_coord_distance(meter_distance):
         #meters_over_coords = meter_distance/delta_coords_norm # equals 110101    
     meters_over_coords = 110101.0
     return meter_distance/meters_over_coords
+
+def query_coords(point_tree, query_coords, query_accuracies):
+    if isinstance( query_accuracies, ( int, long, float ) ):
+        res = point_tree.query_ball_point(query_coords, query_accuracies)
+    else:
+        res = [point_tree.query_ball_point(query_coords[i], query_accuracies[i]) for i in xrange(len(query_accuracies))]
+    return res

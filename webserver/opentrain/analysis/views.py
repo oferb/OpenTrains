@@ -1,15 +1,36 @@
+import urllib
 from django.shortcuts import render
 import forms
+import models
 from django.views.generic.base import View
 from django.http.response import HttpResponseRedirect
-from django.core.urlresolvers import reverse
-import models
+
 # Create your views here.
 
 def show_labels(req):
     ctx = dict(form=forms.LabelsForm)
     return render(req,'analysis/show_labels.html',ctx)
 
+class ShowReportDetails(View):
+    def get(self,req):
+        ctx = dict()
+        f = forms.ReportDetailForm()
+        report_id = req.GET.get('report_id',None) 
+        if report_id:
+            f.fields['report_id'].initial = report_id
+            print report_id
+            ctx['report'] = models.Report.objects.get(id=report_id)
+        ctx['form'] = f    
+        return render(req,'analysis/report_details.html',ctx)
+    def post(self,req,*args,**kwargs):
+        form = forms.ReportDetailForm(req.POST)
+        if form.is_valid():
+            report_id = form.cleaned_data['report_id']
+            qs = urllib.urlencode(dict(report_id=report_id))
+            return HttpResponseRedirect('%s?%s' % (req.path,qs))
+        ctx = dict()
+        ctx['form'] = form
+        return render(req,'analysis/show_reports.html',ctx)
 
 class ShowDeviceReports(View):
     def get(self,req,*args,**kwargs):
@@ -35,14 +56,14 @@ class ShowDeviceReports(View):
         return result 
     
     def post(self,req,*args,**kwargs):
-        import urllib
         form = forms.ReportsForm(req.POST)
         if form.is_valid():
             device_desc = form.cleaned_data['device_desc']
             qs = urllib.urlencode(dict(device_desc=device_desc))
-            url = reverse('analysis:select-device-reports')
-            return HttpResponseRedirect('%s?%s' % (url,qs))
-        raise Exception('Illegal Form')
+            return HttpResponseRedirect('%s?%s' % (req.path,qs))
+        ctx = dict()
+        ctx['form'] = form
+        return render(req,'analysis/show_reports.html',ctx)
 
 
 

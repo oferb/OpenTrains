@@ -79,6 +79,12 @@ def update_git():
     else:
         with cd(env.repo_dir):
            run('git pull')
+
+    # collect static
+    with cd(env.django_base_dir):
+        run('python manage.py collectstatic --noinput')
+    
+    
            
 @task
 def update_pip():
@@ -95,10 +101,6 @@ def update_conf():
     
     run('mkdir -p log')
     run('mkdir -p bin')
-    
-    # collect static
-    with cd(env.django_base_dir):
-        run('python manage.py collectstatic --noinput')
     
     # copy gunicorn script
     fabric.contrib.files.upload_template('files/run_gunicorn.sh',

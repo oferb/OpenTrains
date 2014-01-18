@@ -9,6 +9,7 @@ function initMap() {
 	var reports = [];
 	{%for report in reports %}
 		reports.push({
+			id : {{report.id}},
 			lat : {{report.my_loc.lat}},
 			lon : {{report.my_loc.lon}}, 
 			is_station : {{report.is_station | truefalse }},

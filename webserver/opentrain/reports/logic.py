@@ -54,7 +54,7 @@ def backup_reports(filename):
     
     with gzip.open(filename,'w') as fh:
         while True:
-            reports = models.RawReport.objects.all()[index:index+chunk]
+            reports = models.RawReport.objects.all().order_by('id')[index:index+chunk]
             reports_len = reports.count()
             if reports_len == 0:
                 break

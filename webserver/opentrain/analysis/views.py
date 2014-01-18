@@ -40,7 +40,12 @@ class ShowDeviceReports(View):
             (device_id,device_date,device_count) = device_desc.split('::::')
             ctx['device_id'] = device_id
             ctx['device_date'] = device_date
-            reports = list(models.Report.objects.filter(device_id=ctx['device_id'],my_loc__isnull=False).prefetch_related('wifi_set','my_loc').order_by('timestamp'))
+            (device_date_year,device_date_month,device_date_day) = device_date.split(':')  # @UnusedVariable
+            qs = models.Report.objects.filter(device_id=ctx['device_id'],my_loc__isnull=False)
+            #qs = qs.filter(timestamp__day=device_date_day,timestamp__month=device_date_month,timestamp__year=device_date_year)
+            qs = qs.order_by('timestamp')
+            qs = qs.prefetch_related('wifi_set','my_loc')
+            reports = list(qs)
             ctx['reports'] =  reports
             ctx['no_loc_reports_count'] = models.Report.objects.filter(device_id=ctx['device_id'],my_loc__isnull=True).count()
             ctx['stop_points_count'] = sum(1 for r in reports if r.is_station())

@@ -16,6 +16,10 @@ class Report(models.Model):
                 return True 
         return False
     
+    def loc_ts_delta(self):
+        if self.my_loc:
+            return (self.timestamp - self.my_loc.timestamp).total_seconds()
+    
 class LocationInfo(models.Model):
     report = models.OneToOneField(Report,related_name='my_loc')
     accuracy = models.FloatField()

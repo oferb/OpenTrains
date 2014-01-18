@@ -1,8 +1,6 @@
 {% extends 'common/base.html' %}
 {% load staticfiles %}
 
-
-
 {% block content %}
 <div class="container">
     <h2>Report Details</h2>
@@ -13,8 +11,72 @@
             <span class="glyphicon glyphicon-search"></span>
         </button>
     </form>
-    {% if req.report %}
-    
+    <br/>
+    {% if report %}
+    	<table class="table">
+    		<caption class="pull-left">General</caption>
+    		<tr>
+	    		<td class="col-md-3">ID</td>
+	    		<td>{{report.id}}</td>
+    		</tr>
+    		<tr>
+	    		<td>Timestamp</td>
+	    		<td><span id="report_ts"></span></td>
+	    		<script>
+	    			$("#report_ts").html(toLocalDt(new Date("{{report.timestamp.isoformat}}")));
+	    		</script>
+    		</tr>
+    	</table>
+    	<table class="table">
+    		<caption class="pull-left">Location</caption>
+    		<tr>
+    			<td class="col-md-3">Timestamp</td>
+    			<td><span id="my_loc_ts"></span></td>
+    			<script>
+	    			$("#my_loc_ts").html(toLocalDt(new Date("{{report.my_loc.timestamp.isoformat}}")));
+	    		</script>
+    		</tr>
+    		<tr>
+    			<td class="col-md-3">Timestamp Delta</td>
+    			<td>{{report.loc_ts_delta}} seconds</td>
+    		</tr>
+    		<tr>
+    			<td>Accuracy</td>
+    			<td>{{report.my_loc.accuracy}}</td>
+    		</tr>
+    		<tr>
+    			<td>Lon/Lat</td>
+    			<td>{{report.my_loc.lat}} {{report.my_loc.lon}}</td>
+    		</tr>
+    		<tr>
+    			<td>Provider</td>
+    			<td>{{report.my_loc.provider}}</td>
+    		</tr>
+    	</table>
+    	<ul class="list-group">
+    		{% for wifi in report.wifi_set.all %}
+    			<li class="list-group-item">
+    			<table class="table">
+    				<tr>
+    					<td class="col-md-3">SSID</td>
+    					<td>{{wifi.SSID}}</td>
+    				</tr>
+    				<tr>
+    					<td>key</td>
+    					<td>{{wifi.key}}</td>
+    				</tr>
+    				<tr>
+    					<td>Signal</td>
+    					<td>{{wifi.signal}}</td>
+    				</tr>
+    				<tr>
+    					<td>Frequency</td>
+    					<td>{{wifi.frequency}}</td>
+    				</tr>
+    			</table>
+    			</li>
+    		{% endfor %}
+    	</ul>
     {% endif %}
 </div>
 

@@ -1,19 +1,6 @@
 // utility functions for open layers
 "use strict";
 
-function toHourMinSec(dt) {
-	var h = dt.getHours();
-	var m = dt.getMinutes();
-	var s = dt.getSeconds();
-	m = m < 10 ? '0' + m : '' + m;
-	s = s < 10 ? '0' + s : '' + s;
-	return '' + h + ':' + m + ':' + s;
-};
-
-function toDate(dt) {
-	return dt.toDateString();
-}
-
 function MapWrapper() {
 	this.trainIcon = L.icon({
 		iconUrl : '/static/common/img/open-train.png',
@@ -41,7 +28,7 @@ function MapWrapper() {
 		});
 		points.forEach(function(pt, index) {
 			var report = reports[index];
-			var text = '' + report.id + '<br/>' + toHourMinSec(report.timestamp);
+			var text = '<a href="/analysis/report-details/?report_id=' + report.id + '">' + report.id + '</a><br/>' + toHourMinSec(report.timestamp);
 			if (report.is_station) {
 				L.marker(pt, {
 					icon : that.trainIcon

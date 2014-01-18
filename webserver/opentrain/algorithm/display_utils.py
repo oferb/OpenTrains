@@ -39,14 +39,13 @@ def plot_coords(coords, colors=None, edgecolor=None, axis=None):
     plt.show()
     return sc  
 
-def plot_and_save_shape_matches(shape_point_tree, shape_int_ids, device_coords, shape_probs):
-    fig = plt.figure()
-    ax1 = fig.add_subplot(111)
+def plot_and_save_shape_matches(shape_point_tree, sampled_all_routes_tree, shape_int_ids, device_coords, shape_probs):
     for shape_id in xrange(len(set(shape_int_ids))):
         fig = plt.figure()
         ax1 = fig.add_subplot(111)
-        plot_coords(shape_point_tree.data, edgecolor='0.75', axis = ax1)
-        plot_coords(shape_point_tree.data[shape_int_ids == shape_id], edgecolor='b', axis = ax1)
+        plot_coords(sampled_all_routes_tree.data, edgecolor='0.75', axis = ax1)
+        shape_points = shape_point_tree.data[shape_int_ids == shape_id]
+        plot_coords(shape_points, edgecolor='b', axis = ax1)
         plot_coords(device_coords, edgecolor='r', axis = ax1)
         plt.title('shape_id=%s, score=%d%%' % (shape_id, int(100*shape_probs[shape_id])))
         plt.savefig(os.path.join(config.output_data, 'shape_%d.png' % (shape_id)), bbox_inches=0)

@@ -35,6 +35,10 @@ nosetests.xml
 .project
 .pydevproject
 
+# IDEs
+.metadata*
+*.wpr
+*.wpu
 
 *~
 

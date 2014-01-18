@@ -11,7 +11,7 @@ From python manage.py shell you can run
 (this will clean all existing gtfs data)
 
 python> import gtfs.logic
-python> gtfs.logic.create_all()
+python> gtfs.logic.create_all(download=False)
 
 To download raw-reports from server do:
 (this will clean all current raw reports)

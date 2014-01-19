@@ -3,8 +3,12 @@ os.environ['DJANGO_SETTINGS_MODULE']='opentrain.settings'
 from unittest import TestCase
 import gtfs.models
 import unittest
-from gtfs_utils import get_field
 import numpy as np
+
+def get_field(services, name):
+    service_ids = services.all().values_list(name)
+    service_ids = [x[0] for x in service_ids]
+    return service_ids
 
 class gtfs_test(TestCase):
     

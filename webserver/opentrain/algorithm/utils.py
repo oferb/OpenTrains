@@ -39,3 +39,16 @@ def query_coords(point_tree, query_coords, query_accuracies):
     else:
         res = [point_tree.query_ball_point(query_coords[i], query_accuracies[i]) for i in xrange(len(query_accuracies))]
     return res
+
+def datetime_to_db_time(adatetime):
+    return adatetime.hour * 3600 + 60 * adatetime.minute + adatetime.second
+
+def datetime_range_to_db_time(datetime1, datetime2):
+    d1 = datetime_to_db_time(datetime1)
+    d2 = datetime_to_db_time(datetime2)
+    if d1 > d2: # in gtfs, instead of midnight passing to the next day, you count in more time for the same day, i.e 25:00 instead of 01:00
+        d2 = d2 + 24*3600    
+    return d1,d2
+
+def db_time_to_datetime(db_time):
+    return datetime.time(db_time / 3600 % 24, (db_time % 3600) / 60, db_time % 60)

@@ -17,31 +17,24 @@ import datetime
 
 from display_utils import *
 from export_utils import *
-from gtfs_utils import *
 from report_utils import *
+from ShapeList import *
 
-def test_setup_test():
-    print 'hello'
-
-def load_gtfs_data():
-    shape_ids, shape_coords, unique_shape_ids, shape_int_ids, shape_id_to_route_map = get_shape_data_from_cache() 
-    shape_point_tree = spatial.cKDTree(shape_coords)
-    sampled_all_routes_inds, sampled_all_routes_tree = get_sampling_of_all_routes(shape_point_tree)
-    stop_ids, stop_names, stop_coords, stop_point_tree = get_stops()
-    return shape_int_ids, unique_shape_ids, shape_point_tree, sampled_all_routes_tree, stop_ids, stop_point_tree, stop_names
-
-
-def match_device_id(device_id, sampled_all_routes_tree, shape_point_tree, shape_int_ids, unique_shape_ids, stop_point_tree, stop_ids, stop_names, do_print=False):
+def match_device_id(device_id, do_print=False):
+    sampled_all_routes_tree = ShapeList.all_shapes.sampled_point_tree
+    shape_point_tree = ShapeList.all_shapes.point_tree
+    
+    shape_int_ids = []
     device_coords, device_timestamps, device_accuracies_in_meters, device_accuracies_in_coords = get_location_info_from_device_id(device_id)
-    device_sampled_tracks_coords, device_sampled_tracks_accuracies_in_coords = get_device_sampled_tracks_coords(sampled_all_routes_tree, query_coords, device_coords, device_accuracies_in_coords, itertools, config)
+    device_sampled_tracks_coords, device_sampled_tracks_accuracies_in_coords = get_device_sampled_tracks_coords(sampled_all_routes_tree, query_coords, device_coords, device_accuracies_in_coords)
 
     # Matching trip
-    shape_probs, shape_matches_inds, shape_matches_int_inds = get_shape_probabilities(shape_point_tree, shape_int_ids, unique_shape_ids, device_sampled_tracks_coords, device_sampled_tracks_accuracies_in_coords)
+    shape_probs, shape_matches_inds, shape_matches_int_inds = get_shape_probabilities(shape_int_ids, device_sampled_tracks_coords, device_sampled_tracks_accuracies_in_coords)
     if False:
         plot_and_save_shape_matches(shape_point_tree, sampled_all_routes_tree, shape_int_ids, device_coords, shape_probs)
 
     start_date = device_timestamps[0].strftime("%Y-%m-%d")
-    device_stop_ids, device_stop_int_ids, device_stop_names, device_stops_arrival, device_stops_departure = get_device_stops(device_coords, device_timestamps, shape_matches_inds, stop_ids, stop_names, stop_point_tree)
+    device_stop_ids, device_stop_int_ids, device_stop_names, device_stops_arrival, device_stops_departure = get_device_stops(device_coords, device_timestamps, shape_matches_inds)
     trips_filtered_by_stops_and_times = filter_trips_by_shape_date_stops_and_stop_times(start_date, shape_matches_inds, device_stop_ids, device_stop_int_ids, device_stops_arrival, device_stops_departure)
 
     if do_print:
@@ -59,9 +52,13 @@ def match_device_id(device_id, sampled_all_routes_tree, shape_point_tree, shape_
       
     return trips_filtered_by_stops_and_times
 
+
+print 'a'
+ShapeList.all_shapes
+device_id = '02090d12'
+#match_device_id(device_id, stop_point_tree, stop_ids, stop_names, True)
+
 if False:
-    # load gtfs data    
-    shape_int_ids, unique_shape_ids, shape_point_tree, sampled_all_routes_tree, stop_ids, stop_point_tree, stop_names = load_gtfs_data()
     
     # Loading trip
     #device_id = '02090d12' # Eran's trip

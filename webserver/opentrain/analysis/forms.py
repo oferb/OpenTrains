@@ -11,15 +11,15 @@ def get_device_ids_summary():
     from django.db import connection
     cursor = connection.cursor()
     cursor.execute("""
-        SELECT device_id,DATE(timestamp) as device_date,
+        SELECT device_id,MIN(DATE(timestamp)) as device_date,
         COUNT(*) from analysis_report 
-        GROUP BY device_id,device_date 
+        GROUP BY device_id 
         ORDER BY device_date
     """)
     tuples = cursor.fetchall()
-    for tuple in tuples:
-        tuple_id = '%s::::%s::::%s' % tuple
-        tuple_print = '%s @%s (%d)' % tuple
+    for t in tuples:
+        tuple_id = '%s::::%s:%s:%s::::%s' % (t[0],t[1].year,t[1].month,t[1].day,t[2])
+        tuple_print = '%s @%s (%d)' % t
         result.append((tuple_id,tuple_print))
     return result
         

@@ -44,7 +44,7 @@ class ShowDeviceReports(View):
             filter_start_time = common.ot_utils.parse_form_date(start_time)
             filter_end_time = common.ot_utils.parse_form_date(end_time)
             try:
-                (device_id,device_date,device_count) = device_desc.split('::::')
+                (device_id,device_date) = device_desc.split('::::')
             except ValueError:
                 return HttpResponse(status=400,content='Wrong query paramter')
             ctx['device_id'] = device_id

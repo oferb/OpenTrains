@@ -15,13 +15,8 @@
 	<div class="row">
 		<div class="col-md-3">
 	    	<h2>Search Reports</h2>
-	    	<form class="form-inline" method="post" role="form">
-	        	{% for field in form %}
-	        		<div class="form-group">
-	        			<label>{{ field.label_tag }}</label>
-	    				{{ field }}
-	    			</div>
-				{% endfor %}
+	    	<form class="form" method="post" role="form">
+	       		{{ form.as_p }}
 	        	{% csrf_token %}
 	        	<button type="submit" class="btn btn-success btn-sm">
 	            	<span class="glyphicon glyphicon-search"></span>

@@ -13,24 +13,22 @@
 {{ form.media }}
 <div class="container">
 	<div class="row">
-    	<h2>Search Reports</h2>
-    	<form class="form-inline" method="post" role="form">
-        	{% for field in form %}
-        		<div class="form-group">
-        			<label>{{ field.label_tag }}</label>
-    				{{ field }}
-    			</div>
-			{% endfor %}
-        	{% csrf_token %}
-        	<button type="submit" class="btn btn-success btn-sm">
-            	<span class="glyphicon glyphicon-search"></span>
-       		</button>
-   		 </form>
-   </div>
-   {% if device_id %}
-   <br/>
-   <div class="row">
-   		<div class="col-md-3">
+		<div class="col-md-3">
+	    	<h2>Search Reports</h2>
+	    	<form class="form-inline" method="post" role="form">
+	        	{% for field in form %}
+	        		<div class="form-group">
+	        			<label>{{ field.label_tag }}</label>
+	    				{{ field }}
+	    			</div>
+				{% endfor %}
+	        	{% csrf_token %}
+	        	<button type="submit" class="btn btn-success btn-sm">
+	            	<span class="glyphicon glyphicon-search"></span>
+	       		</button>
+	   		 </form>
+   			<br/>
+   			{% if device_id %}
 	   		<div class="well">
 		    	<!--<p>Time filter: from <span id="filter_start_time"></span> to <span id="filter_end_time"></span></p>--> 
 				<p>Map for device id <b>{{device_id}}</b></p>
@@ -40,11 +38,15 @@
 				<p># of reports without loc: {{no_loc_reports_count}}</p>
 				<p># of station points: {{stop_points_count}}</p>
 			</div>
+			{% endif %}
 		</div>
 		<div class="col-md-9">
-			<div id="map"></div>
+			{% if device_id %}
+				<div id="map"></div>
+			{% endif %}
 		</div>
 	</div>
+	{% if device_id %}
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
 	<script src="{% static 'common/js/ot_map_utils.js' %}"></script>
 	<script>

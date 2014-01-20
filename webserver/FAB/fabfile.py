@@ -50,6 +50,7 @@ def update_apt(package=None):
     			'postgresql',
     			'supervisor',
                 'python-pip',
+		'gfortran'
                 'libpq-dev',
                 'python-dev'
     	)

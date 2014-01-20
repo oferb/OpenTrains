@@ -65,7 +65,10 @@ def _collect_items(offset,count):
         result.extend(items)
     return result
 
-
+def analyze_single_raw_report(rr):
+    items = json.loads(rr.text)['items']
+    dump_items(items)
+    
     
     
 

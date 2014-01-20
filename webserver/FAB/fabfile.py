@@ -50,9 +50,11 @@ def update_apt(package=None):
     			'postgresql',
     			'supervisor',
                 'python-pip',
-		'gfortran'
+		'gfortran',
                 'libpq-dev',
-                'python-dev'
+                'python-dev',
+                'redis-server',
+                'libfreetype6-dev'
     	)
 
     for p in packages:
@@ -60,7 +62,10 @@ def update_apt(package=None):
             if p == 'nginx':
                 sudo('apt-get install -q --yes --upgrade python-software-properties')
                 sudo('add-apt-repository --yes ppa:nginx/stable')
-                sudo('apt-get update')
+                sudo('apt-get -q update')
+            if p == 'redis-server':
+                sudo('add-apt-repository --yes ppa:rwky/redis')
+                sudo('apt-get -q update')
             print 'Installing package ' + p
             sudo('apt-get install -q --yes --upgrade %s' % (p))
 

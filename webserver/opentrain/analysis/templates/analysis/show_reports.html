@@ -45,6 +45,10 @@
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
 	<script src="{% static 'common/js/ot_map_utils.js' %}"></script>
 	<script>
+		$("#id_device_desc").change(function() {
+			$("#id_start_time").val(null);
+			$("#id_end_time").val(null);
+		});
 		{% if start_time %}
 			$("#start_time").html(toHourMinSec(new Date("{{start_time.isoformat}}")));
 			$("#end_time").html(toHourMinSec(new Date("{{end_time.isoformat}}")));

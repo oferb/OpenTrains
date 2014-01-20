@@ -17,8 +17,10 @@ pycrypto==2.6.1
 python-dateutil==2.2
 python-mimeparse==0.1.4
 pytz==2013.8
+redis==2.9.0
 requests==2.0.1
 scipy==0.13.2
 simplekml==1.2.3
 six==1.4.1
 wsgiref==0.1.2
+

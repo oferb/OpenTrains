@@ -1,4 +1,5 @@
 from django import forms
+from bootstrap3_datetime.widgets import DateTimePicker
 
 def get_labels():
     import models
@@ -28,6 +29,20 @@ class LabelsForm(forms.Form):
     
 class ReportsForm(forms.Form):
     device_desc = forms.ChoiceField(choices=get_device_ids_summary(),label='Device Id')
+    start_time = forms.DateTimeField(
+                                            input_formats = ['%Y-%m-%d %H:%M'],
+                                            required=False,
+                                            widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm",
+                                                                           "pickTime": True,
+                                                                           "pickSeconds" : False}))
+
+    end_time = forms.DateTimeField(
+                                            input_formats = ['%Y-%m-%d %H:%M'],
+                                            required=False,
+                                            widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm",
+                                                                           "pickTime": True,
+                                                                           "pickSeconds" : False}))
+
     
 class ReportDetailForm(forms.Form):
     report_id = forms.CharField(max_length=20,label='Report ID')

@@ -61,7 +61,7 @@ function otCreateMap(mapDiv, options) {
 	options = options || {};
 	var map = L.map(mapDiv);
 	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		maxZoom : 18,
+		maxZoom : 22,
 		attribution : 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>'
 	}).addTo(map);
 	var result = new MapWrapper();

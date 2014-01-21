@@ -45,7 +45,8 @@ INSTALLED_APPS = (
     'reports',
     'analysis',
     'django.contrib.staticfiles',
-    'django_extensions'
+    'django_extensions',
+    'redis_intf'
 )
 
 MIDDLEWARE_CLASSES = (

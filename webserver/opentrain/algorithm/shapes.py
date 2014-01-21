@@ -1,13 +1,18 @@
 import gtfs.models
 from scipy import spatial
 import shelve
-from Shape import Shape
 import os
 import config
 import numpy as np
 import copy
 
 from utils import *
+import shapes
+
+class Shape(object):
+    def __init__( self, id_, coords ) :
+        self.id_ = id_
+        self.coords = coords
 
 class ShapeList(list):
     def __init__(self, django_shape_coords_and_ids) :
@@ -46,16 +51,25 @@ class ShapeList(list):
     
     def query_all_points(self, coords, accuracies)   :
         
-        res_coord_ids = query_coords(self.point_tree, coords, accuracies)    
+        res_shape_point_ids = query_coords(self.point_tree, coords, accuracies)    
         
-        res_shape_int_ids = copy.deepcopy(res_coord_ids)
-        for i in xrange(len(res_shape_int_ids)):
-            res_shape_int_ids[i] = list(set(self.point_shape_int_ids[res_shape_int_ids[i]]))
-        
-        return res_coord_ids, res_shape_int_ids
+        if (len(res_shape_point_ids) > 0):
+            if isinstance(res_shape_point_ids[0], (list, tuple)):
+                res_shape_int_ids = copy.deepcopy(res_shape_point_ids)
+                for i in xrange(len(res_shape_int_ids)):
+                    res_shape_int_ids[i] = self.point_shape_int_ids[res_shape_int_ids[i]]
+            else:
+                res_shape_int_ids = self.point_shape_int_ids[res_shape_point_ids]
+        else:
+            res_shape_int_ids = []
+                
+        return res_shape_point_ids, res_shape_int_ids
 
     def query_sampled_points(self, coords, accuracies)   :
-        pass
+        sampled_coord_ids = query_coords(self.sampled_point_tree, coords, accuracies)    
+        sampled_coord_coords = self.sampled_point_tree.data[sampled_coord_ids]
+        return sampled_coord_ids, sampled_coord_coords
+
     
     def get_sampling_of_all_routes(self):
         shape_point_tree = self.point_tree
@@ -88,4 +102,4 @@ def get_all_shapes():
     
     return all_shapes
 
-ShapeList.all_shapes = get_all_shapes()
+shapes.all_shapes = get_all_shapes()

@@ -52,3 +52,7 @@ def datetime_range_to_db_time(datetime1, datetime2):
 
 def db_time_to_datetime(db_time):
     return datetime.time(db_time / 3600 % 24, (db_time % 3600) / 60, db_time % 60)
+
+def enum(*sequential, **named):
+    enums = dict(zip(sequential, range(len(sequential))), **named)
+    return type('Enum', (), enums)

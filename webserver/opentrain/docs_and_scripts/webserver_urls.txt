@@ -1,22 +1,22 @@
 You can use the json api to browse results.
 
 To show raw results (use limit=5, otherwise it sometime crashes):
-http://54.221.246.54/api/v1/raw-reports/?format=json&limit=5 
+http://192.241.154.128/api/v1/raw-reports/?format=json&limit=5 
 
 To get recent reports:
-http://54.221.246.54/api/v1/raw-reports/?format=json&order_by=-id
+http://192.241.154.128/api/v1/raw-reports/?format=json&order_by=-id
 
 In pretty formatting:
-http://54.221.246.54/reports/get/
+http://192.241.154.128/reports/get/
 
 To show analyzed reports:
-http://54.221.246.54/api/v1/reports/?format=json
+http://192.241.154.128/api/v1/reports/?format=json
 
 **************************************
-If you go to http://54.221.246.54/gtfs/search-in/ and search for trains in specific station, then as part of the result there is link to map ,leading to a map with markers for all the stations, and the zoom is in the station you searched for.
+If you go to http://192.241.154.128/gtfs/search-in/ and search for trains in specific station, then as part of the result there is link to map ,leading to a map with markers for all the stations, and the zoom is in the station you searched for.
 
 For direct example, you can look here:
-http://54.221.246.54/gtfs/maps/301213_00102/?zoom_stop_id=3700
+http://192.241.154.128/gtfs/maps/301213_00102/?zoom_stop_id=3700
 
 **************************************
 

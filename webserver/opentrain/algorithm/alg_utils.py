@@ -18,11 +18,11 @@ import datetime
 from display_utils import *
 from export_utils import *
 from report_utils import *
-from ShapeList import *
+import shapes
 
 def match_device_id(device_id, do_print=False):
-    sampled_all_routes_tree = ShapeList.all_shapes.sampled_point_tree
-    shape_point_tree = ShapeList.all_shapes.point_tree
+    sampled_all_routes_tree = shapes.all_shapes.sampled_point_tree
+    shape_point_tree = shapes.all_shapes.point_tree
     
     shape_int_ids = []
     device_coords, device_timestamps, device_accuracies_in_meters, device_accuracies_in_coords = get_location_info_from_device_id(device_id)
@@ -53,10 +53,8 @@ def match_device_id(device_id, do_print=False):
     return trips_filtered_by_stops_and_times
 
 
-print 'a'
-ShapeList.all_shapes
-device_id = '02090d12'
-#match_device_id(device_id, stop_point_tree, stop_ids, stop_names, True)
+
+
 
 if False:
     

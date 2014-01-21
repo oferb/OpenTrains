@@ -28,6 +28,9 @@ class LabelsForm(forms.Form):
     labels = forms.ChoiceField(choices=get_labels())
     
 class ReportsForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(ReportsForm, self).__init__(*args, **kwargs)
+        self.fields["device_desc"] = forms.ChoiceField(choices=get_device_ids_summary(),label='Device Id')
     device_desc = forms.ChoiceField(choices=get_device_ids_summary(),label='Device Id')
     start_time = forms.DateTimeField(
                                             input_formats = ['%Y-%m-%d %H:%M'],

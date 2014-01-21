@@ -4,7 +4,8 @@ import json
 import time
 import sys
 
-def main(count):
+def main(count,sleep):
+	print 'count = %d sleep = %d' % (count,sleep)
 	fh = open('item.json')
 	body = json.load(fh)
 	fh.close()
@@ -13,13 +14,17 @@ def main(count):
 		print '%d/%d' % (i,count)
 		resp = requests.post('http://localhost:8000/reports/add/',headers=headers,data=body)
 		print resp
-		time.sleep(10)
+		time.sleep(sleep)
 
 if __name__ == '__main__':
-	if len(sys.argv) == 2:
+	if len(sys.argv) >= 2:
 		count = int(sys.argv[1])
 	else:
 		count = 1
-	main(count)
+	if len(sys.argv) == 3:
+		sleep = float(sys.argv[2])
+	else:
+		sleep = 10
+	main(count,sleep)
 
 

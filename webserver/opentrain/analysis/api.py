@@ -19,6 +19,14 @@ class ReportResource(ModelResource):
         resource_name = "reports"
         ordering = 'id'
         filtering = {'device_id' : ALL}
+        
+class ReportLocResource(ModelResource):
+    loc = fields.ToOneField(LocationInfoResource,'my_loc',full=True,null=True)
+    class Meta:
+        queryset = models.Report.objects.all().prefetch_related('my_loc')
+        resource_name = "reports-loc"
+        ordering = 'id'
+        filtering = {'device_id' : ALL}
 
 def get_devices_summary():
     from django.db import connection
@@ -79,6 +87,7 @@ class DeviceResource(Resource):
         
 def register_all(tp):
     tp.register(ReportResource())
+    tp.register(ReportLocResource())
     tp.register(DeviceResource())
     
     

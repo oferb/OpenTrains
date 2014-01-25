@@ -18,8 +18,9 @@ function MapWrapper() {
 	this.createReportsLine = function(reports) {
 		var points = [];
 		reports.forEach(function(r) {
-			points.push([r.lat, r.lon]);
+			points.push([r.loc.lat, r.loc.lon]);
 		});
+		console.log(points.length);
 		var that = this;
 		var polyline = this.createLineAndZoom(points, {
 			color : '#0000CD',
@@ -28,8 +29,8 @@ function MapWrapper() {
 		});
 		points.forEach(function(pt, index) {
 			var report = reports[index];
-			var text = '<a href="/analysis/report-details/?report_id=' + report.id + '">' + report.id + '</a><br/>' + toHourMinSec(report.timestamp);
-			if (report.is_station) {
+			var text = '<a href="/analysis/report-details/?report_id=' + report.id + '">' + report.id + '</a><br/>';// + toHourMinSec(report.timestamp);
+			if (/*report.is_station*/false) {
 				L.marker(pt, {
 					icon : that.trainIcon
 				}).addTo(that.map).bindPopup(text);

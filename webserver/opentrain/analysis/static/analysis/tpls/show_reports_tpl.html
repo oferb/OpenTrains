@@ -20,7 +20,7 @@
 		<div class="well" ng-show="reportsStatus == 'wip'">
 			Please wait. Loading Reports, will take bit time....
 		</div>
-		<div class="well" ng-show="reportsStatus == 'done'">
+		<div class="well" ng-if="reportsStatus == 'done'">
 			<p>
 				Map for device id <b>{{$scope.input.selectedDevice.device_id}}</b>
 			</p>
@@ -30,8 +30,8 @@
 		</div>
 	</div>
 	<div class="col-md-9">
-		<div ng-if="reports">
-			<div id="map"></div>
+		<div ng-show="reportsStatus == 'done'">
+			<leaflet width="800" height="500"></leaflet> 
 		</div>
 	</div>
 </div>

@@ -1,6 +1,8 @@
 import models
 import common.ot_utils
 import requests
+import json
+import gzip
 
 MAIN_SERVER = '54.221.246.54'
 
@@ -25,8 +27,6 @@ def download_reports(clean=True):
 def restore_reports(filename,clean=True):
     """ restore reports from main server and restore them in
     local server - cleans first """
-    import gzip
-    import json
     if not filename.endswith('gz'):
         raise Exception('%s must be gz file' % (filename))
     if clean:
@@ -46,8 +46,6 @@ def restore_reports(filename,clean=True):
 def backup_reports(filename):
     chunk = 100
     index = 0
-    import json
-    import gzip
     
     if not filename.endswith('.gz'):
         raise Exception('filename must be gz file')
@@ -64,6 +62,26 @@ def backup_reports(filename):
             index += reports_len
     print 'Backup %s reports to %s' % (index,filename)
             
+
+def copy_device_reports(device_id,filename):
+    chunk = 100
+    index = 0
+    wrote_count = 0
+    
+    with open(filename,'w') as fh:
+        while True:
+            reports = models.RawReport.objects.filter().order_by('id')[index:index+chunk]
+            reports_len = reports.count()
+            if reports_len == 0:
+                break
+            for rr in reports:
+                rr_body = json.loads(rr.text)
+                if rr_body['items'][0]['device_id'] == device_id:
+                    fh.write(rr.text)
+                    fh.write('\n')
+                    wrote_count += len(rr_body['items'])
+            index += reports_len
+    print 'Wrote %s reports of device_id %s to %s' % (wrote_count,device_id,filename)
     
         
         

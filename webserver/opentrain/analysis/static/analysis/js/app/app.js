@@ -1,9 +1,9 @@
 // app.js
 
-app = angular.module('show_reports', ['my.services', 'my.filters', 'my.directives', 'leaflet-directive']);
+app = angular.module('show_reports', ['my.services', 'my.filters', 'my.directives', 'my.leaflet','leaflet-directive']);
 
-app.controller('ShowReportsController', ['$scope', 'MyHttp', '$timeout', 'leafletData','$window',
-function($scope, MyHttp, $timeout, leafletData,$window) {
+app.controller('ShowReportsController', ['$scope', 'MyHttp', 'MyUtils','MyLeaflet','$timeout', 'leafletData','$window',
+function($scope, MyHttp, MyUtils,MyLeaflet,$timeout, leafletData,$window) {
 	$scope.getParameterByName = function(name) {
 	    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
 	    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -70,83 +70,13 @@ function($scope, MyHttp, $timeout, leafletData,$window) {
 	};
 	$scope.drawMap = function() {
 		leafletData.getMap().then(function(map) {
-			$scope.showReports(map);
+			MyLeaflet.showReports(map,$scope.reports);
 		});
 	};
-	$scope.trainIcon = L.icon({
-		iconUrl : '/static/common/img/open-train.png',
-		iconSize : [26, 26]
-	});
 	$scope.getDeviceTitle = function(device) {
 		return device.device_id + ' @' + device.device_date + ' (' + device.device_count + ')';
 	};
-	$scope.toHourMinSec = function(dt) {
-		var h = dt.getHours();
-		var m = dt.getMinutes();
-		var s = dt.getSeconds();
-		m = m < 10 ? '0' + m : '' + m;
-		s = s < 10 ? '0' + s : '' + s;
-		return '' + h + ':' + m + ':' + s;
-	};
 
-	$scope.showReports = function(map) {
-		var points = [];
-		$scope.noLocCount = 0;
-		$scope.locCount = 0;
-		$scope.reports.forEach(function(r) {
-			if (r.loc) {
-				$scope.locCount++;
-				points.push([r.loc.lat, r.loc.lon]);
-			} else {
-				$scope.noLocCount++;
-			}
-		});
-		console.log(points.length);
-		var polyline = $scope.createLineAndZoom(map, points, {
-			color : '#0000CD',
-			weight : 3,
-			stroke : true,
-		});
-		points.forEach(function(pt, index) {
-			var report = $scope.reports[index];
-			var text = '<a href="/analysis/report-details/?report_id=' + report.id + '">' + report.id + '</a><br/>'
-			 + $scope.toHourMinSec(report.timestamp);
-			if (report.is_station) {
-				L.marker(pt, {
-					icon : $scope.trainIcon
-				}).addTo(map).bindPopup(text);
-			} else {
-				L.circleMarker(pt, {
-					radius : 5,
-					color : '#0000CD',
-					fill : true,
-				}).addTo(map).bindPopup(text);
-			}
-		});
-
-	};
-
-	$scope.createLine = function(map, points, options) {
-		var polyline = L.polyline(points, options).addTo(map);
-		return polyline;
-	};
-
-	$scope.createLineAndZoom = function(map, points, options) {
-		var polyline = $scope.createLine(map,points, options);
-		map.fitBounds(polyline.getBounds());
-		return polyline;
-	};
-
-	/*$scope.resizeMap = function() {
-	 var height = ($(window).height() - 20 - $("#deviceMap").offset().top);
-	 console.log(height);
-	 $('#deviceMap').css("height", height);
-	 $('#deviceMap').css("margin-top",20);
-	 };*/
 	$scope.initReport();
-	/*$(window).on("resize",function() {
-	 $scope.resizeMap();
-	 });
-	 $scope.resizeMap();*/
 }]);
 

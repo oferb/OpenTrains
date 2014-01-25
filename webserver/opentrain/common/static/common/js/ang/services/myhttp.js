@@ -1,6 +1,6 @@
 "use strict";
 
-var services = angular.module('my.services',[]);
+var services = angular.module('my.services');
 
 services.factory('MyBase64', function() {
 	var keyStr = 'ABCDEFGHIJKLMNOP' + 'QRSTUVWXYZabcdef' + 'ghijklmnopqrstuv' + 'wxyz0123456789+/' + '=';

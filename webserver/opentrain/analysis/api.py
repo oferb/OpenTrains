@@ -22,8 +22,11 @@ class ReportResource(ModelResource):
         
 class ReportLocResource(ModelResource):
     loc = fields.ToOneField(LocationInfoResource,'my_loc',full=True,null=True)
+    def dehydrate(self, bundle):
+        bundle.data['is_station'] = bundle.obj.is_station()
+        return bundle
     class Meta:
-        queryset = models.Report.objects.all().prefetch_related('my_loc')
+        queryset = models.Report.objects.all().prefetch_related('wifi_set','my_loc')
         resource_name = "reports-loc"
         ordering = 'id'
         filtering = {'device_id' : ALL}

@@ -2,7 +2,7 @@
 <div class="row">
 	<div class="col-md-3">
 		<h2>Search Reports</h2>
-		<form class="form" method="post" role="form" ng-submit="loadReports()">
+		<form class="form" method="post" role="form" ng-submit="redirectToReports()">
 			<select ng-options="getDeviceTitle(device) for device in devices" ng-model="input.selectedDevice"></select>
 			<button type="submit" class="btn btn-success btn-sm">
 				<span class="glyphicon glyphicon-search"></span>
@@ -25,7 +25,13 @@
 				Map for device id <b>{{$scope.input.selectedDevice.device_id}}</b>
 			</p>
 			<p>
-				# of reports with loc: {{reports.length}} 
+				Total # of reports: {{reports.length}}
+			</p>
+			<p>
+				With loc: {{locCount}}
+			</p>
+			<p>
+				Without loc: {{noLocCount}} 
 			</p>
 		</div>
 	</div>

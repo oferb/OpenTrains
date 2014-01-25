@@ -73,3 +73,19 @@ function otCreateMap(mapDiv, options) {
 	return result;
 }
 
+var otLiveMode = false;
+var otLiveIntervalID = null;
+function otRefreshLive(isLive) {
+	otLiveMode = isLive;
+	$("#go_live_btn").prop('disabled', otLiveMode);
+	$("#stop_live_btn").prop('disabled', !otLiveMode);
+	if (otLiveMode) {
+		otLiveIntervalID = window.setInterval(otRefreshDevice, 2000);
+	} else {
+		window.clearInterval(otLiveIntervalID);
+	}
+}
+
+function otRefreshDevice() {
+	console.log('in otRefreshDevice');
+}

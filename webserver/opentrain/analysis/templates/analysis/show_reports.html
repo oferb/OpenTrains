@@ -1,82 +1,29 @@
 {% extends 'common/base.html' %}
 {% load staticfiles %}
 
-
 {% block headend %}
-{% if device_id %}
 <link rel="stylesheet" href="{% static 'common/style/ot_map.css' %}">
+<link rel="stylesheet" href="/static/common/js/ang_dt/css/datetimepicker.css"/>
 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css" />
-{% endif %}
+{% endblock %}
+
+{% block scriptstart %}
+<script src="/static/common/js/ext/angular.min.js"></script>
+<script src="/static/common/js/ang/services/myhttp.js"></script>
+<script src="/static/common/js/ang/filters/filters.js"></script>
+<script src="/static/common/js/ang/directives/directives.js"></script>
+<script src="/static/analysis/js/app/app.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
+<script src="/static/common/js/ext/moment.min.js"></script>
+<script src="/static/common/js/ang_dt/js/datetimepicker.js"></script>
+<script src="{% static 'common/js/ot_map_utils.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 {{ form.media }}
-<div class="container">
-	<div class="row">
-		<div class="col-md-3">
-	    	<h2>Search Reports</h2>
-	    	<form class="form" method="post" role="form">
-	       		{{ form.as_p }}
-	        	{% csrf_token %}
-	        	<button type="submit" class="btn btn-success btn-sm">
-	            	<span class="glyphicon glyphicon-search"></span>
-	       		</button>
-	   		 </form>
-   			<br/>
-   			{% if device_id %}
-	   		<div class="well">
-		    	<!--<p>Time filter: from <span id="filter_start_time"></span> to <span id="filter_end_time"></span></p>--> 
-				<p>Map for device id <b>{{device_id}}</b></p>
-				<p>Between <span id="start_time"></span> to <span id="end_time"></span> in <span id="device_date"></span></p>
-				<p>Full Range is between <span id="global_start_time"></span> to <span id="global_end_time"></span>)</p>
-				<p># of reports with loc: {{reports|length}} ({{global_reports_count}})</p>
-				<p># of reports without loc: {{no_loc_reports_count}}</p>
-				<p># of station points: {{stop_points_count}}</p>
-			</div>
-			{% endif %}
-		</div>
-		<div class="col-md-9">
-			{% if device_id %}
-				<div id="map"></div>
-			{% endif %}
-		</div>
+<div class="container" ng-app="show_reports">
+	<div ng-controller="ShowReportsController" ng-include="'/static/analysis/tpls/show_reports_tpl.html'">	
 	</div>
-	{% if device_id %}
-	<script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
-	<script src="{% static 'common/js/ot_map_utils.js' %}"></script>
-	<script>
-		$("#id_device_desc").change(function() {
-			$("#id_start_time").val(null);
-			$("#id_end_time").val(null);
-		});
-		{% if start_time %}
-			$("#start_time").html(toHourMinSec(new Date("{{start_time.isoformat}}")));
-			$("#end_time").html(toHourMinSec(new Date("{{end_time.isoformat}}")));
-		{% else %}
-			$("#start_time").html('n/a');
-			$("#end_time").html('n/a');
-		{% endif %}
-		$("#global_start_time").html(toHourMinSec(new Date("{{global_start_time.isoformat}}")));
-		$("#global_end_time").html(toHourMinSec(new Date("{{global_end_time.isoformat}}")));
-		$("#device_date").html(toDate(new Date("{{start_time.isoformat}}")));
-		{% if filter_start_time %} 
-			//$("#filter_start_time").html(toLocalDt(new Date("{{filter_start_time.isoformat}}")));
-		{% else %}
-			//$("#filter_start_time").html('all');
-		{% endif %}
-		{% if filter_end_time %}
-			//$("#filter_end_time").html(toLocalDt(new Date("{{filter_end_time.isoformat}}")));
-		{% else %}
-			//$("#filter_end_time").html('all');
-		{% endif %}
-		{% if reports %}
-		{% include 'analysis/analysis_map.js' %}
-		$(function() {
-			initMap();
-		});
-		{% endif %}
-	</script>
-    {% endif %}
 </div>
 
 {% endblock %}

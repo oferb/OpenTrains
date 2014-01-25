@@ -7,22 +7,20 @@
 			<button type="submit" class="btn btn-success btn-sm">
 				<span class="glyphicon glyphicon-search"></span>
 			</button>
-			<div ng-show="reports">			
-				<button id="go_live_btn" class="btn btn-success btn-sm">
-					Go Live
-				</button>
-				<button id="stop_live_btn" class="btn btn-danger btn-sm">
-					Stop Live
-				</button>
-			</div>
+			<button ng-show="reportsStatus == 'done'" class="btn btn-success btn-sm">
+				Go Live
+			</button>
+			<button ng-show="reportsStatus == 'done'" class="btn btn-danger btn-sm">
+				Stop Live
+			</button>
 		</form>
 		<br/>
 		<div class="well" ng-show="reportsStatus == 'wip'">
-			Please wait. Loading Reports, will take bit time....
+			Please wait. Loading Reports, will take some time....
 		</div>
 		<div class="well" ng-if="reportsStatus == 'done'">
 			<p>
-				Map for device id <b>{{$scope.input.selectedDevice.device_id}}</b>
+				Map for device id <b>{{input.selectedDevice.device_id}}</b>
 			</p>
 			<p>
 				Total # of reports: {{reports.length}}
@@ -32,6 +30,14 @@
 			</p>
 			<p>
 				Without loc: {{noLocCount}} 
+			</p>
+			<p>
+				From {{reports[0].timestamp | date:'HH:mm:ss' }} <br/>
+				to {{reports[reports.length-1].timestamp | parseDate | date:'HH:mm:ss' }} <br/>
+				on {{reports[0].timestamp | date:'dd-MMM-yyyy'}}
+			</p>
+			<p>
+				
 			</p>
 		</div>
 	</div>

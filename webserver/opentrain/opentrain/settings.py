@@ -111,6 +111,7 @@ TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
     "common.ctx.menu",
 )
 
+TASTYPIE_DATETIME_FORMATTING = 'rfc-2822'
 
 # override settings using local_settings.py
 try:

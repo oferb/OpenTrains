@@ -55,10 +55,16 @@ function($scope, MyHttp, $timeout, leafletData,$window) {
 			if (data.meta.next) {
 				$scope.appendReportsRec(data.meta.next);
 			} else {
+				$scope.reports.forEach(function(r) {
+					r.timestamp = new Date(r.timestamp);
+					if (r.loc) {
+						r.loc.timestsamp = new Date(r.loc.timestamp);
+					}
+				});
 				$scope.reportsStatus = 'done';
 				$timeout(function() {
 					$scope.drawMap();
-				}, 500);
+				}, 10);
 			}
 		});
 	};
@@ -73,6 +79,14 @@ function($scope, MyHttp, $timeout, leafletData,$window) {
 	});
 	$scope.getDeviceTitle = function(device) {
 		return device.device_id + ' @' + device.device_date + ' (' + device.device_count + ')';
+	};
+	$scope.toHourMinSec = function(dt) {
+		var h = dt.getHours();
+		var m = dt.getMinutes();
+		var s = dt.getSeconds();
+		m = m < 10 ? '0' + m : '' + m;
+		s = s < 10 ? '0' + s : '' + s;
+		return '' + h + ':' + m + ':' + s;
 	};
 
 	$scope.showReports = function(map) {
@@ -95,7 +109,8 @@ function($scope, MyHttp, $timeout, leafletData,$window) {
 		});
 		points.forEach(function(pt, index) {
 			var report = $scope.reports[index];
-			var text = '<a href="/analysis/report-details/?report_id=' + report.id + '">' + report.id + '</a><br/>';// + toHourMinSec(report.timestamp);
+			var text = '<a href="/analysis/report-details/?report_id=' + report.id + '">' + report.id + '</a><br/>'
+			 + $scope.toHourMinSec(report.timestamp);
 			if (report.is_station) {
 				L.marker(pt, {
 					icon : $scope.trainIcon

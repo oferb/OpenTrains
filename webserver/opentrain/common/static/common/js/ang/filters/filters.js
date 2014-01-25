@@ -32,6 +32,12 @@ myFilters.filter('igDate',function() {
 	};
 });
 
+myFilters.filter('parseDate',function() {
+	return function(str) {
+		return new Date(str);
+	};
+});
+
 myFilters.filter('toString',function() {
 	return function(input) {
 		return input.toString();

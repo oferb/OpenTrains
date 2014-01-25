@@ -44,6 +44,7 @@ function(MyUtils) {
 					}).addTo(map).bindPopup(text);
 				}
 			});
+			return result;
 		},
 		createLine : function(map, points, options) {
 			var polyline = L.polyline(points, options).addTo(map);

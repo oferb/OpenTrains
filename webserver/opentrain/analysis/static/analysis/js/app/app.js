@@ -70,7 +70,9 @@ function($scope, MyHttp, MyUtils,MyLeaflet,$timeout, leafletData,$window) {
 	};
 	$scope.drawMap = function() {
 		leafletData.getMap().then(function(map) {
-			MyLeaflet.showReports(map,$scope.reports);
+			var result = MyLeaflet.showReports(map,$scope.reports);
+			$scope.noLocCount = result.noLocCount;
+			$scope.locCount = result.locCount;
 		});
 	};
 	$scope.getDeviceTitle = function(device) {

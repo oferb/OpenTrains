@@ -5,13 +5,15 @@ def set_config(base_dir):
     config.base = base_dir
     config.temp_data = os.path.join(config.base, 'tmp_data')
     
-    # data folders
+    # gtfs
     config.gtfs = os.path.join(config.temp_data, 'gtfs')
     config.gtfs_raw_data = os.path.join(config.gtfs, 'data')
     config.gtfs_processed_data = os.path.join(config.gtfs, 'processed_data')
+    config.gtfs_shelve_file = os.path.join(config.gtfs_processed_data, 'shelve.data') 
     
-    # output folders
-    config.output_data = os.path.join(config.temp_data, 'output')    
+    # reports
+    config.output_data = os.path.join(config.temp_data, 'output')  
+    config.output_shelve_file = os.path.join(config.output_data, 'shelve.data')  
 
     # params
     config.max_accuracy_radius_meters = 300
@@ -22,7 +24,10 @@ def set_config(base_dir):
     config.late_arrival_max_seconds = 45 * 60 # how late can a train arrive before the actual arrival
     config.early_departure_max_seconds = 15 * 60 # how early can a train depart before the actual departure
     config.late_departure_max_seconds = 45 * 60 # how late can a train depart before the actual departure
-    config.shape_probability_threshold= 0.8
+    config.shape_probability_threshold= 0.80
+    config.stop_discovery_location_timeout_seconds = 60
+    config.stop_discovery_probability_thresh = 0.95
+    config.stop_discovery_count_thresh = 10
     
 base_dir = os.path.dirname(os.path.dirname(__file__))
 set_config(base_dir)

@@ -8,7 +8,12 @@ import numpy as np
 import copy
 
 from utils import *
-from Stop import Stop
+
+class Stop(object):
+    def __init__( self, id_, name, coords ) :
+        self.id_ = id_
+        self.name = name
+        self.coords = coords
 
 class StopList(list):
 
@@ -68,4 +73,4 @@ def get_all_stops():
     
     return all_stops
 
-StopList.all_stops = get_all_stops()
+all_stops = get_all_stops()

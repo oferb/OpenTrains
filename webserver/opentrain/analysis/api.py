@@ -15,7 +15,7 @@ class ReportResource(ModelResource):
     wifis = fields.ToManyField(SingleWifiResource,'wifi_set',full=True)
     loc = fields.ToOneField(LocationInfoResource,'my_loc',full=True,null=True)
     class Meta:
-        queryset = models.Report.objects.all().prefetch_related('wifi_set','my_loc')
+        queryset = models.Report.objects.all().order_by('id').prefetch_related('wifi_set','my_loc')
         resource_name = "reports"
         ordering = 'id'
         filtering = {'device_id' : ALL,'id' : ALL_WITH_RELATIONS}
@@ -26,7 +26,7 @@ class ReportLocResource(ModelResource):
         bundle.data['is_station'] = bundle.obj.is_station()
         return bundle
     class Meta:
-        queryset = models.Report.objects.all().prefetch_related('wifi_set','my_loc')
+        queryset = models.Report.objects.order_by('id').all().prefetch_related('wifi_set','my_loc')
         resource_name = "reports-loc"
         ordering = 'id'
         filtering = {'device_id' : ALL, 'id' : ALL_WITH_RELATIONS}

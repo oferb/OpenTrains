@@ -9,7 +9,7 @@ function(MyUtils) {
 			iconUrl : '/static/common/img/open-train.png',
 			iconSize : [26, 26]
 		}),
-		showReports : function(map, reports) {
+		showReports : function(map, reports, toZoom) {
 			var that = this;
 			var points = [];
 			var result = {
@@ -18,13 +18,10 @@ function(MyUtils) {
 			};
 			reports.forEach(function(r) {
 				if (r.loc) {
-					result.locCount++;
 					points.push([r.loc.lat, r.loc.lon]);
-				} else {
-					result.noLocCount++;
-				}
+				} 
 			});
-			var polyline = this.createLineAndZoom(map, points, {
+			var polyline = this.createLine(map, points, toZoom, {
 				color : '#0000CD',
 				weight : 3,
 				stroke : true,
@@ -46,14 +43,13 @@ function(MyUtils) {
 			});
 			return result;
 		},
-		createLine : function(map, points, options) {
+		createLine : function(map, points, toZoom, options) {
+			console.log('In createLine toZoom = ' + toZoom);
 			var polyline = L.polyline(points, options).addTo(map);
+			if (toZoom) {
+				map.fitBounds(polyline.getBounds());
+			}
 			return polyline;
 		},
-		createLineAndZoom : function(map, points, options) {
-			var polyline = this.createLine(map, points, options);
-			map.fitBounds(polyline.getBounds());
-			return polyline;
-		}
 	};
 }]);

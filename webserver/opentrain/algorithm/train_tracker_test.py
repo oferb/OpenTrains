@@ -27,7 +27,7 @@ from analysis.models import SingleWifiReport
 
 class train_tracker_test(TestCase):
     
-    def track_device(self, device_id, do_print=False):
+    def track_device(self, device_id, do_print=False, do_preload_reports=True):
         sampled_all_routes_tree = shapes.all_shapes.sampled_point_tree
         shape_point_tree = shapes.all_shapes.point_tree
         
@@ -39,7 +39,10 @@ class train_tracker_test(TestCase):
         
         fps_period_start = time.clock()
         fps_period_length = 100
-        for i in xrange(reports_queryset.count()):#xrange(500):
+        if do_preload_reports:
+            reports_queryset = list(reports_queryset)
+        count = len(reports_queryset) if isinstance(reports_queryset, list) else reports_queryset.count()
+        for i in xrange(count):#xrange(500):
             if i % fps_period_length == 0:
                 elapsed = (time.clock() - fps_period_start)
                 if elapsed > 0:

@@ -16,66 +16,81 @@ import itertools
 import datetime
 from unittest import TestCase
 import unittest
-
+import time
 from display_utils import *
 from export_utils import *
-from report_utils import *
 import shapes
-from train_tracker import TrackedItem
+import stops
 from train_tracker import TrainTracker
+
+from analysis.models import SingleWifiReport
 
 class train_tracker_test(TestCase):
     
-    def match_device_id2(self, device_id, do_print=False):
+    def track_device(self, device_id, do_print=False):
         sampled_all_routes_tree = shapes.all_shapes.sampled_point_tree
         shape_point_tree = shapes.all_shapes.point_tree
         
         shape_int_ids = []
-        device_coords, device_timestamps, device_accuracies_in_meters, device_accuracies_in_coords = get_location_info_from_device_id(device_id)
-    
+        #device_coords, device_timestamps, device_accuracies_in_meters, device_accuracies_in_coords = get_location_info_from_device_id(device_id)
+        reports_queryset = self.get_data_from_device_id(device_id)
+        
         tracker = TrainTracker('train_id')
-        for i in xrange(len(device_coords)):
-
-            trackedItem = TrackedItem("", device_id, device_timestamps[i], 
-                                     server_timestamp=0, 
-                                     coords_timestamp=0, 
-                                     coords=device_coords[i], 
-                                     accuracy_in_coords=device_accuracies_in_coords[i], 
-                                     accuracy_in_meters=device_accuracies_in_meters[i])
-            tracker.add(trackedItem)
         
-        
-        print tracker.get_shape_probs()
-        device_sampled_tracks_coords, device_sampled_tracks_accuracies_in_coords = get_device_sampled_tracks_coords(sampled_all_routes_tree, query_coords, device_coords, device_accuracies_in_coords)
+        fps_period_start = time.clock()
+        fps_period_length = 100
+        for i in xrange(reports_queryset.count()):#xrange(500):
+            if i % fps_period_length == 0:
+                elapsed = (time.clock() - fps_period_start)
+                if elapsed > 0:
+                    print('%d\t%.1f qps' % (i, fps_period_length/elapsed))
+                else:
+                    print('Elapsed time should be positive but is %d' % (elapsed))
+                fps_period_start = time.clock()                
             
-        # Matching trip
-        shape_probs, shape_matches_inds, shape_matches_int_inds = get_shape_probabilities(shape_int_ids, device_sampled_tracks_coords, device_sampled_tracks_accuracies_in_coords)
-        if False:
-            plot_and_save_shape_matches(shape_point_tree, sampled_all_routes_tree, shape_int_ids, device_coords, shape_probs)
-    
-        start_date = device_timestamps[0].strftime("%Y-%m-%d")
-        device_stop_ids, device_stop_int_ids, device_stop_names, device_stops_arrival, device_stops_departure = get_device_stops(device_coords, device_timestamps, shape_matches_inds)
-        trips_filtered_by_stops_and_times = filter_trips_by_shape_date_stops_and_stop_times(start_date, shape_matches_inds, device_stop_ids, device_stop_int_ids, device_stops_arrival, device_stops_departure)
-    
-        if do_print:
-            for t in trips_filtered_by_stops_and_times:
-                trip_stop_times = gtfs.models.StopTime.objects.filter(trip = t).order_by('arrival_time')
-                print "trip id: %s" % (t)
-                for x in trip_stop_times:
-                    print db_time_to_datetime(x.arrival_time), db_time_to_datetime(x.departure_time), x.stop
-                print
-        
-            for cur in zip(device_stops_arrival, device_stops_departure, device_stop_names):
-                print cur[0].strftime('%H:%M:%S'), cur[1].strftime('%H:%M:%S'), cur[2]
+            if i % 900 == 0:
+                for stop_time in tracker.stop_times: 
+                    departure = stop_time.arrival if stop_time.departure == None else stop_time.departure
+                    print stops.all_stops[stop_time.stop_int_id].name, departure-stop_time.arrival
+                trips = tracker.get_possible_trips()
+            report = reports_queryset[i]
             
-            save_to_kml(device_coords, os.path.join(config.output_data, "shape_%s.kml" % (device_id)))  
-          
-        return trips_filtered_by_stops_and_times
+            tracker.add(report)
+            
 
-    def test_tracker_on_device(self):
+        #tracker.print_tracked_stop_times()
+        #tracker.print_possible_trips()
+        trips = tracker.get_possible_trips()
+        return trips, tracker
         
+  
+    def test_tracker_on_devices(self):
+
         device_id = '02090d12' # Eran's trip
-        trips = self.match_device_id2(device_id)
+        trips, tracker = self.track_device(device_id)
+        self.assertTrue(len(trips) == 3)
+        self.assertTrue('130114_00177' in trips)
+        self.assertTrue('130114_00175' in trips)
+        self.assertTrue('130114_00077' in trips)
+        
+        device_id = 'f752c40d' # Ofer's trip
+        trips, tracker = self.track_device(device_id)
+        self.assertTrue(len(trips) == 1)        
+        self.assertTrue('130114_00283' in trips)
+    
+        device_id = '1cb87f1e' # Udi's trip        
+        trips, tracker = self.track_device(device_id)
+        self.assertTrue(len(trips) == 2)        
+        self.assertTrue('160114_00171' in trips)
+        self.assertTrue('160114_00073' in trips)
+
+    def get_data_from_device_id(self, device_id):
+        qs = analysis.models.Report.objects.filter(device_id=device_id)#,my_loc__isnull=False)
+        #qs = qs.filter(timestamp__day=device_date_day,timestamp__month=device_date_month,timestamp__year=device_date_year)
+        qs = qs.order_by('timestamp')
+        qs = qs.prefetch_related('wifi_set','my_loc')
+        #reports = list(qs) takes a long time
+        return qs    
         
 if __name__ == '__main__':
     unittest.main()

@@ -8,7 +8,6 @@ import numpy as np
 import copy
 
 from utils import *
-import stops
 
 class Stop(object):
     def __init__( self, id_, name, coords ) :
@@ -74,4 +73,4 @@ def get_all_stops():
     
     return all_stops
 
-stops.all_stops = get_all_stops()
+all_stops = get_all_stops()

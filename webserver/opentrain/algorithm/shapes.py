@@ -7,7 +7,6 @@ import numpy as np
 import copy
 
 from utils import *
-import shapes
 
 class Shape(object):
     def __init__( self, id_, coords ) :
@@ -102,4 +101,4 @@ def get_all_shapes():
     
     return all_shapes
 
-shapes.all_shapes = get_all_shapes()
+all_shapes = get_all_shapes()

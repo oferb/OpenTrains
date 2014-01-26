@@ -11,6 +11,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	};
 	$scope.input = {
 		selectedDevice : null,
+		autoZoom : true,
 	};
 	$scope.initReport = function() {
 		var device_id = $scope.getParameterByName('device_id');
@@ -123,6 +124,9 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 					
 				}
 				var box = [[minLat, minLon], [maxLat,maxLon]];
+				if (!$scope.input.autoZoom) {
+					box = null;
+				}
 				MyLeaflet.showReports(map, reports, {
 					box : box,
 					initialPoint : lastPoint

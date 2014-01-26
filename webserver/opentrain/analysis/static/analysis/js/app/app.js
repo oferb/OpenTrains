@@ -103,8 +103,6 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			if (reports.length == 0) {
 				console.log('no new reports');
 			} else {
-				$scope.locCount = 0;
-				$scope.noLocCount = 0;
 				var minLon = +Infinity, maxLon = -Infinity, minLat = +Infinity, maxLat = -Infinity;
 				$scope.reports.forEach(function(r) {
 					if (r.loc) {
@@ -112,16 +110,12 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 						maxLon = Math.max(maxLon, r.loc.lon);
 						minLat = Math.min(minLat, r.loc.lat);
 						maxLat = Math.max(maxLat, r.loc.lat);
-						$scope.locCount++;
-					} else {
-						$scope.noLocCount++;
-					}
+					} 
 				});
 				var lastPoint = null;
 				if ($scope.lastShownReportIndex >= 0) {
 					var l = $scope.reports[$scope.lastShownReportIndex].loc;
 					lastPoint = [l.lat,l.lon];
-					
 				}
 				var box = [[minLat, minLon], [maxLat,maxLon]];
 				if (!$scope.input.autoZoom) {

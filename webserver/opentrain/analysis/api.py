@@ -26,7 +26,7 @@ class ReportLocResource(ModelResource):
         bundle.data['is_station'] = bundle.obj.is_station()
         return bundle
     class Meta:
-        queryset = models.Report.objects.order_by('id').all().prefetch_related('wifi_set','my_loc')
+        queryset = models.Report.objects.order_by('id').filter(my_loc__isnull=False).prefetch_related('wifi_set','my_loc')
         resource_name = "reports-loc"
         ordering = 'id'
         filtering = {'device_id' : ALL, 'id' : ALL_WITH_RELATIONS}

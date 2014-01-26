@@ -26,14 +26,5 @@ def show(req):
     data = dict(rrs=rrs,total=total)
     return render(req,'reports/results.html',data)
 
-def download(req):
-    count = req.GET.get('count',50)
-    offset = req.GET.get('offset',0)
-    rrs = models.RawReport.objects.order_by('-id')[offset:offset+count]
-    objects = []
-    for rr in rrs:
-        objects.append(rr.to_json())
-    resp = HttpResponse(content=json.dumps(objects),content_type='application/json')
-    return resp
 
 

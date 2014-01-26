@@ -1,14 +1,14 @@
 // app.js
 
-app = angular.module('show_reports', ['my.services', 'my.filters', 'my.directives', 'my.leaflet','leaflet-directive']);
+app = angular.module('show_reports', ['my.services', 'my.filters', 'my.directives', 'my.leaflet', 'leaflet-directive']);
 
-app.controller('ShowReportsController', ['$scope', 'MyHttp', 'MyUtils','MyLeaflet','$timeout', 'leafletData','$window',
-function($scope, MyHttp, MyUtils,MyLeaflet,$timeout, leafletData,$window) {
+app.controller('ShowReportsController', ['$scope', 'MyHttp', 'MyUtils', 'MyLeaflet', 
+'$timeout', 'leafletData', '$window','$interval',
+function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$interval) {
 	$scope.getParameterByName = function(name) {
-	    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
-	    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-	        results = regex.exec($window.location.search);
-	    return results == null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
+		name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec($window.location.search);
+		return results == null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
 	};
 	$scope.input = {
 		selectedDevice : null,
@@ -17,8 +17,28 @@ function($scope, MyHttp, MyUtils,MyLeaflet,$timeout, leafletData,$window) {
 		var device_id = $scope.getParameterByName('device_id');
 		$scope.devices = [];
 		$scope.reportsStatus = 'none';
+		$scope.liveMode = false;
 		$scope.loadDeviceList(device_id);
 	};
+	$scope.intervalPromise = undefined;
+	$scope.goLive = function() {
+		$scope.liveMode = true;
+		$scope.intervalPromise = $interval(function() {
+			$scope.updateDevice();
+		}, 2000);
+	};
+	$scope.stopLive = function() {
+		$scope.liveMode = false;
+		if (angular.isDefined($scope.intervalPromise)) {
+			$interval.cancel($scope.intervalPromise);
+			$scope.intervalPromise = undefined;
+		}
+	};
+	
+	$scope.updateDevice = function() {
+		$scope.loadLiveReports();
+	};
+
 	$scope.loadDeviceList = function(device_id) {
 		MyHttp.get('/api/v1/devices/').success(function(data) {
 			$scope.devices = data.objects;
@@ -42,6 +62,10 @@ function($scope, MyHttp, MyUtils,MyLeaflet,$timeout, leafletData,$window) {
 	$scope.redirectToReports = function() {
 		window.location.href = '/analysis/select-device-reports/?device_id=' + $scope.input.selectedDevice.device_id;
 	};
+	$scope.loadLiveReports = function() {
+		var url = '/api/v1/reports-loc/?device_id=' + curId + '&limit=200&';
+		$scope.appendReportsRec(url);
+	};
 	$scope.loadReports = function() {
 		$scope.reportsStatus = 'wip';
 		var curId = $scope.input.selectedDevice.device_id;
@@ -49,6 +73,7 @@ function($scope, MyHttp, MyUtils,MyLeaflet,$timeout, leafletData,$window) {
 		var url = '/api/v1/reports-loc/?device_id=' + curId + '&limit=200';
 		$scope.appendReportsRec(url);
 	};
+	
 	$scope.appendReportsRec = function(url) {
 		MyHttp.get(url).success(function(data) {
 			$scope.reports.push.apply($scope.reports, data.objects);
@@ -70,7 +95,7 @@ function($scope, MyHttp, MyUtils,MyLeaflet,$timeout, leafletData,$window) {
 	};
 	$scope.drawMap = function() {
 		leafletData.getMap().then(function(map) {
-			var result = MyLeaflet.showReports(map,$scope.reports);
+			var result = MyLeaflet.showReports(map, $scope.reports);
 			$scope.noLocCount = result.noLocCount;
 			$scope.locCount = result.locCount;
 		});

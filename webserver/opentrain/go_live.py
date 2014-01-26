@@ -11,7 +11,7 @@ To invoke:
     server:   what server to use.
               if run locally use localhost:8000 if on real server use 54.221.246.54
               
-    For example:  ./go_live.py 1cb87f1e eran1234 0.001 localhost:8000
+    For example:  ./go_live.py 1cb87f1e eran1234 2 localhost:8000
 
 """
 

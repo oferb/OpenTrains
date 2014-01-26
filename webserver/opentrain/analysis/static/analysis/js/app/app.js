@@ -71,6 +71,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$int
 		$scope.reportsStatus = 'wip';
 		var curId = $scope.input.selectedDevice.device_id;
 		$scope.reports = [];
+		$scope.lastShownReportIndex = -1;
 		var url = '/api/v1/reports-loc/?device_id=' + curId + '&limit=200';
 		$scope.appendReportsRec(url);
 	};
@@ -96,9 +97,18 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$int
 	};
 	$scope.drawMap = function() {
 		leafletData.getMap().then(function(map) {
-			var result = MyLeaflet.showReports(map, $scope.reports);
-			$scope.noLocCount = result.noLocCount;
-			$scope.locCount = result.locCount;
+			var reports = $scope.reports.slice($scope.lastShownReportIndex);
+			var result = MyLeaflet.showReports(map, reports);
+			$scope.lastShownReportIndex = $scopre.reports.length-1;
+			$scope.locCount = 0;
+			$scope.noLocCount = 0;
+			$scope.reports.forEach(function(r) {
+				if (r.loc) {
+					$scope.locCount++;			
+				} else {
+					$scope.noLocCount++;
+				}
+			});
 		});
 	};
 	$scope.getDeviceTitle = function(device) {

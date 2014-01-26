@@ -22,7 +22,8 @@
 	</head>
 
 	<body>
-		<!-- <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script> -->
+		{% block scriptstart %}
+		{% endblock %}
 		<script src="{% static 'common/js/ext/jquery-1.10.2.min.js' %}"></script>
 		<script src="{% static 'common/bs3/js/bootstrap.min.js' %}"></script>
 		<script src="{% static 'common/js/ot_utils.js'%}"></script>
@@ -35,7 +36,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="#">Open Train</a>
+					<a class="navbar-brand" href="/">Open Train</a>
 				</div>
 				<div class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">

@@ -77,6 +77,13 @@ def meter_distance_to_coord_distance(meter_distance):
     meters_over_coords = 110101.0
     return meter_distance/meters_over_coords
 
+def analyze_single_raw_report(rr):
+    items = json.loads(rr.text)['items']
+    dump_items(items)
+    
+    
+    
+
 
 
 

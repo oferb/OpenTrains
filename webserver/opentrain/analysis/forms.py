@@ -1,4 +1,5 @@
 from django import forms
+from bootstrap3_datetime.widgets import DateTimePicker
 
 def get_labels():
     import models
@@ -18,7 +19,7 @@ def get_device_ids_summary():
     """)
     tuples = cursor.fetchall()
     for t in tuples:
-        tuple_id = '%s::::%s:%s:%s::::%s' % (t[0],t[1].year,t[1].month,t[1].day,t[2])
+        tuple_id = '%s::::%s:%s:%s' % (t[0],t[1].year,t[1].month,t[1])
         tuple_print = '%s @%s (%d)' % t
         result.append((tuple_id,tuple_print))
     return result
@@ -27,7 +28,24 @@ class LabelsForm(forms.Form):
     labels = forms.ChoiceField(choices=get_labels())
     
 class ReportsForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(ReportsForm, self).__init__(*args, **kwargs)
+        self.fields["device_desc"] = forms.ChoiceField(choices=get_device_ids_summary(),label='Device Id')
     device_desc = forms.ChoiceField(choices=get_device_ids_summary(),label='Device Id')
+    start_time = forms.DateTimeField(
+                                            input_formats = ['%Y-%m-%d %H:%M'],
+                                            required=False,
+                                            widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm",
+                                                                           "pickTime": True,
+                                                                           "pickSeconds" : False}))
+
+    end_time = forms.DateTimeField(
+                                            input_formats = ['%Y-%m-%d %H:%M'],
+                                            required=False,
+                                            widget=DateTimePicker(options={"format": "YYYY-MM-DD HH:mm",
+                                                                           "pickTime": True,
+                                                                           "pickSeconds" : False}))
+
     
 class ReportDetailForm(forms.Form):
     report_id = forms.CharField(max_length=20,label='Report ID')

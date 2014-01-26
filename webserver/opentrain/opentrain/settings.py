@@ -44,8 +44,8 @@ INSTALLED_APPS = (
     'common',
     'reports',
     'analysis',
-    'django.contrib.staticfiles',
-    'django_extensions'
+    'django_extensions',
+    'redis_intf'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -88,7 +88,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Israel'
+TIME_ZONE = 'Asia/Jerusalem'
 
 USE_I18N = True
 
@@ -111,6 +111,7 @@ TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
     "common.ctx.menu",
 )
 
+TASTYPIE_DATETIME_FORMATTING = 'rfc-2822'
 
 # override settings using local_settings.py
 try:

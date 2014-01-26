@@ -4,10 +4,16 @@ import os
 import time
 from django.conf import settings
 from django.utils import timezone
+import pytz
 
 def get_utc_time_underscored():
     """ return UTC time as underscored, to timestamp folders """
     t = datetime.datetime.utcnow()
+    return t.strftime('%Y_%m_%d_%H_%M_%S')
+
+def get_local_time_underscored():
+    """ return time as underscored, to timestamp folders """
+    t = datetime.datetime.now()
     return t.strftime('%Y_%m_%d_%H_%M_%S')
 
 def mkdir_p(path):
@@ -47,7 +53,10 @@ def benchit(func):
 
 def parse_form_date(dt_str):
     """ parse the datetime string as returned from the form """
-    return datetime.datetime.strptime(dt_str, '%Y-%m-%d %H:%M')
+    import dateutil.parser
+    if not dt_str or dt_str.lower() == 'none':
+        return None
+    return dateutil.parser.parse(dt_str)
 
 
 def parse_gtfs_date(value):
@@ -95,4 +104,7 @@ def delete_from_model(model):
     cursor.execute(sql)    
     print 'DELETED %s' % (table_name)
 
+def get_localtime(dt):
+    tz = pytz.timezone(settings.TIME_ZONE)
+    return dt.astimezone(tz)
 

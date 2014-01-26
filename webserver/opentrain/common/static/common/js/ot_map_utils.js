@@ -18,8 +18,9 @@ function MapWrapper() {
 	this.createReportsLine = function(reports) {
 		var points = [];
 		reports.forEach(function(r) {
-			points.push([r.lat, r.lon]);
+			points.push([r.loc.lat, r.loc.lon]);
 		});
+		console.log(points.length);
 		var that = this;
 		var polyline = this.createLineAndZoom(points, {
 			color : '#0000CD',
@@ -28,8 +29,8 @@ function MapWrapper() {
 		});
 		points.forEach(function(pt, index) {
 			var report = reports[index];
-			var text = '<a href="/analysis/report-details/?report_id=' + report.id + '">' + report.id + '</a><br/>' + toHourMinSec(report.timestamp);
-			if (report.is_station) {
+			var text = '<a href="/analysis/report-details/?report_id=' + report.id + '">' + report.id + '</a><br/>';// + toHourMinSec(report.timestamp);
+			if (/*report.is_station*/false) {
 				L.marker(pt, {
 					icon : that.trainIcon
 				}).addTo(that.map).bindPopup(text);
@@ -61,7 +62,7 @@ function otCreateMap(mapDiv, options) {
 	options = options || {};
 	var map = L.map(mapDiv);
 	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		maxZoom : 18,
+		maxZoom : 22,
 		attribution : 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>'
 	}).addTo(map);
 	var result = new MapWrapper();
@@ -73,3 +74,19 @@ function otCreateMap(mapDiv, options) {
 	return result;
 }
 
+var otLiveMode = false;
+var otLiveIntervalID = null;
+function otRefreshLive(isLive) {
+	otLiveMode = isLive;
+	$("#go_live_btn").prop('disabled', otLiveMode);
+	$("#stop_live_btn").prop('disabled', !otLiveMode);
+	if (otLiveMode) {
+		otLiveIntervalID = window.setInterval(otRefreshDevice, 2000);
+	} else {
+		window.clearInterval(otLiveIntervalID);
+	}
+}
+
+function otRefreshDevice() {
+	console.log('in otRefreshDevice');
+}

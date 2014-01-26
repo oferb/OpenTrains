@@ -1,0 +1,49 @@
+<div class="row">
+	<div class="col-md-3">
+		<h2>Search Reports</h2>
+		<form class="form" method="post" role="form" ng-submit="redirectToReports()">
+			<select ng-options="getDeviceTitle(device) for device in devices" ng-model="input.selectedDevice"></select>
+			<button type="submit" class="btn btn-success btn-sm">
+				<span class="glyphicon glyphicon-search"></span>
+			</button>
+			<button type="button" ng-show="reportsStatus == 'done' && !liveMode" class="btn btn-success btn-sm" ng-click="goLive()">
+				Go Live
+			</button>
+			<button type="button" ng-show="reportsStatus == 'done' && liveMode" class="btn btn-danger btn-sm" ng-click="stopLive()">
+				Stop Live
+			</button>
+		</form>
+		<br/>
+		<div class="well" ng-show="reportsStatus == 'wip'">
+			Please wait. Loading Reports, will take some time....
+		</div>
+		<div class="well" ng-if="reportsStatus == 'done'">
+			<p>
+				Map for device id <b>{{input.selectedDevice.device_id}}</b>
+			</p>
+			<p>
+				Total # of reports: {{reports.length}}
+			</p>
+			<p>
+				With loc: {{locCount}}
+			</p>
+			<p>
+				Without loc: {{noLocCount}} 
+			</p>
+			<p>
+				From {{reports[0].timestamp | date:'HH:mm:ss' }} <br/>
+				to {{reports[reports.length-1].timestamp | parseDate | date:'HH:mm:ss' }} <br/>
+				on {{reports[0].timestamp | date:'dd-MMM-yyyy'}}
+			</p>
+			<p>
+				
+			</p>
+		</div>
+	</div>
+	<div class="col-md-9">
+		<div ng-show="reportsStatus == 'done'">
+			<leaflet width="800" height="500"></leaflet> 
+		</div>
+	</div>
+</div>
+

@@ -63,7 +63,8 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$int
 		window.location.href = '/analysis/select-device-reports/?device_id=' + $scope.input.selectedDevice.device_id;
 	};
 	$scope.loadLiveReports = function() {
-		var url = '/api/v1/reports-loc/?device_id=' + curId + '&limit=200&';
+		var last_report_id = $scope.reports.length > 0 ? $scope.reports[$scopre.reports.length-1].id : 0;
+		var url = '/api/v1/reports-loc/?device_id=' + curId + '&limit=200&id_gt=' + last_report_id;
 		$scope.appendReportsRec(url);
 	};
 	$scope.loadReports = function() {

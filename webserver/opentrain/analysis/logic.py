@@ -21,6 +21,9 @@ def analyze_raw_reports_subset(offset,count):
         return True
     return False
 
+from django.db import transaction
+
+@transaction.atomic
 def dump_items(items):
     wifis = []
     locs = []

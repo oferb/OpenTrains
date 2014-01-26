@@ -2,9 +2,8 @@
 
 app = angular.module('show_reports', ['my.services', 'my.filters', 'my.directives', 'my.leaflet', 'leaflet-directive']);
 
-app.controller('ShowReportsController', ['$scope', 'MyHttp', 'MyUtils', 'MyLeaflet', 
-'$timeout', 'leafletData', '$window','$interval',
-function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$interval) {
+app.controller('ShowReportsController', ['$scope', 'MyHttp', 'MyUtils', 'MyLeaflet', '$timeout', 'leafletData', '$window', '$interval',
+function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $interval) {
 	$scope.getParameterByName = function(name) {
 		name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
 		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec($window.location.search);
@@ -34,7 +33,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$int
 			$scope.intervalPromise = undefined;
 		}
 	};
-	
+
 	$scope.updateDevice = function() {
 		$scope.loadLiveReports();
 	};
@@ -64,7 +63,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$int
 	};
 	$scope.loadLiveReports = function() {
 		var curId = $scope.input.selectedDevice.device_id;
-		var last_report_id = $scope.reports.length > 0 ? $scope.reports[$scope.reports.length-1].id : 0;
+		var last_report_id = $scope.reports.length > 0 ? $scope.reports[$scope.reports.length - 1].id : 0;
 		var url = '/api/v1/reports-loc/?device_id=' + curId + '&limit=200&id__gt=' + last_report_id;
 		$scope.appendReportsRec(url);
 	};
@@ -76,7 +75,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$int
 		var url = '/api/v1/reports-loc/?device_id=' + curId + '&limit=200';
 		$scope.appendReportsRec(url);
 	};
-	
+
 	$scope.appendReportsRec = function(url) {
 		MyHttp.get(url).success(function(data) {
 			console.log('GOT ' + data.objects.length);
@@ -99,22 +98,36 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$int
 	};
 	$scope.drawMap = function() {
 		leafletData.getMap().then(function(map) {
-			var reports = $scope.reports.slice($scope.lastShownReportIndex+1);
+			var reports = $scope.reports.slice($scope.lastShownReportIndex + 1);
 			if (reports.length == 0) {
 				console.log('no new reports');
-			}  else {
+			} else {
 				$scope.locCount = 0;
 				$scope.noLocCount = 0;
+				var minLon = +Infinity, maxLon = -Infinity, minLat = +Infinity, maxLat = -Infinity;
 				$scope.reports.forEach(function(r) {
 					if (r.loc) {
-						$scope.locCount++;			
+						minLon = Math.min(minLon, r.loc.lon);
+						maxLon = Math.max(maxLon, r.loc.lon);
+						minLat = Math.min(minLat, r.loc.lat);
+						maxLat = Math.max(maxLat, r.loc.lat);
+						$scope.locCount++;
 					} else {
 						$scope.noLocCount++;
 					}
 				});
-				var toZoom = $scope.lastShownReportIndex < 0;
-				MyLeaflet.showReports(map, reports,toZoom);
-				$scope.lastShownReportIndex = $scope.reports.length-1;
+				var lastPoint = null;
+				if ($scope.lastShownReportIndex >= 0) {
+					var l = $scope.reports[$scope.lastShownReportIndex].loc;
+					lastPoint = [l.lat,l.lon];
+					
+				}
+				var box = [[minLat, minLon], [maxLat,maxLon]];
+				MyLeaflet.showReports(map, reports, {
+					box : box,
+					initialPoint : lastPoint
+				});
+				$scope.lastShownReportIndex = $scope.reports.length - 1;
 			}
 		});
 	};

@@ -1,7 +1,6 @@
 import gtfs.models
 from scipy import spatial
 import shelve
-from Shape import Shape
 import os
 import config
 import numpy as np

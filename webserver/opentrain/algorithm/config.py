@@ -1,5 +1,6 @@
 import config 
 import os
+from common.ot_utils import mkdir_p
 
 def set_config(base_dir):
     config.base = base_dir
@@ -9,10 +10,12 @@ def set_config(base_dir):
     config.gtfs = os.path.join(config.temp_data, 'gtfs')
     config.gtfs_raw_data = os.path.join(config.gtfs, 'data')
     config.gtfs_processed_data = os.path.join(config.gtfs, 'processed_data')
+    mkdir_p(config.gtfs_processed_data)
     config.gtfs_shelve_file = os.path.join(config.gtfs_processed_data, 'shelve.data') 
     
     # reports
     config.output_data = os.path.join(config.temp_data, 'output')  
+    mkdir_p(config.output_data)    
     config.output_shelve_file = os.path.join(config.output_data, 'shelve.data')  
 
     # params

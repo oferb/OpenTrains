@@ -60,8 +60,8 @@ class TrainTracker(object):
                                     transmat=transmat)        
         self.hmm._set_emissionprob(emissionprob)
 
-        self.prev_stops = deque(maxlen=3000)
-        self.prev_stops_timestamps = deque(maxlen=3000)
+        self.prev_stops = deque(maxlen=1000)
+        self.prev_stops_timestamps = deque(maxlen=1000)
         self.stop_times = []
         
     def add(self, report):

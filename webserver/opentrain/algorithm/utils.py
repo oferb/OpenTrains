@@ -4,7 +4,10 @@ import analysis.models
 import numpy as np
 from scipy import spatial
 import shelve
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    pass
 import simplekml
 import config
 import itertools

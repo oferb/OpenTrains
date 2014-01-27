@@ -12,6 +12,12 @@
 			<button type="button" ng-show="reportsStatus == 'done' && liveMode" class="btn btn-danger btn-sm" ng-click="stopLive()">
 				Stop Live
 			</button>
+			<span ng-show="reportsStatus == 'done' && liveMode">
+			<label>
+				<input type="checkbox"  ng-model="input.autoZoom">
+				auto zoom
+			</label>
+			</span>
 		</form>
 		<br/>
 		<div class="well" ng-show="reportsStatus == 'wip'">
@@ -22,13 +28,7 @@
 				Map for device id <b>{{input.selectedDevice.device_id}}</b>
 			</p>
 			<p>
-				Total # of reports: {{reports.length}}
-			</p>
-			<p>
-				With loc: {{locCount}}
-			</p>
-			<p>
-				Without loc: {{noLocCount}} 
+				Total # of reports (with loc): {{reports.length}}
 			</p>
 			<p>
 				From {{reports[0].timestamp | date:'HH:mm:ss' }} <br/>

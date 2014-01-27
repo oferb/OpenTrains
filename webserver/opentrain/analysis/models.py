@@ -1,5 +1,4 @@
 from django.db import models
-from logic import meter_distance_to_coord_distance
 import datetime 
 
 class Report(models.Model):
@@ -22,9 +21,9 @@ class Report(models.Model):
         if self.my_loc:
             return (self.timestamp - self.my_loc.timestamp).total_seconds()
     
-    def get_timestamp_israel_time(self):
-	local_time_delta = datetime.timedelta(0,2*3600)
-	return self.timestamp + local_time_delta
+def get_timestamp_israel_time(self):
+    local_time_delta = datetime.timedelta(0,2*3600)
+    return self.timestamp + local_time_delta
     
 class LocationInfo(models.Model):
     report = models.OneToOneField(Report,related_name='my_loc')
@@ -34,9 +33,10 @@ class LocationInfo(models.Model):
     provider = models.CharField(max_length=100)
     timestamp = models.DateTimeField()
     
-    def get_accuracy_in_coords(self):
-	return meter_distance_to_coord_distance(self.accuracy)
-    accuracy_in_coords = property(get_accuracy_in_coords)
+    @property
+    def accuracy_in_coords(self):
+        import logic.meter_distance_to_coord_distance
+        return logic.meter_distance_to_coord_distance(self.accuracy)
     
 class SingleWifiReport(models.Model):
     report = models.ForeignKey(Report,related_name='wifi_set')

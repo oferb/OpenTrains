@@ -2,9 +2,8 @@
 
 app = angular.module('show_reports', ['my.services', 'my.filters', 'my.directives', 'my.leaflet', 'leaflet-directive']);
 
-app.controller('ShowReportsController', ['$scope', 'MyHttp', 'MyUtils', 'MyLeaflet', 
-'$timeout', 'leafletData', '$window','$interval',
-function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$interval) {
+app.controller('ShowReportsController', ['$scope', 'MyHttp', 'MyUtils', 'MyLeaflet', '$timeout', 'leafletData', '$window', '$interval',
+function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $interval) {
 	$scope.getParameterByName = function(name) {
 		name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
 		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"), results = regex.exec($window.location.search);
@@ -12,6 +11,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$int
 	};
 	$scope.input = {
 		selectedDevice : null,
+		autoZoom : true,
 	};
 	$scope.initReport = function() {
 		var device_id = $scope.getParameterByName('device_id');
@@ -25,7 +25,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$int
 		$scope.liveMode = true;
 		$scope.intervalPromise = $interval(function() {
 			$scope.updateDevice();
-		}, 2000);
+		}, 10000);
 	};
 	$scope.stopLive = function() {
 		$scope.liveMode = false;
@@ -34,7 +34,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$int
 			$scope.intervalPromise = undefined;
 		}
 	};
-	
+
 	$scope.updateDevice = function() {
 		$scope.loadLiveReports();
 	};
@@ -63,8 +63,9 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$int
 		window.location.href = '/analysis/select-device-reports/?device_id=' + $scope.input.selectedDevice.device_id;
 	};
 	$scope.loadLiveReports = function() {
-		var last_report_id = $scope.reports.length > 0 ? $scope.reports[$scopre.reports.length-1].id : 0;
-		var url = '/api/v1/reports-loc/?device_id=' + curId + '&limit=200&id_gt=' + last_report_id;
+		var curId = $scope.input.selectedDevice.device_id;
+		var last_report_id = $scope.reports.length > 0 ? $scope.reports[$scope.reports.length - 1].id : 0;
+		var url = '/api/v1/reports-loc/?device_id=' + curId + '&limit=200&id__gt=' + last_report_id;
 		$scope.appendReportsRec(url);
 	};
 	$scope.loadReports = function() {
@@ -75,9 +76,10 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$int
 		var url = '/api/v1/reports-loc/?device_id=' + curId + '&limit=200';
 		$scope.appendReportsRec(url);
 	};
-	
+
 	$scope.appendReportsRec = function(url) {
 		MyHttp.get(url).success(function(data) {
+			console.log('GOT ' + data.objects.length);
 			$scope.reports.push.apply($scope.reports, data.objects);
 			if (data.meta.next) {
 				$scope.appendReportsRec(data.meta.next);
@@ -97,18 +99,34 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window,$int
 	};
 	$scope.drawMap = function() {
 		leafletData.getMap().then(function(map) {
-			var reports = $scope.reports.slice($scope.lastShownReportIndex);
-			var result = MyLeaflet.showReports(map, reports);
-			$scope.lastShownReportIndex = $scopre.reports.length-1;
-			$scope.locCount = 0;
-			$scope.noLocCount = 0;
-			$scope.reports.forEach(function(r) {
-				if (r.loc) {
-					$scope.locCount++;			
-				} else {
-					$scope.noLocCount++;
+			var reports = $scope.reports.slice($scope.lastShownReportIndex + 1);
+			if (reports.length == 0) {
+				console.log('no new reports');
+			} else {
+				var minLon = +Infinity, maxLon = -Infinity, minLat = +Infinity, maxLat = -Infinity;
+				$scope.reports.forEach(function(r) {
+					if (r.loc) {
+						minLon = Math.min(minLon, r.loc.lon);
+						maxLon = Math.max(maxLon, r.loc.lon);
+						minLat = Math.min(minLat, r.loc.lat);
+						maxLat = Math.max(maxLat, r.loc.lat);
+					} 
+				});
+				var lastPoint = null;
+				if ($scope.lastShownReportIndex >= 0) {
+					var l = $scope.reports[$scope.lastShownReportIndex].loc;
+					lastPoint = [l.lat,l.lon];
 				}
-			});
+				var box = [[minLat, minLon], [maxLat,maxLon]];
+				if (!$scope.input.autoZoom) {
+					box = null;
+				}
+				MyLeaflet.showReports(map, reports, {
+					box : box,
+					initialPoint : lastPoint
+				});
+				$scope.lastShownReportIndex = $scope.reports.length - 1;
+			}
 		});
 	};
 	$scope.getDeviceTitle = function(device) {

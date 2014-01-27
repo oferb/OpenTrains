@@ -73,7 +73,7 @@ class BSSIDTracker(object):
 
 def calc_tracker():
     tracker = BSSIDTracker()
-    reports = analysis.models.Report.objects.filter(wifi_set__SSID = 'S-ISRAEL-RAILWAYS').order_by('id')
+    reports = analysis.models.Report.objects.filter(wifi_set__SSID = 'S-ISRAEL-RAILWAYS', my_loc__isnull=False).order_by('id')
     reports.prefetch_related('wifi_set', 'my_loc')
     # TODO: ask Eran is there's a better way to get unique reports (some kind of django join?):
     reports = list(set(reports))

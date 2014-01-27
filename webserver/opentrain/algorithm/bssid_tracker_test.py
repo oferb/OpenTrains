@@ -38,12 +38,12 @@ class BSSIDTrackerTest(TestCase):
         bssids = [x for x in self.stop_bssids if bssid_tracker.tracker.has_bssid(x)]
         low_confidence_bssids = [x for x in bssids if bssid_tracker.tracker.get_stop_int_id(x)[1] < config.stop_discovery_probability_thresh]
         
-        self.assertTrue(len(low_confidence_bssids) == 0)
+        self.assertEquals(len(low_confidence_bssids), 0)
 
     def test_all_bssids_are_mapped(self):
         unmapped_bssids = [x for x in self.stop_bssids if not bssid_tracker.tracker.has_bssid(x)]
         
-        self.assertTrue(len(unmapped_bssids) == 0, '%s bssids are not mapped' % (unmapped_bssids))
+        self.assertEquals(len(unmapped_bssids),0, '%s bssids are not mapped' % (unmapped_bssids))
     
         
 if __name__ == '__main__':

@@ -70,19 +70,22 @@ class train_tracker_test(TestCase):
 
         device_id = '02090d12' # Eran's trip
         trips, tracker = self.track_device(device_id)
-        self.assertTrue(len(trips) == 3)
+        print trips
+        self.assertEquals(len(trips), 3)
         self.assertTrue('130114_00177' in trips)
         self.assertTrue('130114_00175' in trips)
         self.assertTrue('130114_00077' in trips)
         
         device_id = 'f752c40d' # Ofer's trip
         trips, tracker = self.track_device(device_id)
-        self.assertTrue(len(trips) == 1)        
+        print trips
+        self.assertEquals(len(trips), 1)        
         self.assertTrue('130114_00283' in trips)
     
         device_id = '1cb87f1e' # Udi's trip        
         trips, tracker = self.track_device(device_id)
-        self.assertTrue(len(trips) == 2)        
+        print trips
+        self.assertEquals(len(trips), 2)        
         self.assertTrue('160114_00171' in trips)
         self.assertTrue('160114_00073' in trips)
 

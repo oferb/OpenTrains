@@ -21,9 +21,11 @@ class Report(models.Model):
         if self.my_loc:
             return (self.timestamp - self.my_loc.timestamp).total_seconds()
     
-def get_timestamp_israel_time(self):
-    local_time_delta = datetime.timedelta(0,2*3600)
-    return self.timestamp + local_time_delta
+    def get_timestamp_israel_time(self):
+        #local_time_delta = datetime.timedelta(0,2*3600)
+        #return self.timestamp + local_time_delta
+	from common.ot_utils import get_localtime
+	return get_localtime(self.timestamp)
     
 class LocationInfo(models.Model):
     report = models.OneToOneField(Report,related_name='my_loc')
@@ -35,8 +37,8 @@ class LocationInfo(models.Model):
     
     @property
     def accuracy_in_coords(self):
-        import logic.meter_distance_to_coord_distance
-        return logic.meter_distance_to_coord_distance(self.accuracy)
+        from common.ot_utils import meter_distance_to_coord_distance
+        return meter_distance_to_coord_distance(self.accuracy)
     
 class SingleWifiReport(models.Model):
     report = models.ForeignKey(Report,related_name='wifi_set')

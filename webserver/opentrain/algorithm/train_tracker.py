@@ -15,7 +15,7 @@ try:
 except ImportError:
     pass
 import datetime
-from analysis.logic import meter_distance_to_coord_distance
+from common.ot_utils import meter_distance_to_coord_distance
 import bssid_tracker
 
 class TrackedStopTime(object):

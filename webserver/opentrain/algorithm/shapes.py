@@ -71,6 +71,7 @@ class ShapeList(list):
 
     
     def get_sampling_of_all_routes(self):
+        from common.ot_utils import meter_distance_to_coord_distance
         shape_point_tree = self.point_tree
         inds_to_go_over = np.zeros(len(shape_point_tree.data)) == 0
         inds_to_keep = np.zeros(len(shape_point_tree.data)) == -1

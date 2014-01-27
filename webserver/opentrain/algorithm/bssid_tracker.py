@@ -12,7 +12,7 @@ import shapes
 from sklearn.hmm import MultinomialHMM
 from utils import *
 from collections import deque
-from analysis.logic import meter_distance_to_coord_distance
+from common.ot_utils import meter_distance_to_coord_distance
 
 from export_utils import *
 

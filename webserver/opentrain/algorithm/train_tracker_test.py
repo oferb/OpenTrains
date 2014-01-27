@@ -9,7 +9,10 @@ import analysis.models
 import numpy as np
 from scipy import spatial
 import shelve
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    pass
 import simplekml
 import config
 import itertools
@@ -28,10 +31,6 @@ from analysis.models import SingleWifiReport
 class train_tracker_test(TestCase):
     
     def track_device(self, device_id, do_print=False, do_preload_reports=True):
-        sampled_all_routes_tree = shapes.all_shapes.sampled_point_tree
-        shape_point_tree = shapes.all_shapes.point_tree
-        
-        shape_int_ids = []
         #device_coords, device_timestamps, device_accuracies_in_meters, device_accuracies_in_coords = get_location_info_from_device_id(device_id)
         reports_queryset = self.get_data_from_device_id(device_id)
         

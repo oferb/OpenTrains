@@ -10,7 +10,10 @@ import shapes
 from sklearn.hmm import MultinomialHMM
 from utils import *
 from collections import deque
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    pass
 import datetime
 from analysis.logic import meter_distance_to_coord_distance
 import bssid_tracker

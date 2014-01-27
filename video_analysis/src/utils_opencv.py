@@ -2,9 +2,12 @@ import cv
 import cv2
 import os
 import numpy as np
-import matplotlib.image as mpimg
+try:
+    import matplotlib.image as mpimg
+    import matplotlib.pyplot as plt
+except ImportError:
+    pass
 import time
-import matplotlib.pyplot as plt
 import gc
 import datetime as dt
 import shelve

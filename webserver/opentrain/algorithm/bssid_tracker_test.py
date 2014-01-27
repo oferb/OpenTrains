@@ -37,12 +37,14 @@ class BSSIDTrackerTest(TestCase):
     def test_all_mappings_pass_threshold(self):
         bssids = [x for x in self.stop_bssids if bssid_tracker.tracker.has_bssid(x)]
         low_confidence_bssids = [x for x in bssids if bssid_tracker.tracker.get_stop_int_id(x)[1] < config.stop_discovery_probability_thresh]
-        
+        print low_confidence_bssids
+        for bssid in low_confidence_bssids:
+            print bssid_tracker.tracker.get_stop_int_id(bssid)
         self.assertEquals(len(low_confidence_bssids), 0)
 
     def test_all_bssids_are_mapped(self):
         unmapped_bssids = [x for x in self.stop_bssids if not bssid_tracker.tracker.has_bssid(x)]
-        
+        print unmapped_bssids
         self.assertEquals(len(unmapped_bssids),0, '%s bssids are not mapped' % (unmapped_bssids))
     
         

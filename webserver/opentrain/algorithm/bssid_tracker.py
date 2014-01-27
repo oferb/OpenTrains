@@ -101,4 +101,4 @@ def save_tracker(tracker):
     datafile['bssid_tracker'] = tracker
     datafile.close() 
 
-tracker = get_tracker()
+tracker = get_tracker(True)

@@ -24,8 +24,10 @@ class Report(models.Model):
     def get_timestamp_israel_time(self):
         #local_time_delta = datetime.timedelta(0,2*3600)
         #return self.timestamp + local_time_delta
-	from common.ot_utils import get_localtime
-	return get_localtime(self.timestamp)
+        from common.ot_utils import get_localtime
+        timestamp = get_localtime(self.timestamp)
+        timestamp = timestamp.replace(microsecond=0)
+        return timestamp
     
 class LocationInfo(models.Model):
     report = models.OneToOneField(Report,related_name='my_loc')

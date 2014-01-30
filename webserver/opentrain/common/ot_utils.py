@@ -104,9 +104,18 @@ def delete_from_model(model):
     cursor.execute(sql)    
     print 'DELETED %s' % (table_name)
 
-def get_localtime(dt):
-    tz = pytz.timezone(settings.TIME_ZONE)
-    return dt.astimezone(tz)
+def get_localtime(dt, tz=None):
+    # Note that, pytz.timezone(settings.TIME_ZONE) may return different results on different machines.
+    # On the server it returns option (1), while on Ofer's machine it returns option (2)
+    # 1) <DstTzInfo 'Asia/Jerusalem' IST+2:00:00 STD>
+    # 2) <DstTzInfo 'Asia/Jerusalem' JMT+2:21:00 STD>
+    # that's why there's an option to set the tz parameter externally
+    if tz is None:
+        tz = pytz.timezone(settings.TIME_ZONE)
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=tz)
+    else:
+        return dt.astimezone(tz)
 
 
 def meter_distance_to_coord_distance(meter_distance):

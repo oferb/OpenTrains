@@ -11,7 +11,8 @@ def set_config(base_dir):
     config.gtfs_raw_data = os.path.join(config.gtfs, 'data')
     config.gtfs_processed_data = os.path.join(config.gtfs, 'processed_data')
     mkdir_p(config.gtfs_processed_data)
-    config.gtfs_shelve_file = os.path.join(config.gtfs_processed_data, 'shelve.data') 
+    config.gtfs_stop_file = os.path.join(config.gtfs_processed_data, 'stop.data') 
+    config.gtfs_shape_file = os.path.join(config.gtfs_processed_data, 'shape.data') 
     
     # reports
     config.output_data = os.path.join(config.temp_data, 'output')  

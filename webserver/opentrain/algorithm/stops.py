@@ -5,31 +5,43 @@ import os
 import config
 import numpy as np
 import copy
+import config
 
 from utils import *
 
+NOSTOP = "nostop"
+
 class Stop(object):
     def __init__( self, id_, name, coords ) :
-        self.id_ = id_
+        self.id = id_
         self.name = name
         self.coords = coords
 
-class StopList(list):
-
+class StopList(dict):
 
     def __init__(self, django_stop_list) :
-        stops = gtfs.models.Stop.objects.all();
-        stop_ids = [x[0] for x in list(stops.all().values_list('stop_id'))]
-        stop_names = [x[0] for x in list(stops.all().values_list('stop_name'))]
-        lat_list = [float(x[0]) for x in list(stops.all().values_list('stop_lat'))]
-        lon_list = [float(x[0]) for x in list(stops.all().values_list('stop_lon'))] 
-        stop_coords = zip(lat_list, lon_list)
-        stop_coords = np.array(stop_coords)
-        self.point_tree = spatial.cKDTree(stop_coords)
+        super(StopList, self).__init__()
         
-        for cur in zip(stop_ids, stop_names, stop_coords):
-            stop = Stop(cur[0], cur[1], cur[2])
-            self.append(stop)
+        stops = gtfs.models.Stop.objects.all();
+        stops = list(stops)
+        
+        #stop_ids = [x[0] for x in list(stops.all().values_list('stop_id'))]
+        #stop_names = [x[0] for x in list(stops.all().values_list('stop_name'))]
+        #lat_list = [float(x[0]) for x in list(stops.all().values_list('stop_lat'))]
+        #lon_list = [float(x[0]) for x in list(stops.all().values_list('stop_lon'))] 
+        
+        self.id_list = []
+        stop_coords = []
+        for i, gtfs_stop in enumerate(stops):
+            coord = (gtfs_stop.stop_lat, gtfs_stop.stop_lon)
+            stop = Stop(str(gtfs_stop.stop_id), gtfs_stop.stop_name, coord)
+            stop_coords.append(coord)
+            self.id_list.append(stop.id)
+            self[stop.id] = stop
+        
+        self.id_list.append(NOSTOP)
+        stop_coords = np.array(stop_coords)
+        self.point_tree = spatial.cKDTree(stop_coords)               
 
     def __getstate__(self):
         ret = self.__dict__.copy()
@@ -44,27 +56,16 @@ class StopList(list):
     
     def query_stops(self, coords, accuracies)   :
         
-        res_coord_ids = query_coords(self.point_tree, coords, accuracies)    
-
+        res_coord_int_ids = query_coords(self.point_tree, coords, accuracies)    
+        res_coord_ids = [self.id_list[i] for i in res_coord_int_ids]
         return res_coord_ids
-
-def get_stops():
-    stops = gtfs.models.Stop.objects.all();
-    stop_ids = [x[0] for x in list(stops.all().values_list('stop_id'))]
-    stop_names = [x[0] for x in list(stops.all().values_list('stop_name'))]
-    lat_list = [float(x[0]) for x in list(stops.all().values_list('stop_lat'))]
-    lon_list = [float(x[0]) for x in list(stops.all().values_list('stop_lon'))] 
-    stop_coords = zip(lat_list, lon_list)
-    stop_coords = np.array(stop_coords)
-    stop_point_tree = spatial.cKDTree(stop_coords)
-    return stop_ids, stop_names, stop_coords, stop_point_tree
 
 
 def get_all_stops():
-    datafile = shelve.open(os.path.join(config.gtfs_processed_data, 'shelve.data'))
+    datafile = shelve.open(config.gtfs_stop_file)
 
-    if True or not datafile.has_key('stopList'):
-        gtfs_stops_data = gtfs.models.Stop.objects.all().values_list('stop_id', 'stop_name', 'stop_lat', 'stop_lon')
+    if not datafile.has_key('stopList'):
+        gtfs_stops_data = gtfs.models.Stop.objects.all().values_list('stop_id', 'stop_name', 'stop_lat', 'stop_lon').order_by('stop_id')
         datafile['stopList'] = StopList(gtfs_stops_data)
     all_stops = datafile['stopList']
     

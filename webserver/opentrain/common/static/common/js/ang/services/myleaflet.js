@@ -10,10 +10,11 @@ function(MyUtils) {
 			iconSize : [26, 26],
 		}),
 		drawShapes : function(map, shapes) {
+			var that = this;
 			var points = shapes.map(function(shape) {
-				return [shape.shape_pt_lat, shape.shape_pt_lon];
+				return [parseFloat(shape.shape_pt_lat), parseFloat(shape.shape_pt_lon)];
 			});
-			var polyline = this.createLine(map, points, {
+			var polyline = that.createLine(map, points, {
 				color : '#0000CD',
 				weight : 3,
 				stroke : true,

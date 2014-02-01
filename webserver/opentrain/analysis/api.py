@@ -2,6 +2,7 @@ from tastypie.resources import ModelResource,Resource,Bundle
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
 from tastypie import fields
 import models
+import logic
 
 class SingleWifiResource(ModelResource):
     class Meta:
@@ -31,29 +32,6 @@ class ReportLocResource(ModelResource):
         ordering = 'id'
         filtering = {'device_id' : ALL, 'id' : ALL_WITH_RELATIONS}
 
-def get_devices_summary():
-    from django.db import connection
-    cursor = connection.cursor()
-    cursor.execute("""
-        SELECT device_id,MIN(DATE(timestamp)) as device_date,
-        COUNT(*) from analysis_report 
-        GROUP BY device_id 
-        ORDER BY device_date
-    """)
-    tuples = cursor.fetchall()
-    result = []
-    for t in tuples:
-        d = DeviceObject(device_id=t[0],
-                         device_date=t[1],
-                         device_count=t[2])
-        result.append(d)
-    return result
-
-class DeviceObject(object):
-    def __init__(self,device_id=None,device_date=None,device_count=None):
-        self.device_id = device_id
-        self.device_date = device_date
-        self.device_count = device_count
 
 class DeviceResource(Resource):
     device_id = fields.CharField(attribute='device_id')
@@ -62,7 +40,7 @@ class DeviceResource(Resource):
     
     class Meta:
         resource_name = 'devices'
-        object_class = DeviceObject
+        object_class = logic.DeviceObject
     
     def detail_uri_kwargs(self, bundle_or_obj):
         kwargs = {}
@@ -75,7 +53,7 @@ class DeviceResource(Resource):
         return kwargs
 
     def get_object_list(self, request):
-        return get_devices_summary()
+        return logic.get_devices_summary()
 
     def obj_get_list(self, bundle, **kwargs):
         # Filtering disabled for brevity...
@@ -88,6 +66,41 @@ class DeviceResource(Resource):
                 return obj
             
         
+            
+class TripLocationResource(Resource):
+    trip_id = fields.CharField(attribute='trip_id')
+    cur_lat= fields.CharField(attribute='cur_lat')
+    cur_lon= fields.CharField(attribute='cur_lon')
+    cur_ts = fields.DateTimeField(attribute='cur_ts')
+    
+    class Meta:
+        resource_name = 'train-locs'
+        object_class = logic.TripLocationObject
+
+    def detail_uri_kwargs(self, bundle_or_obj):
+        kwargs = {}
+
+        if isinstance(bundle_or_obj, Bundle):
+            kwargs['pk'] = bundle_or_obj.obj.trip_id
+        else:
+            kwargs['pk'] = bundle_or_obj.trip_id
+
+        return kwargs
+
+    def get_object_list(self, request):
+        return logic.get_current_trips()
+
+    def obj_get_list(self, bundle, **kwargs):
+        # Filtering disabled for brevity...
+        return self.get_object_list(bundle.request)
+
+    def obj_get(self, bundle, **kwargs):
+        objects = self.get_object_list(bundle.request)
+        for obj in objects:
+            if obj.trip_id == kwargs['pk']:
+                return obj
+            
+                        
 def register_all(tp):
     tp.register(ReportResource())
     tp.register(ReportLocResource())

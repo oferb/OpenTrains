@@ -72,7 +72,46 @@ def analyze_single_raw_report(rr):
     items = json.loads(rr.text)['items']
     dump_items(items)
     
+## DEVICES SUMMAY ##    
     
+def get_devices_summary():
+    from django.db import connection
+    cursor = connection.cursor()
+    cursor.execute("""
+        SELECT device_id,MIN(DATE(timestamp)) as device_date,
+        COUNT(*) from analysis_report 
+        GROUP BY device_id 
+        ORDER BY device_date
+    """)
+    tuples = cursor.fetchall()
+    result = []
+    for t in tuples:
+        d = DeviceObject(device_id=t[0],
+                         device_date=t[1],
+                         device_count=t[2])
+        result.append(d)
+    return result
+
+class DeviceObject(object):
+    def __init__(self,device_id=None,device_date=None,device_count=None):
+        self.device_id = device_id
+        self.device_date = device_date
+        self.device_count = device_count
+
+    
+## CUR TRIPS ##
+    
+class TripLocationObject(object):
+    def __init__(self,trip_id,cur_lat,cur_lon,cur_ts):
+        self.trip_id = trip_id
+        self.cur_lat = cur_lat
+        self.cur_lon = cur_lon
+        self.cur_ts = cur_ts
+        
+def get_current_trips():
+    pass
+
+
     
 
 

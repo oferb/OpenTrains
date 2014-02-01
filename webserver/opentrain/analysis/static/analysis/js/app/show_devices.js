@@ -103,21 +103,14 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			if (reports.length == 0) {
 				console.log('no new reports');
 			} else {
-				var minLon = +Infinity, maxLon = -Infinity, minLat = +Infinity, maxLat = -Infinity;
-				$scope.reports.forEach(function(r) {
-					if (r.loc) {
-						minLon = Math.min(minLon, r.loc.lon);
-						maxLon = Math.max(maxLon, r.loc.lon);
-						minLat = Math.min(minLat, r.loc.lat);
-						maxLat = Math.max(maxLat, r.loc.lat);
-					} 
-				});
+				var box = MyLeaflet.findBoundBox($scope.reports.map(function(r) {
+					return [r.loc.lat,r.loc.lon];
+				}));
 				var lastPoint = null;
 				if ($scope.lastShownReportIndex >= 0) {
 					var l = $scope.reports[$scope.lastShownReportIndex].loc;
 					lastPoint = [l.lat,l.lon];
 				}
-				var box = [[minLat, minLon], [maxLat,maxLon]];
 				if (!$scope.input.autoZoom) {
 					box = null;
 				}

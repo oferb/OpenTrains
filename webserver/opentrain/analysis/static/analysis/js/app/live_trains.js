@@ -13,18 +13,26 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		$scope.trips = [];
 		MyHttp.get('/api/v1/live-trips/?limit=100').success(function(data) {
 			$scope.trips = data.objects;
-			$scope.trips.forEach(function(trip) {
-				$scope.loadTripData(trip.trip_id);
-			});
+			$scope.loadTripData($scope.trips[0].trip_id);
+			//$scope.trips.forEach(function(trip) {
+			//	$scope.loadTripData(trip.trip_id);
+			//});
 		});
 	};
 	$scope.loadTripData = function(trip_id) {
 		$scope.input.showTrips[trip_id] = true;
 		MyHttp.get('/api/v1/trips/' + trip_id + '/').success(function(data) {
-			console.log(data);
 			console.log('loaded data for trip ' + trip_id);
 			$scope.tripDatas[trip_id] = data;
+			leafletData.getMap().then(function(map) {
+				$scope.drawTripData(map,trip_id);
+			});
 		});
+	};
+	$scope.drawTripData = function(map,trip_id) {
+		var tripData = $scope.tripDatas[trip_id];
+		var shapes = tripData.shapes;
+		MyLeaflet.drawShapes(map,shapes);
 	};
 	$scope.initTrips();
 }]);

@@ -69,9 +69,9 @@ class DeviceResource(Resource):
             
 class TripLocationResource(Resource):
     trip_id = fields.CharField(attribute='trip_id')
-    cur_lat= fields.CharField(attribute='cur_lat')
-    cur_lon= fields.CharField(attribute='cur_lon')
-    cur_ts = fields.DateTimeField(attribute='cur_ts')
+    cur_point = fields.DictField(attribute='get_cur_point')
+    exp_point = fields.DictField(attribute='get_exp_point')
+    timestamp = fields.DateTimeField(attribute='ts')
     
     class Meta:
         resource_name = 'train-locs'

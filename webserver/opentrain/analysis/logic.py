@@ -102,12 +102,11 @@ class DeviceObject(object):
 ## CUR TRIPS ##
     
 class TripLocationObject(object):
-    def __init__(self,trip_id,cur_lat,cur_lon,cur_ts):
+    def __init__(self,trip_id,cur_point,exp_point,ts):
         self.trip_id = trip_id
-        self.cur_lat = cur_lat
-        self.cur_lon = cur_lon
-        self.cur_ts = cur_ts
-        
+        self.cur_point = cur_point
+        self.exp_point = exp_point
+        self.ts = ts 
 def get_current_trips():
     pass
 

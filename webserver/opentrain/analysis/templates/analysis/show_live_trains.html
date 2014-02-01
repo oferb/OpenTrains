@@ -19,13 +19,13 @@
 <script src="/static/common/js/ang_lf/angular-leaflet-directive.js"></script>
 <script src="/static/common/js/ext/moment.min.js"></script>
 <script src="/static/common/js/ang_dt/js/datetimepicker.js"></script>
-<script src="/static/analysis/js/app/show_devices.js"></script>
+<script src="/static/analysis/js/app/live_trains.js"></script>
 {% endblock %}
 
 {% block content %}
 <div id="main-body">
-	<div class="container-fluid" ng-app="show_reports">
-		<div ng-controller="ShowReportsController" ng-include="'/static/analysis/tpls/show_reports_tpl.html'"></div>
+	<div class="container-fluid" ng-app="live_trains">
+		<div ng-controller="LiveTrainsController" ng-include="'/static/analysis/tpls/live_trains_tpl.html'"></div>
 	</div>
 </div>
 

@@ -130,7 +130,7 @@ def get_fake_status(trip_id):
     shapes_count = shapes.count()
     cur_point = shapes[shapes_count / 3]
     exp_point = shapes[shapes_count / 3 + 100]
-    return TripLocationObject(trip_id='260114_00073',
+    return TripLocationObject(trip_id=trip.trip_id,
                                      cur_point = dict(lat=cur_point.shape_pt_lat,
                                                       lon=cur_point.shape_pt_lon),
                                      exp_point = dict(lat=exp_point.shape_pt_lat,

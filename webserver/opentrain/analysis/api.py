@@ -74,7 +74,7 @@ class TripLocationResource(Resource):
     timestamp = fields.DateTimeField(attribute='timestamp')
     
     class Meta:
-        resource_name = 'trip-live'
+        resource_name = 'live-trips'
         object_class = logic.TripLocationObject
 
     def detail_uri_kwargs(self, bundle_or_obj):

@@ -132,7 +132,16 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	$scope.getDeviceTitle = function(device) {
 		return device.device_id + ' @' + device.device_date + ' (' + device.device_count + ')';
 	};
-
+	
+	$scope.resizeMap = function() {
+		var elem = $window.document.getElementById('my-leaflet');
+		var w = angular.element($window);
+		var m = angular.element(elem);
+		var height = (w.height() - 20 - m.offset().top);
+		m.css("height", height);
+		m.css("width", 600);    
+		m.css("margin-top",20);
+	};
 	$scope.initReport();
 }]);
 

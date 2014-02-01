@@ -116,7 +116,9 @@ class TripLocationObject(object):
 
 def get_current_trips():
     result = []
-    result.append(get_fake_status('260114_00073'))
+    result.append(get_fake_status('260114_00527')) # TA Savido => Jerusalem
+    result.append(get_fake_status('260114_00177')) # Naharia => Modiin
+    result.append(get_fake_status('260114_00274')) # Ashkelon => Byniamina
     return result
 
 def get_fake_status(trip_id):

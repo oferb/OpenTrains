@@ -184,7 +184,7 @@ class Shape(GTFSModel):
     shape_pt_lon = models.CharField(max_length=20)
     shape_pt_sequence = models.IntegerField()
     def __unicode__(self):
-        return self.shape_id
+        return '%s : lon=%s lat=%s' % (self.shape_id,self.shape_pt_lat,self.shape_pt_lon) 
     
     
     

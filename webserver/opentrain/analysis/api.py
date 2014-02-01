@@ -71,10 +71,10 @@ class TripLocationResource(Resource):
     trip_id = fields.CharField(attribute='trip_id')
     cur_point = fields.DictField(attribute='get_cur_point')
     exp_point = fields.DictField(attribute='get_exp_point')
-    timestamp = fields.DateTimeField(attribute='ts')
+    timestamp = fields.DateTimeField(attribute='timestamp')
     
     class Meta:
-        resource_name = 'train-locs'
+        resource_name = 'trip-live'
         object_class = logic.TripLocationObject
 
     def detail_uri_kwargs(self, bundle_or_obj):
@@ -105,5 +105,6 @@ def register_all(tp):
     tp.register(ReportResource())
     tp.register(ReportLocResource())
     tp.register(DeviceResource())
+    tp.register(TripLocationResource())
     
     

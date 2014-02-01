@@ -102,13 +102,42 @@ class DeviceObject(object):
 ## CUR TRIPS ##
     
 class TripLocationObject(object):
-    def __init__(self,trip_id,cur_point,exp_point,ts):
+    def __init__(self,trip_id=None,cur_point=None,exp_point=None,timestamp=None):
         self.trip_id = trip_id
         self.cur_point = cur_point
         self.exp_point = exp_point
-        self.ts = ts 
+        self.timestamp = timestamp 
+        
+    def get_exp_point(self):
+        return self.exp_point
+    
+    def get_cur_point(self):
+        return self.cur_point
+
 def get_current_trips():
-    pass
+    result = []
+    result.append(get_fake_status('260114_00073'))
+    return result
+
+def get_fake_status(trip_id):
+    import datetime
+    from gtfs.models import Trip,Shape
+    trip = Trip.objects.get(trip_id=trip_id)
+    shape_id = trip.shape_id
+    shapes = Shape.objects.filter(shape_id=shape_id)
+    shapes_count = shapes.count()
+    cur_point = shapes[shapes_count / 3]
+    exp_point = shapes[shapes_count / 3 + 100]
+    return TripLocationObject(trip_id='260114_00073',
+                                     cur_point = dict(lat=cur_point.shape_pt_lat,
+                                                      lon=cur_point.shape_pt_lon),
+                                     exp_point = dict(lat=exp_point.shape_pt_lat,
+                                                      lon=exp_point.shape_pt_lon),
+                              timestamp=datetime.datetime.utcnow() -datetime.timedelta(seconds=100))
+    
+    
+    
+                                     
 
 
     

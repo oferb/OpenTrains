@@ -9,7 +9,10 @@ import analysis.models
 import numpy as np
 from scipy import spatial
 import shelve
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    pass
 import simplekml
 import config
 import itertools
@@ -33,14 +36,16 @@ class BSSIDTrackerTest(TestCase):
         
     def test_all_mappings_pass_threshold(self):
         bssids = [x for x in self.stop_bssids if bssid_tracker.tracker.has_bssid(x)]
-        low_confidence_bssids = [x for x in bssids if bssid_tracker.tracker.get_stop_int_id(x)[1] < config.stop_discovery_probability_thresh]
-        
-        self.assertTrue(len(low_confidence_bssids) == 0)
+        low_confidence_bssids = [x for x in bssids if bssid_tracker.tracker.get_stop_id(x)[1] < config.stop_discovery_probability_thresh]
+
+        bssid_tracker.tracker.print_table(low_confidence_bssids)
+
+        self.assertEquals(len(low_confidence_bssids), 0)
 
     def test_all_bssids_are_mapped(self):
         unmapped_bssids = [x for x in self.stop_bssids if not bssid_tracker.tracker.has_bssid(x)]
-        
-        self.assertTrue(len(unmapped_bssids) == 0, '%s bssids are not mapped' % (unmapped_bssids))
+        print unmapped_bssids
+        self.assertEquals(len(unmapped_bssids),0, '%s bssids are not mapped' % (unmapped_bssids))
     
         
 if __name__ == '__main__':

@@ -1,9 +1,12 @@
 
 import numpy as np
 import os
-import matplotlib.image as mpimg
 import time
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.image as mpimg
+    import matplotlib.pyplot as plt
+except ImportError:
+    pass
 import gc
 
 import datetime as dt

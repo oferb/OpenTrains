@@ -9,7 +9,10 @@ import analysis.models
 import numpy as np
 from scipy import spatial
 import shelve
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    pass
 import simplekml
 import config
 import itertools
@@ -20,29 +23,27 @@ import time
 from display_utils import *
 from export_utils import *
 import shapes
+
 import stops
 from train_tracker import TrainTracker
 
 from analysis.models import SingleWifiReport
+from redis_intf.client import get_redis_pipeline, get_redis_client
 
 class train_tracker_test(TestCase):
     
     def track_device(self, device_id, do_print=False, do_preload_reports=True):
-        sampled_all_routes_tree = shapes.all_shapes.sampled_point_tree
-        shape_point_tree = shapes.all_shapes.point_tree
-        
-        shape_int_ids = []
         #device_coords, device_timestamps, device_accuracies_in_meters, device_accuracies_in_coords = get_location_info_from_device_id(device_id)
         reports_queryset = self.get_data_from_device_id(device_id)
         
-        tracker = TrainTracker('train_id')
+        tracker = TrainTracker(device_id)
         
         fps_period_start = time.clock()
         fps_period_length = 100
         if do_preload_reports:
             reports_queryset = list(reports_queryset)
         count = len(reports_queryset) if isinstance(reports_queryset, list) else reports_queryset.count()
-        for i in xrange(count):#xrange(500):
+        for i in xrange(count):
             if i % fps_period_length == 0:
                 elapsed = (time.clock() - fps_period_start)
                 if elapsed > 0:
@@ -52,9 +53,6 @@ class train_tracker_test(TestCase):
                 fps_period_start = time.clock()                
             
             if i % 900 == 0:
-                for stop_time in tracker.stop_times: 
-                    departure = stop_time.arrival if stop_time.departure == None else stop_time.departure
-                    print stops.all_stops[stop_time.stop_int_id].name, departure-stop_time.arrival
                 trips = tracker.get_possible_trips()
             report = reports_queryset[i]
             
@@ -68,22 +66,29 @@ class train_tracker_test(TestCase):
         
   
     def test_tracker_on_devices(self):
+        cl = get_redis_client()
+        keys = cl.keys(pattern='train_tracker:*')
+        if len(keys) > 0:
+            cl.delete(*keys)
 
         device_id = '02090d12' # Eran's trip
-        trips, tracker = self.track_device(device_id)
-        self.assertTrue(len(trips) == 3)
+        trips, tracker = self.track_device(device_id, do_preload_reports=True)
+        print trips
+        self.assertEquals(len(trips), 3)
         self.assertTrue('130114_00177' in trips)
         self.assertTrue('130114_00175' in trips)
         self.assertTrue('130114_00077' in trips)
         
         device_id = 'f752c40d' # Ofer's trip
         trips, tracker = self.track_device(device_id)
-        self.assertTrue(len(trips) == 1)        
+        print trips
+        self.assertEquals(len(trips), 1)        
         self.assertTrue('130114_00283' in trips)
     
         device_id = '1cb87f1e' # Udi's trip        
         trips, tracker = self.track_device(device_id)
-        self.assertTrue(len(trips) == 2)        
+        print trips
+        self.assertEquals(len(trips), 2)        
         self.assertTrue('160114_00171' in trips)
         self.assertTrue('160114_00073' in trips)
 

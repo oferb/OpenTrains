@@ -1,7 +1,10 @@
 import redis
 
-CLIENT = redis.StrictRedis()
+_CLIENT = redis.StrictRedis()
 
-def get_client():
-    return CLIENT
+def get_redis_client():
+    return _CLIENT
+
+def get_redis_pipeline():
+    return _CLIENT.pipeline()
 

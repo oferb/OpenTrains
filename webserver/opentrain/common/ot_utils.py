@@ -104,7 +104,29 @@ def delete_from_model(model):
     cursor.execute(sql)    
     print 'DELETED %s' % (table_name)
 
-def get_localtime(dt):
-    tz = pytz.timezone(settings.TIME_ZONE)
-    return dt.astimezone(tz)
+def get_localtime(dt, tz=None):
+    # Note that, pytz.timezone(settings.TIME_ZONE) may return different results on different machines.
+    # On the server it returns option (1), while on Ofer's machine it returns option (2)
+    # 1) <DstTzInfo 'Asia/Jerusalem' IST+2:00:00 STD>
+    # 2) <DstTzInfo 'Asia/Jerusalem' JMT+2:21:00 STD>
+    # that's why there's an option to set the tz parameter externally
+    if tz is None:
+        tz = pytz.timezone(settings.TIME_ZONE)
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=tz)
+    else:
+        return dt.astimezone(tz)
+
+
+def meter_distance_to_coord_distance(meter_distance):
+    """ the following (non-exact) calculation yields a conversion from meter distances 
+        to lat-lon distance which should be accurate enough for Israel
+        tel_aviv = [32.071589, 34.778227]
+        rehovot = [31.896010, 34.811525]
+        meter_distance = 19676
+        delta_coords = [tel_aviv[0]-rehovot[0], tel_aviv[1]-rehovot[1]]
+        delta_coords_norm = (delta_coords[0]**2 + delta_coords[1]**2)**0.5
+        meters_over_coords = meter_distance/delta_coords_norm # equals 110101 """
+    meters_over_coords = 110101.0
+    return meter_distance/meters_over_coords
 

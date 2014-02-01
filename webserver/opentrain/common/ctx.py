@@ -1,9 +1,8 @@
 from django.core.urlresolvers import reverse
 def menu(req):
-    menu_items = [#dict(title="Search Between",name = 'gtfs:search-between'),
-                  dict(title="Search In",name = 'gtfs:search-in'),
-                  #dict(title="Show labels",name = 'analysis:show-labels'),
-                  dict(title="Show Reports",name = 'analysis:select-device-reports'),
+    menu_items = [dict(title="Search In",name = 'gtfs:search-in'),
+                  dict(title="Device Reports",name = 'analysis:device-reports'),
+                  dict(title="Live Trains",name = 'analysis:live-trains'),
                   dict(title="Report Details",name='analysis:report-details')
                   ]
     for mi in menu_items:

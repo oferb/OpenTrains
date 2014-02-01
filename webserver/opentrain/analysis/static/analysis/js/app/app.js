@@ -60,7 +60,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		});
 	};
 	$scope.redirectToReports = function() {
-		window.location.href = '/analysis/select-device-reports/?device_id=' + $scope.input.selectedDevice.device_id;
+		window.location.href = '/analysis/device-reports/?device_id=' + $scope.input.selectedDevice.device_id;
 	};
 	$scope.loadLiveReports = function() {
 		var curId = $scope.input.selectedDevice.device_id;

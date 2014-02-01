@@ -1,16 +1,23 @@
 <div class="row">
 	<div class="col-md-4">
 		<h2>Current Trips</h2>
+		<div ng-hide="initialDone">
+			<div class="progress progress-striped active">
+				<div class="progress-bar"  role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%">
+					<span class="sr-only">Complete</span>
+				</div>
+			</div>
+		</div>
 		<div ng-repeat="(tripId,tripData) in tripDatas">
 			<input type="checkbox" ng-model="input.showTrips[tripId]">
 			{{tripId}} {{tripData.stop_times[0].stop.stop_name}} <span class="glyphicon glyphicon-arrow-right"></span>
 			{{tripData.stop_times[tripData.stop_times.length-1].stop.stop_name}}
-			
+
 		</div>
 	</div>
 	<div class="col-md-8">
 		<div>
-			<leaflet id="my-leaflet" width="800" height="600"></leaflet> 
+			<leaflet id="my-leaflet" width="800" height="600"></leaflet>
 		</div>
 	</div>
 </div>

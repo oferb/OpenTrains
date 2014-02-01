@@ -20,6 +20,16 @@ function(MyUtils) {
 				stroke : true,
 			});
 		},
+		drawStops : function(map,stops) {
+			var that = this;
+			stops.forEach(function(stop) {
+				var text = stop.stop_name;
+				var pt = [stop.stop_lat,stop.stop_lon];
+				L.marker(pt, {
+					icon : that.trainIcon
+				}).addTo(map).bindPopup(text);
+			});
+		},
 		findBoundBox : function(points) {
 			var initialBox = [[points[0][0], points[0][1]], [points[0][0], points[0][1]]];
 			return points.reduce(function(box, p) {

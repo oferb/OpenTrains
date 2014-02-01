@@ -8,13 +8,16 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	$scope.input = {
 		showTrips : {},
 	};
-	$scope.leftCounter = 10;
+	$scope.leftCounter = 0;
+	$scope.initialDone = false;
+	$scope.progress = 1;
 	$scope.initTrips = function() {
 		$scope.tripDatas = {};
 		$scope.trips = [];
 		MyHttp.get('/api/v1/live-trips/?limit=100').success(function(data) {
 			$scope.trips = data.objects;
 			$scope.leftCounter = $scope.trips.length;
+			$scope.progressSegment = 100 / $scope.trips.length;
 			$scope.trips.forEach(function(trip) {
 				$scope.loadTripData(trip.trip_id);
 			});
@@ -32,8 +35,13 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		leafletData.getMap().then(function(map) {
 			var tripData = $scope.tripDatas[trip_id];
 			var shapes = tripData.shapes;
+			var stops = tripData.stop_times.map(function(st) {
+				return st.stop;
+			});
 			MyLeaflet.drawShapes(map,shapes);
+			MyLeaflet.drawStops(map,stops);
 			$scope.leftCounter--;
+			$scope.progress = $scope.progressSegment * ($scope.trips.length - $scope.leftCounter);
 			if ($scope.leftCounter <= 0) {
 				$scope.refreshBoundBox(map);
 			}
@@ -49,7 +57,9 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		};
 		var box = MyLeaflet.findBoundBox(points);
 		map.fitBounds(box);
-		
+		$timeout(function() {
+			$scope.initialDone = true;
+		},500);
 	};
 	$scope.initTrips();
 }]);

@@ -41,19 +41,30 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			$scope.leftCounter = $scope.trips.length;
 			$scope.progressSegment = 100 / $scope.trips.length;
 			$scope.trips.forEach(function(trip) {
-				$scope.loadTripData(trip.trip_id);
+				$scope.loadTripData(trip.trip_id,true);
 			});
 		});
 	};
-	$scope.loadTripData = function(trip_id) {
+	$scope.loadTripData = function(trip_id,is_initial) {
 		$scope.input.showTrips[trip_id] = true;
 		MyHttp.get('/api/v1/trips/' + trip_id + '/').success(function(data) {
 			console.log('loaded data for trip ' + trip_id);
 			$scope.tripDatas[trip_id] = data;
-			$scope.drawTripData(trip_id);
+			$scope.drawTripData(trip_id,is_initial);
 		});
 	};
-	$scope.drawTripData = function(trip_id) {
+	$scope.updateTripsLive = function() {
+		MyHttp.get('/api/v1/live-trips/?limit=100').success(function(data) {
+			$scope.trips = data.objects;
+			$scope.trips.forEach(function(trip) {
+				if (!$scope.tripDatas[trip.trip_id]) {
+					console.log('!!! found new trip id ' + trip_id);
+					$scope.loadTripData(trip.trip_id,false);
+				}
+			});
+		});
+	};
+	$scope.drawTripData = function(trip_id,is_initial) {
 		leafletData.getMap().then(function(map) {
 			var tripData = $scope.tripDatas[trip_id];
 			var shapes = tripData.shapes;
@@ -67,10 +78,12 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			var lg = L.layerGroup(layers);
 			$scope.tripLayers[trip_id] = lg;
 			lg.addTo(map);
-			$scope.leftCounter--;
-			$scope.progress = $scope.progressSegment * ($scope.trips.length - $scope.leftCounter);
-			if ($scope.leftCounter <= 0) {
-				$scope.refreshBoundBox(map);
+			if (is_initial) {
+				$scope.leftCounter--;
+				$scope.progress = $scope.progressSegment * ($scope.trips.length - $scope.leftCounter);
+				if ($scope.leftCounter <= 0) {
+					$scope.refreshBoundBox(map);
+				}
 			}
 		});
 	};
@@ -87,6 +100,9 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		$timeout(function() {
 			$scope.initialDone = true;
 		},500);
+		$interval(function() {
+			$scope.updateTripsLive();
+		},5000);
 	};
 	$scope.initTrips();
 }]);

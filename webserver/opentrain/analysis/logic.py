@@ -114,22 +114,24 @@ class TripLocationObject(object):
     def get_cur_point(self):
         return self.cur_point
 
-def get_current_trips():
+def get_current_trips(counter):
     result = []
-    result.append(get_fake_status('260114_00527')) # TA Savido => Jerusalem
-    result.append(get_fake_status('260114_00177')) # Naharia => Modiin
-    result.append(get_fake_status('260114_00274')) # Ashkelon => Byniamina
+    result.append(get_fake_status('260114_00527',counter)) # TA Savido => Jerusalem
+    result.append(get_fake_status('260114_00177',counter)) # Naharia => Modiin
+    result.append(get_fake_status('260114_00274',counter)) # Ashkelon => Byniamina
     return result
 
-def get_fake_status(trip_id):
+def get_fake_status(trip_id,counter):
     import datetime
     from gtfs.models import Trip,Shape
     trip = Trip.objects.get(trip_id=trip_id)
     shape_id = trip.shape_id
     shapes = Shape.objects.filter(shape_id=shape_id)
     shapes_count = shapes.count()
-    cur_point = shapes[shapes_count / 3]
-    exp_point = shapes[shapes_count / 3 + 100]
+    cur_index = counter % shapes_count
+    exp_index = min(counter + 30,shapes_count-1)
+    cur_point = shapes[cur_index]
+    exp_point = shapes[exp_index]
     return TripLocationObject(trip_id=trip.trip_id,
                                      cur_point = dict(lat=cur_point.shape_pt_lat,
                                                       lon=cur_point.shape_pt_lon),

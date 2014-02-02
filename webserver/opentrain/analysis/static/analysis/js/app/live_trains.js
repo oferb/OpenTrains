@@ -54,7 +54,11 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		});
 	};
 	$scope.updateTripsLive = function() {
-		MyHttp.get('/api/v1/live-trips/?limit=100').success(function(data) {
+		$scope.intervalCounter++;
+		MyHttp.get('/api/v1/live-trips/',{
+			limit : 100,
+			counter : $scope.intervalCounter,
+		}).success(function(data) {
 			$scope.trips = data.objects;
 			$scope.trips.forEach(function(trip) {
 				if (!$scope.tripDatas[trip.trip_id]) {
@@ -62,8 +66,27 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 					$scope.loadTripData(trip.trip_id,false);
 				}
 			});
+			leafletData.getMap().then(function(map) {
+				$scope.trips.forEach(function(trip) {
+					$scope.updateTripStatus(map,trip);
+				});
+			});
 		});
 	};
+	
+	$scope.updateTripStatus = function(map,trip) {
+		var tripData = $scope.tripDatas[trip.trip_id];
+		var lg = $scope.tripLayers[trip.trip_id];
+		if (!lg) {
+			console.log('trip ' + trip.trip_id + ' is not ready yet');
+			return;	
+		}
+		var cur = MyLeaflet.getTripMarker(trip,tripData,'cur');
+		var exp = MyLeaflet.getTripMarker(trip,tripData,'exp');
+		lg.addLayer(cur);
+		lg.addLayer(exp);
+	};
+	
 	$scope.drawTripData = function(trip_id,is_initial) {
 		leafletData.getMap().then(function(map) {
 			var tripData = $scope.tripDatas[trip_id];
@@ -84,6 +107,10 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 				if ($scope.leftCounter <= 0) {
 					$scope.refreshBoundBox(map);
 				}
+				$scope.intervalCounter = 0;
+				$interval(function() {
+					$scope.updateTripsLive();
+				},5000);
 			}
 		});
 	};
@@ -100,9 +127,6 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		$timeout(function() {
 			$scope.initialDone = true;
 		},500);
-		$interval(function() {
-			$scope.updateTripsLive();
-		},5000);
 	};
 	$scope.initTrips();
 }]);

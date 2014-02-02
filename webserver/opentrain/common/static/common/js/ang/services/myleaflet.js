@@ -9,6 +9,29 @@ function(MyUtils) {
 			iconUrl : '/static/common/img/open-train.png',
 			iconSize : [26, 26],
 		}),
+		expIcon : L.icon({
+			iconUrl : '/static/common/img/exp.png',
+			iconSize : [26, 26],
+		}),
+		curIcon : L.icon({
+			iconUrl : '/static/common/img/cur.png',
+			iconSize : [26, 26],
+		}),
+		getTripMarker : function(trip,tripData,kind) {
+			if (kind != 'cur' && kind != 'exp' ) {
+				alert('wrong kind ' + kind);
+				return;
+			}
+			var is_cur = kind == 'cur';
+			var trip_pt = is_cur ? trip.cur_point : trip.exp_point;
+			var pt = [trip_pt.lat,trip_pt.lon]; 
+			var text = tripData.stop_times[0].stop.stop_name + ' to ' + tripData.stop_times[tripData.stop_times.length-1].stop.stop_name;
+			var icon = is_cur ? this.curIcon : this.expIcon;
+			return L.marker(pt,{
+					icon : icon
+				}
+			).bindPopup(text);
+		},
 		drawShapes : function(shapes) {
 			var that = this;
 			var points = shapes.map(function(shape) {

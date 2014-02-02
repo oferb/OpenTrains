@@ -44,7 +44,6 @@ class DeviceResource(Resource):
     
     def detail_uri_kwargs(self, bundle_or_obj):
         kwargs = {}
-
         if isinstance(bundle_or_obj, Bundle):
             kwargs['pk'] = bundle_or_obj.obj.device_id
         else:
@@ -88,7 +87,9 @@ class TripLocationResource(Resource):
         return kwargs
 
     def get_object_list(self, request):
-        return logic.get_current_trips()
+        counter = int(request.GET.get('counter',0))
+        print counter;
+        return logic.get_current_trips(counter)
 
     def obj_get_list(self, bundle, **kwargs):
         # Filtering disabled for brevity...

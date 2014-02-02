@@ -11,6 +11,28 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	$scope.leftCounter = 0;
 	$scope.initialDone = false;
 	$scope.progress = 1;
+	$scope.tripLayers = {};
+	$scope.showTripsChange = function() {
+		leafletData.getMap().then(function(map) {
+			$scope.refreshLayers(map);
+		});
+	};
+	$scope.refreshLayers = function(map) {
+		console.log('In refreshLayers');
+		for (var tripId in $scope.tripLayers) {
+			var lg = $scope.tripLayers[tripId];
+			var toShow = $scope.input.showTrips[tripId];
+			if (!toShow) {
+				if (map.hasLayer(lg)) {
+					map.removeLayer(lg);
+				}
+			} else {
+				if (!map.hasLayer(lg)) {
+					map.addLayer(lg);
+				}
+			}
+		}
+	};
 	$scope.initTrips = function() {
 		$scope.tripDatas = {};
 		$scope.trips = [];
@@ -43,6 +65,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			var layers = [line];
 			layers.push.apply(layers,markers);
 			var lg = L.layerGroup(layers);
+			$scope.tripLayers[trip_id] = lg;
 			lg.addTo(map);
 			$scope.leftCounter--;
 			$scope.progress = $scope.progressSegment * ($scope.trips.length - $scope.leftCounter);

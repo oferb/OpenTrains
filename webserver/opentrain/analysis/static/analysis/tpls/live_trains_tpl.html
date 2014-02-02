@@ -9,7 +9,7 @@
 			</div>
 		</div>
 		<div ng-repeat="(tripId,tripData) in tripDatas">
-			<input type="checkbox" ng-model="input.showTrips[tripId]">
+			<input type="checkbox" ng-change="showTripsChange()"  ng-model="input.showTrips[tripId]">
 			{{tripId}} {{tripData.stop_times[0].stop.stop_name}} <span class="glyphicon glyphicon-arrow-right"></span>
 			{{tripData.stop_times[tripData.stop_times.length-1].stop.stop_name}}
 

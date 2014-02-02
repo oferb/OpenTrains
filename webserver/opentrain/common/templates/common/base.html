@@ -16,7 +16,7 @@
 
 		<!-- Custom styles for this template -->
 		<link href="{% static 'common/style/open-train.css' %}" rel="stylesheet">
-		
+
 		{% block headend %}
 		{% endblock %}
 	</head>
@@ -53,6 +53,14 @@
 		{% block content %}
 		{% endblock %}
 		<!-- END BLOCK CONTENT -->
+		<div class="container">
+			<hr/>
+			<footer class="footer">
+				<img src="/static/common/img/open-train.png" width="40" height="40">
+				<a href="https://github.com/oferb/OpenTrainApp/blob/master/APKs/OpenTrainApp.apk?raw=true"><span class="glyphicon glyphicon-download"></span></a>
+				Download the <a href="https://github.com/oferb/OpenTrainApp/blob/master/APKs/OpenTrainApp.apk?raw=true">app</a> (Alpha version - on your own risk....)
+			</footer>
+		</div>
 	</body>
 </html>
 

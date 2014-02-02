@@ -18,6 +18,7 @@ function(MyUtils) {
 		curIcon : L.icon({
 			iconUrl : '/static/common/img/cur.png',
 			iconSize : [26, 26],
+			iconAnchor : [12,25],
 		}),
 		getTripMarker : function(trip,tripData,kind) {
 			if (kind != 'cur' && kind != 'exp' ) {

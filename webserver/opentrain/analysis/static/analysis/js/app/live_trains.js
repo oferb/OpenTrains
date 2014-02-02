@@ -38,8 +38,12 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			var stops = tripData.stop_times.map(function(st) {
 				return st.stop;
 			});
-			MyLeaflet.drawShapes(map,shapes);
-			MyLeaflet.drawStops(map,stops);
+			var line = MyLeaflet.drawShapes(shapes);
+			var markers = MyLeaflet.drawStops(stops);
+			var layers = [line];
+			layers.push.apply(layers,markers);
+			var lg = L.layerGroup(layers);
+			lg.addTo(map);
 			$scope.leftCounter--;
 			$scope.progress = $scope.progressSegment * ($scope.trips.length - $scope.leftCounter);
 			if ($scope.leftCounter <= 0) {

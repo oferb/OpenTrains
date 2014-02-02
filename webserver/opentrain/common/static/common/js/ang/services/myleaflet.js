@@ -9,26 +9,30 @@ function(MyUtils) {
 			iconUrl : '/static/common/img/open-train.png',
 			iconSize : [26, 26],
 		}),
-		drawShapes : function(map, shapes) {
+		drawShapes : function(shapes) {
 			var that = this;
 			var points = shapes.map(function(shape) {
 				return [parseFloat(shape.shape_pt_lat), parseFloat(shape.shape_pt_lon)];
 			});
-			var polyline = that.createLine(map, points, {
+			var polyline = that.createLine(null, points, {
 				color : '#0000CD',
 				weight : 3,
 				stroke : true,
 			});
+			return polyline;
 		},
-		drawStops : function(map,stops) {
+		drawStops : function(stops) {
 			var that = this;
+			var result = [];
 			stops.forEach(function(stop) {
 				var text = stop.stop_name;
 				var pt = [stop.stop_lat,stop.stop_lon];
-				L.marker(pt, {
+				var marker = L.marker(pt, {
 					icon : that.trainIcon
-				}).addTo(map).bindPopup(text);
+				}).bindPopup(text);
+				result.push(marker);
 			});
+			return result;
 		},
 		findBoundBox : function(points) {
 			var initialBox = [[points[0][0], points[0][1]], [points[0][0], points[0][1]]];
@@ -80,7 +84,10 @@ function(MyUtils) {
 			});
 		},
 		createLine : function(map, points, options) {
-			var polyline = L.polyline(points, options).addTo(map);
+			var polyline = L.polyline(points, options);
+			if (map != null) {
+				polyline.addTo(map);
+			};
 			return polyline;
 		},
 	};

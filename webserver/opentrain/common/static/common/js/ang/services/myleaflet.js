@@ -8,10 +8,12 @@ function(MyUtils) {
 		trainIcon : L.icon({
 			iconUrl : '/static/common/img/open-train.png',
 			iconSize : [26, 26],
+			iconAnchor : [12,25]
 		}),
 		expIcon : L.icon({
 			iconUrl : '/static/common/img/exp.png',
 			iconSize : [26, 26],
+			iconAnchor : [12,25],
 		}),
 		curIcon : L.icon({
 			iconUrl : '/static/common/img/cur.png',
@@ -26,9 +28,11 @@ function(MyUtils) {
 			var trip_pt = is_cur ? trip.cur_point : trip.exp_point;
 			var pt = [trip_pt.lat,trip_pt.lon]; 
 			var text = tripData.stop_times[0].stop.stop_name + ' to ' + tripData.stop_times[tripData.stop_times.length-1].stop.stop_name;
+			var title = (is_cur ? 'cur ' : 'exp ') +  '@ ' + tripData.stop_times[0].stop.stop_name + ' to ' + tripData.stop_times[tripData.stop_times.length-1].stop.stop_name;
 			var icon = is_cur ? this.curIcon : this.expIcon;
 			return L.marker(pt,{
-					icon : icon
+					icon : icon,
+					title : title,
 				}
 			).bindPopup(text);
 		},

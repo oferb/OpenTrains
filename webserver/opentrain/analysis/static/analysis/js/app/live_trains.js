@@ -11,7 +11,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	$scope.leftCounter = 0;
 	$scope.initialDone = false;
 	$scope.progress = 1;
-	$scope.tripLayers = {};
+	$scope.tripMapInfo = {};
 	$scope.showTripsChange = function() {
 		leafletData.getMap().then(function(map) {
 			$scope.refreshLayers(map);
@@ -19,8 +19,8 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	};
 	$scope.refreshLayers = function(map) {
 		console.log('In refreshLayers');
-		for (var tripId in $scope.tripLayers) {
-			var lg = $scope.tripLayers[tripId];
+		for (var tripId in $scope.tripMapInfo) {
+			var lg = $scope.tripMapInfo[tripId].lg;
 			var toShow = $scope.input.showTrips[tripId];
 			if (!toShow) {
 				if (map.hasLayer(lg)) {
@@ -76,13 +76,22 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	
 	$scope.updateTripStatus = function(map,trip) {
 		var tripData = $scope.tripDatas[trip.trip_id];
-		var lg = $scope.tripLayers[trip.trip_id];
-		if (!lg) {
+		var ti = $scope.tripMapInfo[trip.trip_id];
+		if (!ti || !ti.lg) {
 			console.log('trip ' + trip.trip_id + ' is not ready yet');
 			return;	
 		}
+		var lg = ti.lg;
 		var cur = MyLeaflet.getTripMarker(trip,tripData,'cur');
 		var exp = MyLeaflet.getTripMarker(trip,tripData,'exp');
+		if (ti.cur) {
+			ti.lg.removeLayer(ti.cur);
+		}
+		if (ti.exp) {
+			ti.lg.removeLayer(ti.exp);
+		}
+		ti.cur = cur;
+		ti.exp = exp;
 		lg.addLayer(cur);
 		lg.addLayer(exp);
 	};
@@ -99,7 +108,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			var layers = [line];
 			layers.push.apply(layers,markers);
 			var lg = L.layerGroup(layers);
-			$scope.tripLayers[trip_id] = lg;
+			$scope.tripMapInfo[trip_id] = {lg : lg};
 			lg.addTo(map);
 			if (is_initial) {
 				$scope.leftCounter--;

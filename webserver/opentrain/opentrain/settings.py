@@ -46,7 +46,8 @@ INSTALLED_APPS = (
     'analysis',
     'algorithm',
     'django_extensions',
-    'redis_intf'
+    'redis_intf',
+    'ot_cache'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -56,7 +57,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'common.middleware.OpenTrainMiddleware'
+    'common.middleware.OpenTrainMiddleware',
+    'ot_cache.middleware.OpenTrainCacheMiddleware',
 )
 
 ROOT_URLCONF = 'opentrain.urls'

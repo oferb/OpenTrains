@@ -57,12 +57,15 @@ def get_expected_location(trip_id,dt):
     # if no after stop - the reverse
     if not before_stop:
         return [after_stop.stop.stop_pt_lat,after_stop.stop.stop_pt_loc]
-    if not after_stop:
+    if not after_stop or after_stop == before_stop:
         return [before_stop.stop.stop_pt_lat,before_stop.stop.stop_pt_loc]
     pt_before = find_closest_point(trip,shapes,lat=before_stop.stop.stop_lat,lon=before_stop.stop.stop_lon)
     pt_after = find_closest_point(trip,shapes,lat=after_stop.stop.stop_lat,lon=after_stop.stop.stop_lon)
     delta = float(after_stop.arrival_time - before_stop.departure_time)
-    relative = (normal_time - before_stop.departure_time) / delta
+    if delta == 0:
+        relative = 0
+    else:
+        relative = (normal_time - before_stop.departure_time) / delta
     num_points = pt_after.shape_pt_sequence - pt_before.shape_pt_sequence
     result_seq = int(relative*num_points) +  pt_before.shape_pt_sequence
     for s in shapes:

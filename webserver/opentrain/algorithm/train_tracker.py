@@ -10,14 +10,12 @@ import shapes
 from sklearn.hmm import MultinomialHMM
 from utils import *
 from collections import deque
-from calendar import timegm
-from common.ot_utils import get_localtime
+from common import ot_utils
 try:
     import matplotlib.pyplot as plt
 except ImportError:
     pass
 import datetime
-from common.ot_utils import meter_distance_to_coord_distance
 import bssid_tracker
 from redis_intf.client import get_redis_pipeline, get_redis_client
 
@@ -77,7 +75,12 @@ class TrainTracker(object):
         #self.stop_times = []
         
     def add(self, report):
-        self.db_timezone = report.get_timestamp_israel_time().tzinfo
+        if not hasattr(self, 'relevant_service_ids'):
+            start_date = report.timestamp.strftime("%Y-%m-%d")
+            relevant_services = gtfs.models.Service.objects.filter(start_date = start_date)
+            self.relevant_service_ids = relevant_services.all().values_list('service_id')
+            
+        
         # update train position
         coords = [report.my_loc.lat, report.my_loc.lon]
         res_shape_sampled_point_ids, _ = shapes.all_shapes.query_sampled_points(coords, report.my_loc.accuracy_in_coords)
@@ -134,7 +137,7 @@ class TrainTracker(object):
             elif report.loc_ts_delta() < config.stop_discovery_location_timeout_seconds:  
                 
                 coords = [report.my_loc.lat, report.my_loc.lon]
-                stop_id_list = stops.all_stops.query_stops(coords, meter_distance_to_coord_distance(config.station_radius_in_meters))
+                stop_id_list = stops.all_stops.query_stops(coords, ot_utils.meter_distance_to_coord_distance(config.station_radius_in_meters))
                 if len(stop_id_list) == 1:
                     timestamp = report.get_timestamp_israel_time()
                     stop_id = stop_id_list[0]                    
@@ -185,7 +188,7 @@ class TrainTracker(object):
             if prev_current_stop != current_stop_id:
                 
                 prev_stops_by_hmm = [stops.all_stops.id_list[x] for x in state_sequence]
-                prev_stops_timestamps = [get_localtime(datetime.datetime.fromtimestamp(x[1]), timestamp.tzinfo) for x in prev_stops]
+                prev_stops_timestamps = [ot_utils.unix_time_to_localtime((x[1])) for x in prev_stops]
                 for i, stop_id, timestamp in reversed(zip(range(len(prev_stops_by_hmm)), prev_stops_by_hmm, prev_stops_timestamps)):
                     #current_stop_component_num = stops.all_stops.ids_list.index(current_stop_id)
                     # test if this is where we changed states, or this is the first state
@@ -193,8 +196,8 @@ class TrainTracker(object):
                         if current_stop_id == stops.NOSTOP: # we need to set departure
                             #self.stop_times[-1].departure = timestamp
                             stop_time = cl.zrange("train_tracker:%s:tracked_stops" % (self.id), -1, -1, withscores=True)
-                            #arrival_unix_timestamp = timegm(self.stop_times[-1].arrival.utctimetuple())
-                            departure_unix_timestamp = timegm(timestamp.utctimetuple())
+                            #arrival_unix_timestamp = ot_utils.dt_time_to_unix_time(self.stop_times[-1].arrival)
+                            departure_unix_timestamp = ot_utils.dt_time_to_unix_time(timestamp)
                             stop_id_and_departure_time = "%s_%d" % (prev_current_stop, departure_unix_timestamp)
                             self.update_stop_time(prev_stop_id, stop_time[0][1], stop_id_and_departure_time)
                         else: # we need to set arrival
@@ -202,7 +205,7 @@ class TrainTracker(object):
                             stop_time = cl.zrange("train_tracker:%s:tracked_stops" % (self.id), -1, -1, withscores=True)
                             if len(stop_time) == 0 or stop_time[0][0].split('_')[0] != current_stop_id:
                                 arrival = prev_timestamp if prev_timestamp is not None else timestamp
-                                arrival_unix_timestamp = timegm(arrival.utctimetuple())
+                                arrival_unix_timestamp = ot_utils.dt_time_to_unix_time(arrival)
                                 
                                 stop_id_and_departure_time = "%s_" % (current_stop_id)
                                 self.update_stop_time(prev_stop_id, arrival_unix_timestamp, stop_id_and_departure_time)
@@ -244,7 +247,7 @@ class TrainTracker(object):
         next_id = cl.incr("train_tracker:%s:prev_stops_counter" % (self.id))
         #p = get_redis_pipeline()
         #p.set("train_tracker:%s:%d:stop_id:" % (self.id, next_id), stop_id)
-        unix_timestamp = timegm(timestamp.utctimetuple())
+        unix_timestamp = ot_utils.dt_time_to_unix_time(timestamp)
         p = get_redis_pipeline()
         p.zadd("train_tracker:%s:timestamp_sorted_stop_ids" % (self.id), unix_timestamp, "%d_%s" % (next_id, stop_id))
         p.zremrangebyrank("train_tracker:%s:timestamp_sorted_stop_ids" % (self.id), 0, -self.history_length-1)
@@ -273,13 +276,12 @@ class TrainTracker(object):
         stop_times_redis = cl.zrange("train_tracker:%s:tracked_stops" % (self.id), 0, -1, withscores=True)
         if len(stop_times_redis) == 0:
             return None
-        arrival = get_localtime(datetime.datetime.fromtimestamp(stop_times_redis[0][1]), self.db_timezone)
-        start_date = arrival.strftime("%Y-%m-%d")
+        #arrival = get_localtime(datetime.datetime.fromtimestamp(stop_times_redis[0][1]), self.db_timezone)
+        
         #shape_matches_inds = self.get_shape_ids_with_high_probability()
-        relevant_services = gtfs.models.Service.objects.filter(start_date = start_date)
-        relevant_service_ids = relevant_services.all().values_list('service_id')
+
         #trips = gtfs.models.Trip.objects.filter(shape_id__in=shape_matches_inds, service__in=relevant_service_ids)
-        trips = gtfs.models.Trip.objects.filter(service__in=relevant_service_ids)
+        trips = gtfs.models.Trip.objects.filter(service__in=self.relevant_service_ids)
     
         # filter by stop existence and its time frame:
         trips_filtered_by_stops_and_times = trips
@@ -287,11 +289,11 @@ class TrainTracker(object):
             print len(trips_filtered_by_stops_and_times)
         stop_times = []
         for cur in stop_times_redis:
-            arrival = get_localtime(datetime.datetime.fromtimestamp(cur[1]), self.db_timezone)
+            arrival = ot_utils.unix_time_to_localtime(int(cur[1]))
             cur_0_split = cur[0].split('_')
             stop_id = cur_0_split[0]
             name = stops.all_stops[stop_id].name
-            departure = get_localtime(datetime.datetime.fromtimestamp(int(cur_0_split[1])), self.db_timezone) if cur_0_split[1] != '' else None
+            departure = ot_utils.unix_time_to_localtime(int(cur_0_split[1])) if cur_0_split[1] != '' else None
             stop_times.append(TrackedStopTime(stop_id))
             stop_times[-1].arrival = arrival
             stop_times[-1].departure = departure
@@ -379,10 +381,10 @@ class TrainTracker(object):
         cl = get_redis_client()
         res = cl.zrange("train_tracker:%s:tracked_stops" % (self.id), 0, -1, withscores=True)
         for cur in res:
-            arrival = get_localtime(datetime.datetime.fromtimestamp(cur[1]), self.db_timezone)
+            arrival = ot_utils.unix_time_to_localtime(int(cur[1]))
             cur_0_split = cur[0].split('_')
             name = stops.all_stops[cur_0_split[0]].name
-            departure = get_localtime(datetime.datetime.fromtimestamp(int(cur_0_split[1])), self.db_timezone) if cur_0_split[1] != '' else None
+            departure = ot_utils.unix_time_to_localtime(int(cur_0_split[1])) if cur_0_split[1] != '' else None
             print TrackedStopTime.get_str(arrival, departure, name)
  
 trackers_by_device_id = {}

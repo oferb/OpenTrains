@@ -84,7 +84,8 @@ class train_tracker_test(TestCase):
         print trips
         self.assertEquals(len(trips), 1)        
         self.assertTrue('130114_00283' in trips)
-    
+        tracker.print_possible_trips()
+        
         device_id = '1cb87f1e' # Udi's trip        
         trips, tracker = self.track_device(device_id)
         print trips

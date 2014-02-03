@@ -25,6 +25,7 @@ from django.db import transaction
 
 @transaction.atomic
 def dump_items(items):
+    result = []
     wifis = []
     locs = []
     for (idx,item) in enumerate(items):
@@ -34,6 +35,7 @@ def dump_items(items):
             report_dt = common.ot_utils.get_utc_time_from_timestamp(float(item['time'])/1000)
             m = models.Report(device_id=item['device_id'],timestamp=report_dt)
             m.save()
+            result.append(m)
             item_loc = item.get('location_api')
             if item_loc:
                 loc = models.LocationInfo(report=m,
@@ -52,6 +54,7 @@ def dump_items(items):
     print 'Saving all dependant objects'
     models.SingleWifiReport.objects.bulk_create(wifis)
     models.LocationInfo.objects.bulk_create(locs)
+    return result
 
 def delete_all_reports():
     common.ot_utils.delete_from_model(models.SingleWifiReport)
@@ -69,8 +72,11 @@ def _collect_items(offset,count):
     return result
 
 def analyze_single_raw_report(rr):
+    import algorithm.train_tracker
     items = json.loads(rr.text)['items']
-    dump_items(items)
+    reports = dump_items(items)
+    algorithm.train_tracker.add_report(report)
+    
     
 ## DEVICES SUMMAY ##    
     

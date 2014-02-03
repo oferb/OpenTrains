@@ -384,5 +384,11 @@ class TrainTracker(object):
             name = stops.all_stops[cur_0_split[0]].name
             departure = get_localtime(datetime.datetime.fromtimestamp(int(cur_0_split[1])), self.db_timezone) if cur_0_split[1] != '' else None
             print TrackedStopTime.get_str(arrival, departure, name)
-            
+ 
+trackers_by_device_id = {}
+def add_report(report):  
+    if not trackers_by_device_id.has_key(report.device_id):
+        trackers_by_device_id[report.device_id] = TrainTracker(report.device_id)
+    
+    trackers_by_device_id[report.device_id].add(report)        
         

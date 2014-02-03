@@ -26,5 +26,3 @@ def show(req):
     data = dict(rrs=rrs,total=total)
     return render(req,'reports/results.html',data)
 
-
-

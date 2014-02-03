@@ -12,6 +12,14 @@ def get_stations_choices():
     return tuple(result)
 
 
+
+def get_expected_location(trip_id,dt):
+    import common.ot_utils
+    trip = models.Trip.objects.get(trip_id=trip_id)
+    stop_times = trip.stoptime_set.all()
+    dt = common.ot_utils.get_localtime(dt)
+    
+
 def do_search(kind,in_station=None,from_station=None,to_station=None,when=None,before=None,after=None):
     before = int(before)
     after = int(after)

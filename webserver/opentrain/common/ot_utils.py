@@ -104,19 +104,18 @@ def delete_from_model(model):
     cursor.execute(sql)    
     print 'DELETED %s' % (table_name)
 
-def get_localtime(dt, tz=None):
-    # Note that, pytz.timezone(settings.TIME_ZONE) may return different results on different machines.
-    # On the server it returns option (1), while on Ofer's machine it returns option (2)
-    # 1) <DstTzInfo 'Asia/Jerusalem' IST+2:00:00 STD>
-    # 2) <DstTzInfo 'Asia/Jerusalem' JMT+2:21:00 STD>
-    # that's why there's an option to set the tz parameter externally
-    if tz is None:
-        tz = pytz.timezone(settings.TIME_ZONE)
-    if dt.tzinfo is None:
-        return dt.replace(tzinfo=tz)
-    else:
-        return dt.astimezone(tz)
+def get_localtime(dt):
+    tz = pytz.timezone(settings.TIME_ZONE)
+    return dt.astimezone(tz)
 
+def dt_time_to_unix_time(dt):
+    epoch = datetime.datetime.utcfromtimestamp(0).replace(tzinfo=pytz.utc)
+    delta = dt - epoch
+    return delta.total_seconds()
+
+def unix_time_to_localtime(ts):
+    dt = datetime.datetime.utcfromtimestamp(ts).replace(tzinfo=pytz.UTC)
+    return get_localtime(dt)
 
 def meter_distance_to_coord_distance(meter_distance):
     """ the following (non-exact) calculation yields a conversion from meter distances 

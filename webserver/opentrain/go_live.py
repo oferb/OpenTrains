@@ -57,6 +57,7 @@ def report_fake(filename,dev2,delay,server):
                 print 'failed with: ' + resp.content
                 with open('/tmp/error.html','w') as fh:
                     fh.write(resp.content)
+                sys.exit(1)
             print 'Sent %d raw reports so far' % (index) 
             index += 1
             

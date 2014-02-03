@@ -391,4 +391,4 @@ def add_report(report):
         trackers_by_device_id[report.device_id] = TrainTracker(report.device_id)
     
     trackers_by_device_id[report.device_id].add(report)        
-        
+

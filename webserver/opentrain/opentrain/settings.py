@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'common',
     'reports',
     'analysis',
+    'algorithm',
     'django_extensions',
     'redis_intf'
 )

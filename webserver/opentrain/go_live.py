@@ -53,7 +53,7 @@ def report_fake(filename,dev2,delay,server):
             headers = {'content-type':'application/json'}
             url = 'http://%s/reports/add/' % (server)
             resp = requests.post(url,headers=headers,data=body)
-            if resp.status >= 400:
+            if resp.status_code >= 400:
                 print 'failed with: ' + resp.content
                 with open('/tmp/error.html') as fh:
                     fh.write(resp.content)

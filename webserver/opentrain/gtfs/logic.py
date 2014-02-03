@@ -11,14 +11,56 @@ def get_stations_choices():
         result.append((unicode(station.stop_id),station.stop_name))
     return tuple(result)
 
-
+def test1():
+    import common.ot_utils
+    trip_id = '030214_00192'
+    secs = 1391451464.94
+    dt = common.ot_utils.unix_time_to_localtime(secs)
+    loc = get_expected_location(trip_id,dt)
+    print loc
 
 def get_expected_location(trip_id,dt):
     import common.ot_utils
-    trip = models.Trip.objects.get(trip_id=trip_id)
-    stop_times = trip.stoptime_set.all()
-    dt = common.ot_utils.get_localtime(dt)
+    from models import Trip,Shape
+    trip = Trip.objects.get(trip_id=trip_id)
+    shapes = list(Shape.objects.filter(shape_id=trip.shape_id))
+    local_dt = common.ot_utils.get_localtime(dt)
+    h = local_dt.hour
+    m = local_dt.minute
+    s = local_dt.second
+    normal_time = h * 60 * 60 + m * 60 + s
+    before_stop_list = list(trip.stoptime_set.filter(departure_time__lte=normal_time).order_by('stop_sequence'))
+    after_stop_list = (trip.stoptime_set.filter(arrival_time__gte=normal_time).order_by('stop_sequence'))
+    before_stop = before_stop_list[-1] if before_stop_list else None
+    after_stop = after_stop_list[0] if after_stop_list else None
+    # if there is no before stop, means that the train is not in the first stop
+    # so we just return the after stop
+    # if no after stop - the reverse
+    if not before_stop:
+        return [after_stop.stop.stop_pt_lat,after_stop.stop.stop_pt_loc]
+    if not after_stop:
+        return [before_stop.stop.stop_pt_lat,before_stop.stop.stop_pt_loc]
+    pt_before = find_closest_point(trip,shapes,lat=before_stop.stop.stop_lat,lon=before_stop.stop.stop_lon)
+    pt_after = find_closest_point(trip,shapes,lat=after_stop.stop.stop_lat,lon=after_stop.stop.stop_lon)
+    delta = float(after_stop.arrival_time - before_stop.departure_time)
+    relative = (normal_time - before_stop.departure_time) / delta
+    num_points = pt_after.shape_pt_sequence - pt_before.shape_pt_sequence
+    result_seq = int(relative*num_points) +  pt_before.shape_pt_sequence
+    for s in shapes:
+        if s.shape_pt_sequence == result_seq:
+            return s
+    assert False,'Ooops'
+
+def find_closest_point(trip,shapes,lat,lon):
+    lat = float(lat)
+    lon = float(lon)
+    def dist(shape):
+        lat1 = float(shape.shape_pt_lat)
+        lon1 = float(shape.shape_pt_lon)
+        return (lon1 - lon)*(lon1 - lon) + (lat1 - lat)*(lat1-lat)
+    return min(shapes,key = dist)
     
+
 
 def do_search(kind,in_station=None,from_station=None,to_station=None,when=None,before=None,after=None):
     before = int(before)

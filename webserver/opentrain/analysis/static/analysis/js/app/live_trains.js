@@ -92,7 +92,9 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		}
 		ti.cur = cur;
 		ti.exp = exp;
-		lg.addLayer(cur);
+		if (cur) {
+			lg.addLayer(cur);
+		}
 		lg.addLayer(exp);
 	};
 	

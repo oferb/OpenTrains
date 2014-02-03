@@ -127,17 +127,24 @@ class Trip(GTFSModel):
     shape_id = models.CharField(max_length=100)
     wheelchair_accessible = models.IntegerField()
     trip_headsign = models.CharField(max_length=100)
-    def get_stop_times(self):
-        return self.stoptime_set.all().order_by('stop_sequence')
+    def get_times_frame(self):
+        stop_times = list(self.stoptime_set.all().order_by('stop_sequence'))
+        return (stop_times[0].departure_time,stop_times[-1].arrival_time)
     
+    def get_stop_times(self):
+        return list(self.stoptime_set.all().order_by('stop_sequence'))
+        
     def get_first_stop(self):
-        return self.get_stop_times()[0].stop;
+        return self.get_stop_times()[0].stop
     
     def get_last_stop(self):
-        return list(self.get_stop_times())[-1].stop;
-    
+        return self.get_stop_times()[-1].stop
+             
     def get_shapes(self):
         return Shape.objects.filter(shape_id=self.shape_id).order_by('shape_pt_sequence')
+    
+    def get_stop_times_qs(self):
+        return self.stoptime_set.all().order_by('stop_sequence')
     
     def __unicode__(self):
         return self.trip_id

@@ -88,7 +88,6 @@ class TripLocationResource(Resource):
 
     def get_object_list(self, request):
         counter = int(request.GET.get('counter',0))
-        print counter;
         return logic.get_current_trips(counter)
 
     def obj_get_list(self, bundle, **kwargs):

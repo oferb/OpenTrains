@@ -27,6 +27,9 @@ function(MyUtils) {
 			}
 			var is_cur = kind == 'cur';
 			var trip_pt = is_cur ? trip.cur_point : trip.exp_point;
+			if (!trip_pt) {
+				return null;
+			}
 			var pt = [trip_pt.lat,trip_pt.lon]; 
 			var text = tripData.stop_times[0].stop.stop_name + ' to ' + tripData.stop_times[tripData.stop_times.length-1].stop.stop_name;
 			var title = (is_cur ? 'cur ' : 'exp ') +  '@ ' + tripData.stop_times[0].stop.stop_name + ' to ' + tripData.stop_times[tripData.stop_times.length-1].stop.stop_name;

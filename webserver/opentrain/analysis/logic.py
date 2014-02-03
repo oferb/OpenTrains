@@ -122,31 +122,19 @@ class TripLocationObject(object):
         return self.cur_point
 
 def get_current_trips(counter):
+    import gtfs.logic
     result = []
-    result.append(get_fake_status('260114_00527',counter)) # TA Savido => Jerusalem
-    result.append(get_fake_status('260114_00177',counter)) # Naharia => Modiin
-    result.append(get_fake_status('260114_00274',counter)) # Ashkelon => Byniamina
+    dt = common.ot_utils.get_utc_now()
+    current_trips = gtfs.logic.get_all_trips_in_date(dt)
+    for trip in current_trips:
+        trip_id = trip.trip_id
+        exp_shape=gtfs.logic.get_expected_location(trip_id, dt)
+        result.append(TripLocationObject(trip_id=trip_id,
+                                         exp_point = dict(lat=exp_shape.shape_pt_lat,
+                                                          lon=exp_shape.shape_pt_lon),
+                                         timestamp = dt))
     return result
 
-def get_fake_status(trip_id,counter):
-    import datetime
-    from gtfs.models import Trip,Shape
-    trip = Trip.objects.get(trip_id=trip_id)
-    shape_id = trip.shape_id
-    shapes = Shape.objects.filter(shape_id=shape_id)
-    shapes_count = shapes.count()
-    cur_index = counter % shapes_count
-    exp_index = min(counter + 30,shapes_count-1)
-    cur_point = shapes[cur_index]
-    exp_point = shapes[exp_index]
-    return TripLocationObject(trip_id=trip.trip_id,
-                                     cur_point = dict(lat=cur_point.shape_pt_lat,
-                                                      lon=cur_point.shape_pt_lon),
-                                     exp_point = dict(lat=exp_point.shape_pt_lat,
-                                                      lon=exp_point.shape_pt_lon),
-                              timestamp=datetime.datetime.utcnow() -datetime.timedelta(seconds=100))
-    
-    
     
                                      
 

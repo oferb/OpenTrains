@@ -92,6 +92,9 @@ def format_date(dt):
 def get_utc_time_from_timestamp(ts):
     return datetime.datetime.utcfromtimestamp(ts).replace(tzinfo=timezone.utc)
     
+def get_utc_now():
+    return datetime.datetime.utcnow().replace(tzinfo=timezone.utc)
+    
 def delete_from_model(model):
     from django.db import connection
     cursor = connection.cursor()
@@ -107,6 +110,13 @@ def delete_from_model(model):
 def get_localtime(dt):
     tz = pytz.timezone(settings.TIME_ZONE)
     return dt.astimezone(tz)
+
+def get_normal_time(dt):
+    local_dt = get_localtime(dt)
+    h = local_dt.hour
+    m = local_dt.minute
+    s = local_dt.second
+    return h*3600+60*m+s
 
 def dt_time_to_unix_time(dt):
     epoch = datetime.datetime.utcfromtimestamp(0).replace(tzinfo=pytz.utc)

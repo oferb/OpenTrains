@@ -26,7 +26,7 @@ class StopTimeResource(ModelResource):
 class TripResource(ModelResource):
     route = fields.ForeignKey(RouteResource,'route',full=True)
     service = fields.ForeignKey(ServiceResource,'service',full=True)
-    stop_times = fields.ToManyField(StopTimeResource,attribute = lambda b : b.obj.get_stop_times(),full=True)
+    stop_times = fields.ToManyField(StopTimeResource,attribute = lambda b : b.obj.get_stop_times_qs(),full=True)
     shapes = fields.ToManyField('gtfs.api.ShapeResource',attribute = lambda b : b.obj.get_shapes(),full=True)
     class Meta:
         queryset = models.Trip.objects.all()

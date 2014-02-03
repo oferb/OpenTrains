@@ -55,7 +55,7 @@ def report_fake(filename,dev2,delay,server):
             resp = requests.post(url,headers=headers,data=body)
             if resp.status_code >= 400:
                 print 'failed with: ' + resp.content
-                with open('/tmp/error.html') as fh:
+                with open('/tmp/error.html','w') as fh:
                     fh.write(resp.content)
             print 'Sent %d raw reports so far' % (index) 
             index += 1

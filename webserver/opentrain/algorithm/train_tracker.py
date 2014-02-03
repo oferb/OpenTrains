@@ -86,8 +86,19 @@ class TrainTracker(object):
         res_shape_sampled_point_ids, _ = shapes.all_shapes.query_sampled_points(coords, report.my_loc.accuracy_in_coords)
         cl = get_redis_client()   
         added_count = cl.sadd("train_tracker:%s:visited_shape_sampled_point_ids" % (self.id), res_shape_sampled_point_ids)
+        trips = cl.get("train_tracker:%s:trip_ids" % (self.id))
+        trip = trips.split(',')[0] if trips is not None and len(trips) > 0 else None
         if added_count > 0:
-            cl.set("train_tracker:%s:coords" % (self.id), coords)
+            p = get_redis_pipeline()
+            p.set("train_tracker:%s:coords" % (self.id), coords)
+            
+            if trip is not None:
+                p.set('current_trip_id:coords:%s' % (trip), coords)
+                p.set('current_trip_id:coords_timestamp:%s' % (trip), ot_utils.dt_time_to_unix_time(report.timestamp))
+            p.execute()              
+        
+        if trip is not None:    
+            cl.set('current_trip_id:report_timestamp:%s' % (trip), ot_utils.dt_time_to_unix_time(report.timestamp))
         
         #coords_updated = False
         #p = get_redis_pipeline()
@@ -200,6 +211,7 @@ class TrainTracker(object):
                             departure_unix_timestamp = ot_utils.dt_time_to_unix_time(timestamp)
                             stop_id_and_departure_time = "%s_%d" % (prev_current_stop, departure_unix_timestamp)
                             self.update_stop_time(prev_stop_id, stop_time[0][1], stop_id_and_departure_time)
+                            self.update_trips(report, coords)
                         else: # we need to set arrival
                              # set new stop_time if no stop_time exists or on stop_id change
                             stop_time = cl.zrange("train_tracker:%s:tracked_stops" % (self.id), -1, -1, withscores=True)
@@ -209,6 +221,8 @@ class TrainTracker(object):
                                 
                                 stop_id_and_departure_time = "%s_" % (current_stop_id)
                                 self.update_stop_time(prev_stop_id, arrival_unix_timestamp, stop_id_and_departure_time)
+                                self.update_trips(report, coords)
+                                
                                 #stop_time = TrackedStopTime(current_stop_id)
                                 #self.stop_times.append(stop_time)
                                 #stop_time.arrival = prev_timestamp if prev_timestamp is not None else timestamp
@@ -216,6 +230,13 @@ class TrainTracker(object):
                     prev_timestamp = timestamp
             self.print_tracked_stop_times()
 
+    def update_trips(self, report, coords):
+        trips, time_deviation_in_seconds = self.get_possible_trips()
+        if len(trips) <= 3:
+            cl = get_redis_client()
+            cl.set("train_tracker:%s:trip_ids" % (self.id), ",".join(trips))
+          
+            
     def update_stop_time(self, prev_stop_id, arrival_unix_timestamp, stop_id_and_departure_time):
         p = get_redis_pipeline()
         cl = get_redis_client()
@@ -313,7 +334,7 @@ class TrainTracker(object):
                                                                            departure_time__range=departure_time__range)
             
             else:
-                trip_stop_times_for_specific_stop = trip_stop_times.filter(stop = tracked_stop_time.stop_id, 
+                trip_stop_times_for_specific_stop = trip_stop_times.filter(stop = stop_id, 
                                                                            arrival_time__range=arrival_time__range)                
                 
             trips_filtered_by_stops_and_times = trip_stop_times_for_specific_stop.values_list('trip')
@@ -332,7 +353,7 @@ class TrainTracker(object):
         
         trips_filtered_by_stops_and_times = [trips_filtered_by_stops_and_times[i][0] for i in trip_in_right_direction]
         
-        arrival_delta_abs_sums = []
+        arrival_delta_abs_sums_seconds = []
         #departure_delta_abs_sums = []
         for t in trips_filtered_by_stops_and_times:
             stop_times_redis = gtfs.models.StopTime.objects.filter(trip = t).order_by('arrival_time').values_list('stop', 'arrival_time')#, 'departure_time')
@@ -344,12 +365,14 @@ class TrainTracker(object):
                 #departure_delta_seconds = stop_time[2] - datetime_to_db_time(tracked_stop_time.departure)
                 arrival_delta_abs_sum += abs(arrival_delta_seconds)
                 #departure_delta_abs_sum += abs(departure_delta_seconds)
-            arrival_delta_abs_sums.append(arrival_delta_abs_sum)
+            arrival_delta_abs_sums_seconds.append(arrival_delta_abs_sum)
             #departure_delta_abs_sums.append(departure_delta_abs_sum)
         
         # sort results by increasing arrival time 
-        trips_filtered_by_stops_and_times = [x for (y,x) in sorted(zip(arrival_delta_abs_sums,trips_filtered_by_stops_and_times))]
-        return trips_filtered_by_stops_and_times
+        sorted_trips = sorted(zip(arrival_delta_abs_sums_seconds,trips_filtered_by_stops_and_times))
+        trips_filtered_by_stops_and_times = [x for (y,x) in sorted_trips]
+        arrival_delta_abs_sums_seconds = [y for (y,x) in sorted_trips]
+        return trips_filtered_by_stops_and_times, arrival_delta_abs_sums_seconds
 
      
     def get_shape_probs(self):

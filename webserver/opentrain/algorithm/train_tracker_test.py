@@ -61,7 +61,7 @@ class train_tracker_test(TestCase):
 
         #tracker.print_tracked_stop_times()
         #tracker.print_possible_trips()
-        trips = tracker.get_possible_trips()
+        trips, deviation_in_seconds = tracker.get_possible_trips()
         return trips, tracker
         
   
@@ -74,10 +74,9 @@ class train_tracker_test(TestCase):
         device_id = '02090d12' # Eran's trip
         trips, tracker = self.track_device(device_id, do_preload_reports=True)
         print trips
-        self.assertEquals(len(trips), 3)
-        self.assertTrue('130114_00177' in trips)
-        self.assertTrue('130114_00175' in trips)
+        self.assertEquals(len(trips), 2)
         self.assertTrue('130114_00077' in trips)
+        self.assertTrue('130114_00177' in trips)
         
         device_id = 'f752c40d' # Ofer's trip
         trips, tracker = self.track_device(device_id)
@@ -89,8 +88,7 @@ class train_tracker_test(TestCase):
         device_id = '1cb87f1e' # Udi's trip        
         trips, tracker = self.track_device(device_id)
         print trips
-        self.assertEquals(len(trips), 2)        
-        self.assertTrue('160114_00171' in trips)
+        self.assertEquals(len(trips), 1)        
         self.assertTrue('160114_00073' in trips)
 
     def get_data_from_device_id(self, device_id):

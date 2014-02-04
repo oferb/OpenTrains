@@ -43,5 +43,6 @@ def get_live_trips(req):
     import logic
     import json
     live_trips = logic.get_live_trips()    
-    return HttpResponse(content=json.dumps(live_trips),content_type='application/json',status=200)
+    result = dict(objects=live_trips)
+    return HttpResponse(content=json.dumps(result),content_type='application/json',status=200)
 

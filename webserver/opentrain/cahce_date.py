@@ -5,7 +5,7 @@ import argparse
 
 def cache_date(year,month,day,server):
     print 'Caching for %s/%s/%s on %s' % (day,month,year,server)
-    trip_ids = requests.get('http://%s/gtfs/trips-for-date' % (server),params=dict(year=year,month=month,day=day)).json()
+    trip_ids = requests.get('http://%s/gtfs/api/trips-for-date/' % (server),params=dict(year=year,month=month,day=day)).json()
     print 'Found %s trip ids for %s/%s/%s' % (len(trip_ids),day,month,year)
     bad = []
     for idx,trip_id in enumerate(trip_ids):

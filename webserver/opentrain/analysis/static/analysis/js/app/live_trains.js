@@ -7,6 +7,7 @@ app.controller('LiveTrainsController', ['$scope', 'MyHttp', 'MyUtils', 'MyLeafle
 function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $interval) {
 	$scope.input = {
 		showTrips : {},
+		showReportedOnly : false,
 	};
 	$scope.leftCounter = 0;
 	$scope.initialDone = false;
@@ -16,6 +17,18 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		leafletData.getMap().then(function(map) {
 			$scope.refreshLayers(map);
 		});
+	};
+	$scope.showReportedOnlyChange = function() {
+		if ($scope.input.showReportedOnly) {
+			$scope.trips.forEach(function(trip) {
+				$scope.input.showTrips[trip.trip_id] = trip.cur_point ? true : false; 
+			});
+		} else {
+			for (var k in $scope.input.showTrips) {
+				$scope.input.showTrips[k] = true;
+			}
+		}
+		$scope.showTripsChange();
 	};
 	$scope.refreshLayers = function(map) {
 		console.log('In refreshLayers');

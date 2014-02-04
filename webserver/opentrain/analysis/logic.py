@@ -121,6 +121,7 @@ class TripLocationObject(object):
     def get_cur_point(self):
         return self.cur_point
 
+from django.db import connection 
 def get_live_trips():
     import gtfs.logic
     result = []
@@ -128,7 +129,7 @@ def get_live_trips():
     current_trips = gtfs.logic.get_all_trips_in_datetime(dt)
     for trip in current_trips:
         trip_id = trip.trip_id
-        exp_shape=gtfs.logic.get_expected_location(trip_id, dt)
+        exp_shape=gtfs.logic.get_expected_location(trip, dt)
         result.append(dict(trip_id=trip_id,
                            exp_point = dict(lat=exp_shape.shape_pt_lat,
                                             lon=exp_shape.shape_pt_lon),

@@ -26,7 +26,7 @@ def test1():
     
 def test2():
     return get_all_trips_in_datetime(common.ot_utils.get_utc_now())
-    
+        
 def get_all_trips_in_datetime(dt):
     from models import Service,Trip
     local_dt = common.ot_utils.get_localtime(dt)
@@ -34,7 +34,8 @@ def get_all_trips_in_datetime(dt):
     date = local_dt.date()
     services = Service.objects.filter(start_date__gte=date,end_date__lte=date)
     service_ids = services.values_list('service_id')
-    trips = list(Trip.objects.filter(service_id__in=service_ids))
+    trips_qs = Trip.objects.filter(service_id__in=service_ids).prefetch_related('stoptime_set','stoptime_set__stop')
+    trips = list(trips_qs)
     result = []
     for trip in trips:
         t1,t2 = trip.get_times_frame()
@@ -48,13 +49,14 @@ def get_all_trips_in_date(date):
     service_ids = services.values_list('service_id')
     return Trip.objects.filter(service_id__in=service_ids)
 
-def get_expected_location(trip_id,dt):
-    from models import Trip,Shape
-    trip = Trip.objects.get(trip_id=trip_id)
+def get_expected_location(trip,dt):
+    from models import Shape
     shapes = list(Shape.objects.filter(shape_id=trip.shape_id))
     normal_time = common.ot_utils.get_normal_time(dt)
-    before_stop_list = list(trip.stoptime_set.filter(departure_time__lte=normal_time).order_by('stop_sequence'))
-    after_stop_list = (trip.stoptime_set.filter(arrival_time__gte=normal_time).order_by('stop_sequence'))
+    stop_times = list(trip.stoptime_set.all())
+    stop_times.sort(key=lambda x : x.stop_sequence)
+    before_stop_list = [st for st in stop_times if st.departure_time <= normal_time]
+    after_stop_list = [st for st in stop_times if st.arrival_time >= normal_time]
     before_stop = before_stop_list[-1] if before_stop_list else None
     after_stop = after_stop_list[0] if after_stop_list else None
     # if there is no before stop, means that the train is not in the first stop

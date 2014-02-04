@@ -20,7 +20,6 @@ class ShowReportDetails(View):
         report_id = req.GET.get('report_id',None) 
         if report_id:
             f.fields['report_id'].initial = report_id
-            print report_id
             ctx['report'] = models.Report.objects.get(id=report_id)
         ctx['form'] = f    
         return render(req,'analysis/report_details.html',ctx)

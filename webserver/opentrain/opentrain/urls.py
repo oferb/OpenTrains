@@ -22,8 +22,8 @@ urlpatterns = patterns('',
     url(r'^gtfs/',include('gtfs.urls',namespace='gtfs')),
     url(r'^reports/',include('reports.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^analysis/',include('analysis.urls',namespace='analysis')),
     url(r'^api/', include(tp.urls)),
-    url(r'^analysis/',include('analysis.urls',namespace='analysis'))
 )
 
 

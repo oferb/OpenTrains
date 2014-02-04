@@ -63,48 +63,10 @@ class DeviceResource(Resource):
         for obj in objects:
             if obj.device_id == kwargs['pk']:
                 return obj
-            
-        
-            
-class TripLocationResource(Resource):
-    trip_id = fields.CharField(attribute='trip_id')
-    cur_point = fields.DictField(attribute='get_cur_point')
-    exp_point = fields.DictField(attribute='get_exp_point')
-    timestamp = fields.DateTimeField(attribute='timestamp')
-    
-    class Meta:
-        resource_name = 'live-trips'
-        object_class = logic.TripLocationObject
-
-    def detail_uri_kwargs(self, bundle_or_obj):
-        kwargs = {}
-
-        if isinstance(bundle_or_obj, Bundle):
-            kwargs['pk'] = bundle_or_obj.obj.trip_id
-        else:
-            kwargs['pk'] = bundle_or_obj.trip_id
-
-        return kwargs
-
-    def get_object_list(self, request):
-        counter = int(request.GET.get('counter',0))
-        return logic.get_current_trips(counter)
-
-    def obj_get_list(self, bundle, **kwargs):
-        # Filtering disabled for brevity...
-        return self.get_object_list(bundle.request)
-
-    def obj_get(self, bundle, **kwargs):
-        objects = self.get_object_list(bundle.request)
-        for obj in objects:
-            if obj.trip_id == kwargs['pk']:
-                return obj
-            
-                        
+                                    
 def register_all(tp):
     tp.register(ReportResource())
     tp.register(ReportLocResource())
     tp.register(DeviceResource())
-    tp.register(TripLocationResource())
     
     

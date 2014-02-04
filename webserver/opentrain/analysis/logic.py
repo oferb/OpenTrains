@@ -121,23 +121,19 @@ class TripLocationObject(object):
     def get_cur_point(self):
         return self.cur_point
 
-def get_current_trips(counter):
+def get_live_trips():
     import gtfs.logic
     result = []
-    dt = common.ot_utils.get_utc_now()
+    dt = common.ot_utils.get_localtime_now()
     current_trips = gtfs.logic.get_all_trips_in_datetime(dt)
     for trip in current_trips:
         trip_id = trip.trip_id
         exp_shape=gtfs.logic.get_expected_location(trip_id, dt)
-        result.append(TripLocationObject(trip_id=trip_id,
-                                         exp_point = dict(lat=exp_shape.shape_pt_lat,
-                                                          lon=exp_shape.shape_pt_lon),
-                                         timestamp = dt))
+        result.append(dict(trip_id=trip_id,
+                           exp_point = dict(lat=exp_shape.shape_pt_lat,
+                                            lon=exp_shape.shape_pt_lon),
+                            timestamp = dt.isoformat()))                                 
     return result
-
-    
-                                     
-
 
     
 

@@ -40,6 +40,9 @@ def show_device_reports(req):
 def show_live_trains(req):
     return render(req,'analysis/show_live_trains.html')
          
-    
-
+def get_live_trips(req):
+    import logic
+    import json
+    live_trips = logic.get_live_trips()    
+    return HttpResponse(content=json.dumps(live_trips),content_type='application/json',status=200)
 

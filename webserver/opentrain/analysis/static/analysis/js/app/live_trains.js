@@ -36,7 +36,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	$scope.initTrips = function() {
 		$scope.tripDatas = {};
 		$scope.trips = [];
-		MyHttp.get('/api/v1/live-trips/?limit=100').success(function(data) {
+		MyHttp.get('/analysis/api/live-trips/').success(function(data) {
 			$scope.trips = data.objects;
 			$scope.leftCounter = $scope.trips.length;
 			$scope.progressSegment = 100 / $scope.trips.length;
@@ -56,7 +56,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	$scope.updateTripsLive = function() {
 		$scope.intervalCounter++;
 		console.log('In updateTripsLive counter = ' + $scope.intervalCounter);
-		MyHttp.get('/api/v1/live-trips/', {
+		MyHttp.get('/analysis/api/live-trips/', {
 			limit : 100,
 			counter : $scope.intervalCounter,
 		}).success(function(data) {

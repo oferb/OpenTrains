@@ -2,11 +2,18 @@
 
 import requests
 import argparse
+import datetime
 
-def cache_date(year,month,day,server):
-    print 'Caching for %s/%s/%s on %s' % (day,month,year,server)
-    trip_ids = requests.get('http://%s/gtfs/api/trips-for-date/' % (server),params=dict(year=year,month=month,day=day)).json()
-    print 'Found %s trip ids for %s/%s/%s' % (len(trip_ids),day,month,year)
+def cache_date(date,today,server):
+    params = dict()
+    if today:
+        params['today']=1
+    else:
+        params['date']=date
+    resp = requests.get('http://%s/gtfs/api/trips-for-date/' % (server),params=params)    
+    trip_ids = resp.json()['objects']
+    assert len(trip_ids) == resp.json()['meta']['total_count']
+    print 'Found %s trip ids for %s' % (len(trip_ids),('today' if today else date))
     bad = []
     for idx,trip_id in enumerate(trip_ids):
         url = 'http://%s/api/v1/trips/%s/' % (server,trip_id)
@@ -20,10 +27,11 @@ def cache_date(year,month,day,server):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='cache trips for date')
-    parser.add_argument('--year',help='year',required=True)
-    parser.add_argument('--month',help='month',required=True)
-    parser.add_argument('--day',help='day',required=True)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('--date',help='generate cache for specific date in format day/month/year',required=False)
+    group.add_argument('--today',help='generate cache for today',required=False,action='store_true')
     parser.add_argument('--server',help='server',default='localhost:8000',required=False)
+    
     ns = parser.parse_args()
-    cache_date(year=ns.year,month=ns.month,day=ns.day,server=ns.server)
+    cache_date(date=ns.date,today=ns.today,server=ns.server)
 

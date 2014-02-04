@@ -101,13 +101,18 @@ class GtfsSearchIn(GtfsSearch):
     title = 'Search In'
 
 def get_trip_ids_for_date(request,*args,**kwargs):
-    year = request.GET.get('year')
-    month = request.GET.get('month')
-    day = request.GET.get('day')
-    if not year or not month or not day:
-        raise Exception('year/month/day are mandatory')
-    dt = datetime.date(year=int(year),month=int(month),day=int(day))
+    date = request.GET.get('date')
+    today = bool(int(request.GET.get('today','0')))
+    if not today and not date:
+        raise Exception('Must have either today or date')
+    if today:
+        dt = common.ot_utils.get_localtime_now().date()
+    else:
+        day,month,year = date.split('/')
+        dt = datetime.date(year=int(year),month=int(month),day=int(day))
     trips = logic.get_all_trips_in_date(dt)
-    trip_ids = [trip.trip_id for trip in trips] 
-    return HttpResponse(status=200,content=json.dumps(trip_ids),content_type='application/json')
+    objects=[trip.trip_id for trip in trips]
+    result = dict(objects=objects,
+                  meta=dict(total_count=len(objects)))
+    return HttpResponse(status=200,content=json.dumps(result),content_type='application/json')
     

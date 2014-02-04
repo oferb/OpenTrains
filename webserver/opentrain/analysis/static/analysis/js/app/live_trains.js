@@ -41,21 +41,22 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			$scope.leftCounter = $scope.trips.length;
 			$scope.progressSegment = 100 / $scope.trips.length;
 			$scope.trips.forEach(function(trip) {
-				$scope.loadTripData(trip.trip_id,true);
+				$scope.loadTripData(trip.trip_id, true);
 			});
 		});
 	};
-	$scope.loadTripData = function(trip_id,is_initial) {
+	$scope.loadTripData = function(trip_id, is_initial) {
 		$scope.input.showTrips[trip_id] = true;
 		MyHttp.get('/api/v1/trips/' + trip_id + '/').success(function(data) {
 			console.log('loaded data for trip ' + trip_id);
 			$scope.tripDatas[trip_id] = data;
-			$scope.drawTripData(trip_id,is_initial);
+			$scope.drawTripData(trip_id, is_initial);
 		});
 	};
 	$scope.updateTripsLive = function() {
 		$scope.intervalCounter++;
-		MyHttp.get('/api/v1/live-trips/',{
+		console.log('In updateTripsLive counter = ' + $scope.intervalCounter);
+		MyHttp.get('/api/v1/live-trips/', {
 			limit : 100,
 			counter : $scope.intervalCounter,
 		}).success(function(data) {
@@ -63,27 +64,30 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			$scope.trips.forEach(function(trip) {
 				if (!$scope.tripDatas[trip.trip_id]) {
 					console.log('!!! found new trip id ' + trip_id);
-					$scope.loadTripData(trip.trip_id,false);
+					$scope.loadTripData(trip.trip_id, false);
 				}
 			});
 			leafletData.getMap().then(function(map) {
 				$scope.trips.forEach(function(trip) {
-					$scope.updateTripStatus(map,trip);
+					$scope.updateTripStatus(map, trip);
 				});
 			});
+			$timeout(function() {
+				$scope.updateTripsLive();
+			}, 5000);
 		});
 	};
-	
-	$scope.updateTripStatus = function(map,trip) {
+
+	$scope.updateTripStatus = function(map, trip) {
 		var tripData = $scope.tripDatas[trip.trip_id];
 		var ti = $scope.tripMapInfo[trip.trip_id];
 		if (!ti || !ti.lg) {
 			console.log('trip ' + trip.trip_id + ' is not ready yet');
-			return;	
+			return;
 		}
 		var lg = ti.lg;
-		var cur = MyLeaflet.getTripMarker(trip,tripData,'cur');
-		var exp = MyLeaflet.getTripMarker(trip,tripData,'exp');
+		var cur = MyLeaflet.getTripMarker(trip, tripData, 'cur');
+		var exp = MyLeaflet.getTripMarker(trip, tripData, 'exp');
 		if (ti.cur) {
 			ti.lg.removeLayer(ti.cur);
 		}
@@ -97,8 +101,8 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		}
 		lg.addLayer(exp);
 	};
-	
-	$scope.drawTripData = function(trip_id,is_initial) {
+
+	$scope.drawTripData = function(trip_id, is_initial) {
 		leafletData.getMap().then(function(map) {
 			var tripData = $scope.tripDatas[trip_id];
 			var shapes = tripData.shapes;
@@ -108,20 +112,22 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			var line = MyLeaflet.drawShapes(shapes);
 			var markers = MyLeaflet.drawStops(stops);
 			var layers = [line];
-			layers.push.apply(layers,markers);
+			layers.push.apply(layers, markers);
 			var lg = L.layerGroup(layers);
-			$scope.tripMapInfo[trip_id] = {lg : lg};
+			$scope.tripMapInfo[trip_id] = {
+				lg : lg
+			};
 			lg.addTo(map);
 			if (is_initial) {
 				$scope.leftCounter--;
 				$scope.progress = $scope.progressSegment * ($scope.trips.length - $scope.leftCounter);
 				if ($scope.leftCounter <= 0) {
 					$scope.refreshBoundBox(map);
+					$scope.intervalCounter = 0;
+					$timeout(function() {
+						$scope.updateTripsLive();
+					}, 5000);
 				}
-				$scope.intervalCounter = 0;
-				$interval(function() {
-					$scope.updateTripsLive();
-				},5000);
 			}
 		});
 	};
@@ -130,14 +136,14 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		for (var key in $scope.tripDatas) {
 			var trip = $scope.tripDatas[key];
 			trip.shapes.forEach(function(shape) {
-				points.push([shape.shape_pt_lat,shape.shape_pt_lon]);
+				points.push([shape.shape_pt_lat, shape.shape_pt_lon]);
 			});
 		};
 		var box = MyLeaflet.findBoundBox(points);
 		map.fitBounds(box);
 		$timeout(function() {
 			$scope.initialDone = true;
-		},500);
+		}, 500);
 	};
 	$scope.initTrips();
 }]);

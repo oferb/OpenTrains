@@ -174,12 +174,6 @@ def download_db():
         os.system('cd ../opentrain ; ./restore.py')
     
 @task
-def cache_date(*args):
-    """ calls the cache date on host """
-    with cd(env.django_base_dir):
-        run('./cache_date.py')    
-
-@task
 def analyze_reports():
     with cd(env.django_base_dir):
         run('./reanalyze.py')

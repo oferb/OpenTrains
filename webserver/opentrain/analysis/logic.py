@@ -120,8 +120,7 @@ class TripLocationObject(object):
     
     def get_cur_point(self):
         return self.cur_point
-
-from django.db import connection 
+ 
 def get_live_trips():
     import gtfs.logic
     result = []

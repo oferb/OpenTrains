@@ -25,9 +25,9 @@ def test1():
     assert loc.shape_pt_sequence == 1362
     
 def test2():
-    return get_all_trips_in_date(common.ot_utils.get_utc_now())
+    return get_all_trips_in_datetime(common.ot_utils.get_utc_now())
     
-def get_all_trips_in_date(dt):
+def get_all_trips_in_datetime(dt):
     from models import Service,Trip
     local_dt = common.ot_utils.get_localtime(dt)
     normal_time = common.ot_utils.get_normal_time(dt) 
@@ -41,7 +41,12 @@ def get_all_trips_in_date(dt):
         if t1 <= normal_time <= t2:
             result.append(trip) 
     return result
-    
+
+def get_all_trips_in_date(date):
+    from models import Service,Trip
+    services = Service.objects.filter(start_date__gte=date,end_date__lte=date)
+    service_ids = services.values_list('service_id')
+    return Trip.objects.filter(service_id__in=service_ids)
 
 def get_expected_location(trip_id,dt):
     from models import Trip,Shape

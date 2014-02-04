@@ -9,5 +9,6 @@ urlpatterns = patterns('',
     url(r'^maps/(?P<trip_id>\w+)/',views.show_map,name='show-map'), 
     url(r'^create-models/$',views.create_all),
     url(r'^create-superuser/$',views.create_superuser),
+    url(r'^trips-for-date/$',views.get_trip_ids_for_date),
 )
 

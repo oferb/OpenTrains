@@ -125,7 +125,7 @@ def get_current_trips(counter):
     import gtfs.logic
     result = []
     dt = common.ot_utils.get_utc_now()
-    current_trips = gtfs.logic.get_all_trips_in_date(dt)
+    current_trips = gtfs.logic.get_all_trips_in_datetime(dt)
     for trip in current_trips:
         trip_id = trip.trip_id
         exp_shape=gtfs.logic.get_expected_location(trip_id, dt)

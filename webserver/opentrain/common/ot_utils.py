@@ -95,6 +95,9 @@ def get_utc_time_from_timestamp(ts):
 def get_utc_now():
     return datetime.datetime.utcnow().replace(tzinfo=timezone.utc)
     
+def get_localtime_now():
+    return get_localtime(get_utc_now())
+    
 def delete_from_model(model):
     from django.db import connection
     cursor = connection.cursor()

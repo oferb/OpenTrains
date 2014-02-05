@@ -140,6 +140,13 @@ def update_conf():
 
 
 @task
+def reload_all():
+    sudo('sudo supervisorctl reread')
+    sudo('supervisorctl update')
+    sudo('supervisorctl restart opentrain')
+    reload_gunicorn()
+
+@task
 def db_first_time():
     """ initialize Postgres DB """
     with cd(env.django_base_dir):

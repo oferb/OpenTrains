@@ -121,10 +121,18 @@ class TripLocationObject(object):
     def get_cur_point(self):
         return self.cur_point
  
-def get_live_trips():
+def test3():
+    secs = 1391451464.94
+    dt = common.ot_utils.unix_time_to_localtime(secs)
+    result =  get_live_trips(dt)
+    return result
+
+ 
+def get_live_trips(dt=None):
     import gtfs.logic
     result = []
-    dt = common.ot_utils.get_localtime_now()
+    if not dt:
+        dt = common.ot_utils.get_localtime_now()
     current_trips = gtfs.logic.get_all_trips_in_datetime(dt)
     for trip in current_trips:
         trip_id = trip.trip_id

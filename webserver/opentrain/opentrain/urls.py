@@ -4,14 +4,10 @@ from django.views.generic.base import RedirectView
 admin.autodiscover()
 
 from tastypie.api import Api
-import gtfs.api
-import reports.api
 import analysis.api 
 
 tp = Api(api_name='v1')
 
-gtfs.api.register_all(tp)
-reports.api.register_all(tp)
 analysis.api.register_all(tp)
 
 urlpatterns = patterns('',

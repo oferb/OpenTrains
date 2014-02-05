@@ -147,6 +147,15 @@ class Trip(GTFSModel):
     def get_stop_times_qs(self):
         return self.stoptime_set.all().order_by('stop_sequence')
     
+    def to_json_full(self):
+        import json
+        shapes = json.loads(ShapeJson.objects.get(shape_id=self.shape_id).points)
+        stop_times = self.get_stop_times_qs().select_related('stop')
+        stop_times_json = [st.to_json() for st in stop_times]
+        return dict(trip_id=self.trip_id,
+                    shapes=shapes,
+                    stop_times=stop_times_json)
+    
     def __unicode__(self):
         return self.trip_id
     
@@ -158,6 +167,11 @@ class Stop(GTFSModel):
     stop_lon = models.CharField(max_length=20)
     stop_url = models.URLField()
     location_type = models.IntegerField()
+    
+    def to_json(self):
+        return dict(stop_name=self.stop_name,
+                    latlon=[self.stop_lat,self.stop_lon])
+
     def __unicode__(self):
         return self.stop_name
 
@@ -171,6 +185,13 @@ class StopTime(GTFSModel):
     stop_sequence = models.IntegerField() 
     def set_arrival_time(self,value):
         self.arrival_time = common.ot_utils.normalize_time(value)
+        
+    def to_json(self):
+        return dict(arrival_time=self.arrival_time,
+                    departure_time=self.departure_time,
+                    stop_sequence=self.stop_sequence,
+                    stop=self.stop.to_json()
+                    )
         
     def json_arrival_time(self):
         return common.ot_utils.denormalize_time_to_string(self.arrival_time) 

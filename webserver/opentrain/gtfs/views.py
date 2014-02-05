@@ -2,7 +2,7 @@ from django.http import HttpResponse
 import datetime
 from django.http.response import HttpResponseNotAllowed,HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import View
 from django.core.urlresolvers import reverse
 
@@ -116,3 +116,8 @@ def get_trip_ids_for_date(request,*args,**kwargs):
                   meta=dict(total_count=len(objects)))
     return HttpResponse(status=200,content=json.dumps(result),content_type='application/json')
     
+def get_trip_details(request,trip_id):
+    from models import Trip
+    trip = Trip.objects.get(trip_id=trip_id)
+    result = trip.to_json_full()
+    return HttpResponse(status=200,content=json.dumps(result),content_type='application/json')

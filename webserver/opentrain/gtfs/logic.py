@@ -151,7 +151,8 @@ def create_shape_json():
         points = Shape.objects.filter(shape_id=shape_id).order_by('shape_pt_sequence')
         point_list = []
         for point in points:
-            point_list.append([point.shape_pt_lat,point.shape_pt_lon])
+            point_list.append([float(point.shape_pt_lat),float(point.shape_pt_lon)])
         ShapeJson(shape_id=shape_id,points=json.dumps(point_list)).save()
         print 'saved %d/%d' % (idx,len(shape_ids)) 
+
             

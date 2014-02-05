@@ -60,7 +60,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	};
 	$scope.loadTripData = function(trip_id, is_initial) {
 		$scope.input.showTrips[trip_id] = true;
-		MyHttp.get('/api/v1/trips/' + trip_id + '/').success(function(data) {
+		MyHttp.get('/gtfs/api/trips/' + trip_id + '/').success(function(data) {
 			console.log('loaded data for trip ' + trip_id);
 			$scope.tripDatas[trip_id] = data;
 			$scope.drawTripData(trip_id, is_initial);

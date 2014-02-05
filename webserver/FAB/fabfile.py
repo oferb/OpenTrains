@@ -24,6 +24,13 @@ def get_ctx():
             }
     return ctx
 
+@task
+@hosts('localhost')
+def localhost():
+    env.hosts = ['localhost']
+    env.user = os.environ['USER']
+    env.django_base_dir = os.path.join(os.path.dirname(os.getcwd()),'opentrain')
+
 
 @task
 def create_new():

@@ -10,5 +10,6 @@ urlpatterns = patterns('',
     url(r'^create-models/$',views.create_all),
     url(r'^create-superuser/$',views.create_superuser),
     url(r'^api/trips-for-date/$',views.get_trip_ids_for_date),
+    url(r'^api/trips/(?P<trip_id>\w+)/$',views.get_trip_details),
 )
 

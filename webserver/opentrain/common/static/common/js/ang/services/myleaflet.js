@@ -40,12 +40,8 @@ function(MyUtils) {
 				}
 			).bindPopup(text);
 		},
-		drawShapes : function(shapes) {
-			var that = this;
-			var points = shapes.map(function(shape) {
-				return [parseFloat(shape.shape_pt_lat), parseFloat(shape.shape_pt_lon)];
-			});
-			var polyline = that.createLine(null, points, {
+		drawShapes : function(points) {
+			var polyline = this.createLine(null, points, {
 				color : '#0000CD',
 				weight : 3,
 				stroke : true,
@@ -57,7 +53,7 @@ function(MyUtils) {
 			var result = [];
 			stops.forEach(function(stop) {
 				var text = stop.stop_name;
-				var pt = [stop.stop_lat,stop.stop_lon];
+				var pt = stop.latlon;
 				var marker = L.marker(pt, {
 					icon : that.trainIcon
 				}).bindPopup(text);

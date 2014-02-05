@@ -5,6 +5,5 @@ urlpatterns = patterns('',
     url(r'^device-reports/$',views.show_device_reports,name="device-reports"),
     url(r'^live-trips/$',views.show_live_trains,name="live-trips"),
     url(r'^report-details/$',views.ShowReportDetails.as_view(),name='report-details'),
-    url(r'^api/live-trips/$',views.get_live_trips,name='api-live-trips')
-     
+    url(r'^api/live-trips/$',views.get_live_trips,name='api-live-trips') 
 )

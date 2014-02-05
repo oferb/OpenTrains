@@ -60,22 +60,20 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	};
 	$scope.loadTripData = function(trip_id, is_initial) {
 		$scope.input.showTrips[trip_id] = true;
-		MyHttp.get('/api/v1/trips/' + trip_id + '/').success(function(data) {
-			console.log('loaded data for trip ' + trip_id);
+		MyHttp.get('/gtfs/api/trips/' + trip_id + '/').success(function(data) {
 			$scope.tripDatas[trip_id] = data;
 			$scope.drawTripData(trip_id, is_initial);
 		});
 	};
 	$scope.updateTripsLive = function() {
 		$scope.intervalCounter++;
-		console.log('In updateTripsLive counter = ' + $scope.intervalCounter);
 		MyHttp.get('/analysis/api/live-trips/', {
 			limit : 100,
 			counter : $scope.intervalCounter,
 		}).success(function(data) {
 			$scope.trips = data.objects;
 			$scope.trips.forEach(function(trip) {
-				if (!$scope.tripDatas[trip.trip_id]) {
+				if (trip.trip_id && !$scope.tripDatas[trip.trip_id]) {
 					console.log('!!! found new trip id ' + trip_id);
 					$scope.loadTripData(trip.trip_id, false);
 				}
@@ -85,9 +83,6 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 					$scope.updateTripStatus(map, trip);
 				});
 			});
-			$timeout(function() {
-				$scope.updateTripsLive();
-			}, 5000);
 		});
 	};
 
@@ -137,9 +132,9 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 				if ($scope.leftCounter <= 0) {
 					$scope.refreshBoundBox(map);
 					$scope.intervalCounter = 0;
-					$timeout(function() {
+					$interval(function() {
 						$scope.updateTripsLive();
-					}, 5000);
+					}, 10000);
 				}
 			}
 		});
@@ -148,9 +143,9 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		var points = [];
 		for (var key in $scope.tripDatas) {
 			var trip = $scope.tripDatas[key];
-			trip.shapes.forEach(function(shape) {
-				points.push([shape.shape_pt_lat, shape.shape_pt_lon]);
-			});
+			trip.shapes.forEach(function(pt) {
+			     points.push(pt);
+			 });
 		};
 		var box = MyLeaflet.findBoundBox(points);
 		map.fitBounds(box);

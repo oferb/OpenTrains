@@ -18,8 +18,6 @@ def test1():
     secs = 1391451464.94
     dt = common.ot_utils.unix_time_to_localtime(secs)
     loc = get_expected_location(trip_id,dt)
-    import pdb
-    pdb.set_trace()
     assert loc.shape_pt_lon == '34.79795221'
     assert loc.shape_pt_lat ==  '32.08201845'
     assert loc.shape_id == '51_00001'
@@ -28,7 +26,10 @@ def test1():
 def test2():
     secs = 1391451464.94
     dt = common.ot_utils.unix_time_to_localtime(secs)
-    return list(get_all_trips_in_datetime(dt))
+    result =  list(get_all_trips_in_datetime(dt))
+    exp_trips = ['030214_00089','030214_00090','030214_00187','030214_00188','030214_00191','030214_00192','030214_00193','030214_00124','030214_00125','030214_00126','030214_00127','030214_00128','030214_00129','030214_00229','030214_00277','030214_00279','030214_00280','030214_00282','030214_00679','030214_00681','030214_00682','030214_00683','030214_00684','030214_00685','030214_00686','030214_00690','030214_00929','030214_00930','030214_00975','030214_00978','030214_00980','030214_00528','030214_00533']
+    assert set(t.trip_id for t in result) == set(exp_trips)
+    return result
         
         
         

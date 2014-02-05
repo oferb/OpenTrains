@@ -30,13 +30,16 @@ def test2():
         
 def get_all_trips_in_datetime(dt):
     from models import Service,Trip
+    from django.db.models import Min,Max
     local_dt = common.ot_utils.get_localtime(dt)
     normal_time = common.ot_utils.get_normal_time(dt) 
     date = local_dt.date()
     services = Service.objects.filter(start_date__gte=date,end_date__lte=date)
     service_ids = services.values_list('service_id')
-    trips = Trip.objects.filter(service_id__in=service_ids).filter(start_time__gte=normal_time).filter(end_time__gte=normal_time)
-    trips.prefetch_related('stoptime_set','stoptime_set__stop') 
+    trips = Trip.objects.filter(service_id__in=service_ids)
+    trips = trips.annotate(total_departure_time=Min('stoptime__departure_time'),total_arrival_time=Max('stoptime__arrival_time'))
+    trips = trips.filter(total_departure_time__lte=normal_time).filter(total_arrival_time__gte=normal_time)
+    trips = trips.prefetch_related('stoptime_set','stoptime_set__stop') 
     return trips
 
 def get_all_trips_in_date(date):
@@ -135,7 +138,6 @@ def create_all(clean=True,download=True):
     for cls in cls_list: 
         cls.read_from_csv(dirname)
 
-    complete_trips()
     create_shape_json()
     
 def create_shape_json():
@@ -151,17 +153,3 @@ def create_shape_json():
         ShapeJson(shape_id=shape_id,points=json.dumps(point_list)).save()
         print 'saved %d/%d' % (idx,len(shape_ids)) 
 
-def complete_trips():
-    from models import Trip
-    trips = Trip.objects.all()
-    idx = 0
-    trips = list(trips)
-    for trip in trips:
-        trip.complete()
-        trip.save()
-        if idx % 100 == 0:
-            print 'updated %d/%d trips' % (idx,len(trips))
-        idx += 1
-        
-        
-             

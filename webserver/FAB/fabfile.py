@@ -157,8 +157,7 @@ def db_first_time():
 def db_reset():
     """ Reset (deletes and recreate) Postgres DB """
     with cd(env.django_base_dir):
-        run('echo "DROP DATABASE opentrain;" | sudo -u postgres psql')
-        run('python manage.py sqlcreate --router=default| grep -v "CREATE USER" | sudo -u postgres psql')
+        run('python manage.py sqlcreate -D --router=default | sudo -u postgres psql')
         run('python manage.py syncdb --noinput')
         
 @task

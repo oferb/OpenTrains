@@ -26,7 +26,11 @@ def test1():
     assert loc.shape_pt_sequence == 1362
     
 def test2():
-    return get_all_trips_in_datetime(common.ot_utils.get_utc_now())
+    secs = 1391451464.94
+    dt = common.ot_utils.unix_time_to_localtime(secs)
+    return list(get_all_trips_in_datetime(dt))
+        
+        
         
 def get_all_trips_in_datetime(dt):
     from models import Service,Trip

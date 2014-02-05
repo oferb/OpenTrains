@@ -127,6 +127,8 @@ class Trip(GTFSModel):
     shape_id = models.CharField(max_length=100)
     wheelchair_accessible = models.IntegerField()
     trip_headsign = models.CharField(max_length=100)
+    #total_start_time = models.IntegerField()
+    #total_end_time = models.IntegerField()
         
     def get_stop_times(self):
         return list(self.stoptime_set.all().order_by('stop_sequence'))

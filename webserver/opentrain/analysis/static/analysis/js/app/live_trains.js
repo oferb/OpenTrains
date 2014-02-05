@@ -74,6 +74,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			counter : $scope.intervalCounter,
 		}).success(function(data) {
 			$scope.trips = data.objects;
+			console.log(data.objects);
 			$scope.trips.forEach(function(trip) {
 				if (!$scope.tripDatas[trip.trip_id]) {
 					console.log('!!! found new trip id ' + trip_id);
@@ -148,9 +149,9 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		var points = [];
 		for (var key in $scope.tripDatas) {
 			var trip = $scope.tripDatas[key];
-			trip.shapes.forEach(function(shape) {
-				points.push([shape.shape_pt_lat, shape.shape_pt_lon]);
-			});
+			trip.shapes.forEach(function(pt) {
+			     points.push(pt);
+			 });
 		};
 		var box = MyLeaflet.findBoundBox(points);
 		map.fitBounds(box);

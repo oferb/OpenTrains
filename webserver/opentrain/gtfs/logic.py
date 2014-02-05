@@ -1,5 +1,6 @@
 import models
 import common.ot_utils
+import json
 
 def get_stations():
     result = models.Stop.objects.all().order_by('stop_name')
@@ -127,7 +128,6 @@ def do_seatch_between(from_station,to_station,when,before,after):
 
 def create_all(clean=True,download=True):
     import utils
-    import common.ot_utils
     cls_list = models.GTFSModel.__subclasses__()  # @UndefinedVariable
     if clean:
         for cls in reversed(cls_list):
@@ -140,6 +140,18 @@ def create_all(clean=True,download=True):
     for cls in cls_list: 
         cls.read_from_csv(dirname)
 
-
-
-
+    create_shape_json()
+    
+def create_shape_json():
+    from models import Shape,ShapeJson
+    shape_ids = list(Shape.objects.values_list('shape_id',flat=True).distinct())
+    common.ot_utils.delete_from_model(ShapeJson)
+    print 'Creating shapes json # of shape_ids = %s' % (len(shape_ids))
+    for idx,shape_id in enumerate(shape_ids):
+        points = Shape.objects.filter(shape_id=shape_id).order_by('shape_pt_sequence')
+        point_list = []
+        for point in points:
+            point_list.append([point.shape_pt_lat,point.shape_pt_lon])
+        ShapeJson(shape_id=shape_id,points=json.dumps(point_list)).save()
+        print 'saved %d/%d' % (idx,len(shape_ids)) 
+            

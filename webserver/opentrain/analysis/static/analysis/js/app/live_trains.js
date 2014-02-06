@@ -7,7 +7,7 @@ app.controller('LiveTrainsController', ['$scope', 'MyHttp', 'MyUtils', 'MyLeafle
 function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $interval) {
 	$scope.input = {
 		showTrips : {},
-		showReportedOnly : false,
+		showDetails : {},
 	};
 	$scope.leftCounter = 0;
 	$scope.initialDone = false;
@@ -18,16 +18,16 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			$scope.refreshLayers(map);
 		});
 	};
-	$scope.showReportedOnlyChange = function() {
-		if ($scope.input.showReportedOnly) {
-			$scope.trips.forEach(function(trip) {
-				$scope.input.showTrips[trip.trip_id] = trip.cur_point ? true : false; 
-			});
-		} else {
-			for (var k in $scope.input.showTrips) {
-				$scope.input.showTrips[k] = true;
-			}
-		}
+	$scope.showReportedOnly = function() {
+		$scope.trips.forEach(function(trip) {
+			$scope.input.showTrips[trip.trip_id] = trip.cur_point ? true : false; 
+		});
+		$scope.showTripsChange();
+	};
+	$scope.showHideAll = function(toShow) {
+		$scope.trips.forEach(function(trip) {
+			$scope.input.showTrips[trip.trip_id] = toShow; 
+		});
 		$scope.showTripsChange();
 	};
 	$scope.refreshLayers = function(map) {
@@ -73,8 +73,8 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		}).success(function(data) {
 			$scope.trips = data.objects;
 			$scope.trips.forEach(function(trip) {
-				if (trip.trip_id && !$scope.tripDatas[trip.trip_id]) {
-					console.log('!!! found new trip id ' + trip_id);
+				if (!$scope.tripDatas[trip.trip_id]) {
+					console.log('!!! found new trip id ' + trip.trip_id);
 					$scope.loadTripData(trip.trip_id, false);
 				}
 			});
@@ -109,7 +109,6 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		}
 		lg.addLayer(exp);
 	};
-
 	$scope.drawTripData = function(trip_id, is_initial) {
 		leafletData.getMap().then(function(map) {
 			var tripData = $scope.tripDatas[trip_id];
@@ -132,6 +131,9 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 				if ($scope.leftCounter <= 0) {
 					$scope.refreshBoundBox(map);
 					$scope.intervalCounter = 0;
+					$timeout(function() {
+						$scope.updateTripsLive();
+					}, 500);
 					$interval(function() {
 						$scope.updateTripsLive();
 					}, 10000);

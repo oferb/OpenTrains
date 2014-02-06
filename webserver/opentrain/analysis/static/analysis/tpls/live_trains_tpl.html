@@ -9,12 +9,40 @@
 				</div>
 			</div>
 		</div>
-		<input type="checkbox" ng-change="showReportedOnlyChange()" ng-model="input.showReportedOnly">Only Reported Trips
+		<button class="btn" ng-click="showReportedOnly()">Only Reported Trips</button>
+		<button class="btn" ng-click="showHideAll(true)">Show All</button>
+		<button class="btn" ng-click="showHideAll(false)">Hide All</button>
 		<hr/>
 		<div ng-repeat="(tripId,tripData) in tripDatas">
 			<input type="checkbox" ng-change="showTripsChange()"  ng-model="input.showTrips[tripId]">
+			<span ng-hide="input.showDetails[tripId]" ng-click="input.showDetails[tripId] = true" class="glyphicon glyphicon-expand"></span>
+			<span ng-show="input.showDetails[tripId]" ng-click="input.showDetails[tripId] = false" class="glyphicon glyphicon-collapse-up"></span>
 			{{tripId}} {{tripData.stop_times[0].stop.stop_name}} <span class="glyphicon glyphicon-arrow-right"></span>
 			{{tripData.stop_times[tripData.stop_times.length-1].stop.stop_name}}
+			<div ng-show="input.showDetails[tripId]">
+				<table>
+				<tr>
+					<th>Seq</th>
+					<th>Stop</th>
+					<th>Arrival</th>
+					<th>Departure</th>
+				</tr>
+				<tr ng-repeat="stop_time in tripData.stop_times">
+					<td>
+						{{stop_time.stop_sequence}}
+					</td>
+					<td>
+						{{stop_time.stop.stop_name}}
+					</td>
+					<td>
+						 {{stop_time.arrival_time | denormalTime}}&nbsp;&nbsp;
+					</td>
+					<td>
+						 {{stop_time.departure_time | denormalTime}}
+					</td>	
+				</tr>
+				</table>
+			</div>
 		</div>
 	</div>
 	<div class="col-md-8">

@@ -123,6 +123,24 @@ myFilters.filter('ago',function() {
 	};
 });
 
+myFilters.filter('denormalTime',function() {
+	return function(value,withSeconds) {
+		var s = value % 60;
+    	var value = value - s;
+    	var value = (value - s)/ 60;
+    	var m = value % 60;
+    	var h = (value - m) / 60;
+    	h = h < 10 ? '0' + h : h;
+    	m = m < 10 ? '0' + m : m;
+    	s = s < 10 ? '0' + s : s;
+    	if (withSeconds) {
+    		return h + ':' + m + ':' + s;
+    	} else {
+    		return h + ':' + m;
+    	} 
+	};
+});
+
 myFilters.filter('newlines', function () {
     return function(text) {
         return text.replace(/\n/g, '<br/>');

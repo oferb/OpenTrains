@@ -1,7 +1,7 @@
 from django.middleware.common import CommonMiddleware
 import urlparse
 import time
-class OpenTrainMiddleware(CommonMiddleware):
+class OpenTrainMiddleware(object):
     def process_response(self, request, response):
         from django.db import connection
         if hasattr(request,'prof_start_time'):

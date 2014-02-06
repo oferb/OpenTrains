@@ -125,7 +125,7 @@ class TripLocationObject(object):
 def test3():
     secs = 1391451464.94
     dt = common.ot_utils.unix_time_to_localtime(secs)
-    result =  get_live_trips(dt)
+    result = get_live_trips(dt)
     return result
 
 @common.ot_utils.benchit

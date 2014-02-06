@@ -14,14 +14,16 @@ def get_stations_choices():
     return tuple(result)
 
 def test1():
+    from models import Trip
     trip_id = '030214_00192'
     secs = 1391451464.94
     dt = common.ot_utils.unix_time_to_localtime(secs)
-    loc = get_expected_location(trip_id,dt)
-    assert loc.shape_pt_lon == '34.79795221'
-    assert loc.shape_pt_lat ==  '32.08201845'
+    trip = Trip.objects.get(trip_id=trip_id)
+    loc = get_expected_location(trip,dt)
+    assert loc.shape_pt_lon == 34.7979581
+    assert loc.shape_pt_lat ==  32.08205763
     assert loc.shape_id == '51_00001'
-    assert loc.shape_pt_sequence == 1362
+    assert loc.shape_pt_sequence == 1363
     
 @common.ot_utils.benchit
 def test2():

@@ -161,8 +161,8 @@ class Stop(GTFSModel):
     filename = "stops.txt"
     stop_id = models.IntegerField(primary_key=True)
     stop_name = models.CharField(max_length=200)
-    stop_lat = models.CharField(max_length=20)
-    stop_lon = models.CharField(max_length=20)
+    stop_lat = models.FloatField()
+    stop_lon = models.FloatField()
     stop_url = models.URLField()
     location_type = models.IntegerField()
     
@@ -207,8 +207,8 @@ class StopTime(GTFSModel):
 class Shape(GTFSModel):
     filename = "shapes.txt"
     shape_id = models.CharField(max_length=100,db_index=True)
-    shape_pt_lat = models.CharField(max_length=20)
-    shape_pt_lon = models.CharField(max_length=20)
+    shape_pt_lat = models.FloatField()
+    shape_pt_lon = models.FloatField()
     shape_pt_sequence = models.IntegerField()
     def __unicode__(self):
         return '%s : lon=%s lat=%s' % (self.shape_id,self.shape_pt_lat,self.shape_pt_lon) 

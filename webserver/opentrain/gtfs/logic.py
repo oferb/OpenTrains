@@ -23,6 +23,7 @@ def test1():
     assert loc.shape_id == '51_00001'
     assert loc.shape_pt_sequence == 1362
     
+@common.ot_utils.benchit
 def test2():
     secs = 1391451464.94
     dt = common.ot_utils.unix_time_to_localtime(secs)
@@ -85,11 +86,9 @@ def get_expected_location(trip,dt):
     assert False,'Ooops'
 
 def find_closest_point(trip,shapes,lat,lon):
-    lat = float(lat)
-    lon = float(lon)
     def dist(shape):
-        lat1 = float(shape.shape_pt_lat)
-        lon1 = float(shape.shape_pt_lon)
+        lat1 = shape.shape_pt_lat
+        lon1 = shape.shape_pt_lon
         return (lon1 - lon)*(lon1 - lon) + (lat1 - lat)*(lat1-lat)
     return min(shapes,key = dist)
     
@@ -154,7 +153,7 @@ def create_shape_json():
         points = Shape.objects.filter(shape_id=shape_id).order_by('shape_pt_sequence')
         point_list = []
         for point in points:
-            point_list.append([float(point.shape_pt_lat),float(point.shape_pt_lon)])
+            point_list.append([point.shape_pt_lat,point.shape_pt_lon])
         ShapeJson(shape_id=shape_id,points=json.dumps(point_list)).save()
         print 'saved %d/%d' % (idx,len(shape_ids)) 
 

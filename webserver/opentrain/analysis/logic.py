@@ -121,12 +121,24 @@ class TripLocationObject(object):
     def get_cur_point(self):
         return self.cur_point
  
+@common.ot_utils.benchit
 def test3():
     secs = 1391451464.94
     dt = common.ot_utils.unix_time_to_localtime(secs)
     result =  get_live_trips(dt)
     return result
 
+@common.ot_utils.benchit
+def test4():
+    import gtfs.models
+    import gtfs.logic
+    secs = 1391451464.94
+    dt = common.ot_utils.unix_time_to_localtime(secs)
+    trip_id = '030214_00089'
+    trip = gtfs.models.Trip.objects.get(trip_id=trip_id)
+    exp_shape=gtfs.logic.get_expected_location(trip, dt)
+    assert exp_shape.shape_pt_lat == 32.10497517
+    assert exp_shape.shape_pt_lon == 34.80547358
  
 def get_live_trips(dt=None):
     import gtfs.logic

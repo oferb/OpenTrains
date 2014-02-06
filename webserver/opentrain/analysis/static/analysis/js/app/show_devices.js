@@ -40,7 +40,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	};
 
 	$scope.loadDeviceList = function(device_id) {
-		MyHttp.get('/api/v1/devices/').success(function(data) {
+		MyHttp.get('/api/v1/devices/?limit=100').success(function(data) {
 			$scope.devices = data.objects;
 			var found = false;
 			$scope.devices.forEach(function(d) {
@@ -127,13 +127,11 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	};
 	
 	$scope.resizeMap = function() {
-		var elem = $window.document.getElementById('my-leaflet');
-		var w = angular.element($window);
-		var m = angular.element(elem);
-		var height = (w.height() - 20 - m.offset().top);
-		m.css("height", height);
-		m.css("width", 600);    
-		m.css("margin-top",20);
+		var w = $(window).width() * 0.6;
+		var h = $(window).height() - 70;
+		$(".angular-leaflet-map").css('width', 'auto');
+		$(".angular-leaflet-map").css('height', h + 'px');
+		return false;
 	};
 	$scope.initReport();
 }]);

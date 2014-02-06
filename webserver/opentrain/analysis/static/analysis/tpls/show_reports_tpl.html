@@ -42,7 +42,10 @@
 	</div>
 	<div class="col-md-9">
 		<div ng-show="reportsStatus == 'done'">
-			<leaflet id="my-leaflet" width="800" height="600"></leaflet> 
+			<span ng-show="resizeMap()"></span>
+			<div>
+			<leaflet id="mymap" width="600" height="600"></leaflet>
+		</div> 
 		</div>
 	</div>
 </div>

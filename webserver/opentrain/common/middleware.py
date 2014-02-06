@@ -19,7 +19,7 @@ class OpenTrainMiddleware(CommonMiddleware):
             t.write("\n")
             t.close()
             print '*******************************************'
-            print '** ERROR_500 Wrote to ' + t.name
+            print '** ERROR_500 Wrote to  file://%s' % t.name
             print '*******************************************'
  
         return response

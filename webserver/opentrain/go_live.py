@@ -40,6 +40,7 @@ def report_fake(filename,dev2,delay,server):
     
     with open(filename,'r') as fh:
         index = 0
+        items_sent = 0
         for line in fh:
             report = json.loads(line)
             items = report['items']
@@ -49,6 +50,7 @@ def report_fake(filename,dev2,delay,server):
                 if item['location_api']:
                     item['location_api']['time'] = time.time() * 1000
                 time.sleep(delay)
+                items_sent += 1
             body = json.dumps(report)
             headers = {'content-type':'application/json'}
             url = 'http://%s/reports/add/' % (server)
@@ -58,8 +60,8 @@ def report_fake(filename,dev2,delay,server):
                 with open('/tmp/error.html','w') as fh:
                     fh.write(resp.content)
                 sys.exit(1)
-            print 'Sent %d raw reports so far' % (index) 
             index += 1
+            print 'Sent %d items in %d raw reports so far' % (items_sent,index) 
             
 def main(dev1,dev2,delay,server):
     filename = copy_reports(dev1)

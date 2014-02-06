@@ -45,8 +45,11 @@
 							<a href="{% url mi.name %}">{{mi.title}}</a>
 						</li>
 						{% endfor %}
+						<li><a><span id="clock">clock</a></li>
 					</ul>
+					
 				</div><!--/.nav-collapse -->
+				
 			</div>
 		</div>
 		<!-- BLOCK CONTENT -->
@@ -61,6 +64,24 @@
 				Download the <a href="https://github.com/oferb/OpenTrainApp/blob/master/APKs/OpenTrainApp.apk?raw=true">app</a> (Alpha version - on your own risk....)
 			</footer>
 		</div>
+		<script>
+			(
+				function() {
+					var updateTime = function () {
+						var now = new Date();
+						var h = now.getHours();
+						var m = now.getMinutes();
+						var s = now.getSeconds();
+						h = h < 10 ? '0' + h : h;
+						m = m < 10 ? '0' + m : m;  
+						s = s < 10 ? '0' + s : s;
+						$("#clock").text(h + ":" + m + ':' + s);	
+					};
+					updateTime();
+					window.setInterval(updateTime,1000);
+				}
+			)();
+		</script>
 	</body>
 </html>
 

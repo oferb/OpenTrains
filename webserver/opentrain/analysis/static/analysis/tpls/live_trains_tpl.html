@@ -1,8 +1,6 @@
 <div class="row">
 	<div class="col-md-4">
 		<div class="page-header">
-		<h2>Current Trips [WIP]</h2>
-		<h4>{{currentDateTime | date: "hh:mm:ss"}}</h4>
 		</div>
 		<div ng-hide="initialDone">
 			<div class="progress progress-striped active">
@@ -11,16 +9,17 @@
 				</div>
 			</div>
 		</div>
-		<button class="btn" ng-click="showReportedOnly()">Only Reported Trips</button>
-		<button class="btn" ng-click="showHideAll(true)">Show All</button>
-		<button class="btn" ng-click="showHideAll(false)">Hide All</button>
+		<button class="btn btn-sm" ng-click="showReportedOnly()">Only Reported Trips</button>
+		<button class="btn btn-sm" ng-click="showHideAll(true)">Show All</button>
+		<button class="btn btn-sm" ng-click="showHideAll(false)">Hide All</button>
 		<hr/>
-		<div ng-repeat="(tripId,tripData) in tripDatas">
+		<div ng-repeat="trip in trips" ng-controller="TripController">
 			<input type="checkbox" ng-change="showTripsChange()"  ng-model="input.showTrips[tripId]">
 			<span ng-hide="input.showDetails[tripId]" ng-click="input.showDetails[tripId] = true" class="glyphicon glyphicon-expand"></span>
 			<span ng-show="input.showDetails[tripId]" ng-click="input.showDetails[tripId] = false" class="glyphicon glyphicon-collapse-up"></span>
 			{{tripId}} {{tripData.stop_times[0].stop.stop_name}} <span class="glyphicon glyphicon-arrow-right"></span>
 			{{tripData.stop_times[tripData.stop_times.length-1].stop.stop_name}}
+			<span ng-click="zoomToTrip(tripId)" class="glyphicon glyphicon-zoom-in"></span>
 			<div ng-show="input.showDetails[tripId]">
 				<table class="table table-striped">
 				<tr>
@@ -47,9 +46,10 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-md-8">
+	<div class="col-md-8" id="col8div">
+		<span ng-show="resizeMap()"></span>
 		<div>
-			<leaflet id="my-leaflet" width="800" height="600"></leaflet>
+			<leaflet id="mymap" width="600" height="600"></leaflet>
 		</div>
 	</div>
 </div>

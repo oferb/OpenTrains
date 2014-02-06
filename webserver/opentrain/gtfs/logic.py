@@ -49,6 +49,7 @@ def get_all_trips_in_datetime(dt):
     trips = Trip.objects.filter(service_id__in=service_ids)
     trips = trips.annotate(total_departure_time=Min('stoptime__departure_time'),total_arrival_time=Max('stoptime__arrival_time'))
     trips = trips.filter(total_departure_time__lte=normal_time).filter(total_arrival_time__gte=normal_time)
+    trips = trips.order_by('total_departure_time')
     trips = trips.prefetch_related('stoptime_set','stoptime_set__stop') 
     return trips
 
@@ -60,7 +61,6 @@ def get_all_trips_in_date(date):
 
 def get_expected_location(trip,dt):
     from models import ShapeJson
-    import time
     normal_time = common.ot_utils.get_normal_time(dt)
     stop_times = list(trip.stoptime_set.all())
     stop_times.sort(key=lambda x : x.stop_sequence)
@@ -72,9 +72,9 @@ def get_expected_location(trip,dt):
     # so we just return the after stop
     # if no after stop - the reverse
     if not before_stop:
-        return [after_stop.stop.stop_pt_lat,after_stop.stop.stop_pt_loc]
+        return [after_stop.stop.stop_lat,after_stop.stop.stop_lon]
     if not after_stop or after_stop == before_stop:
-        return [before_stop.stop.stop_pt_lat,before_stop.stop.stop_pt_loc]
+        return [before_stop.stop.stop_lat,before_stop.stop.stop_lon]
     points = json.loads(ShapeJson.objects.get(shape_id=trip.shape_id).points)
     idx_before = find_closest_point_index(trip,points,lat=before_stop.stop.stop_lat,lon=before_stop.stop.stop_lon)
     idx_after = find_closest_point_index(trip,points,lat=after_stop.stop.stop_lat,lon=after_stop.stop.stop_lon)

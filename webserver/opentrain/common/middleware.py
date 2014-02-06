@@ -10,7 +10,18 @@ class OpenTrainMiddleware(CommonMiddleware):
             print '%s %s Time = %.2f DB = %d' % (request.method,
                                                  urlparse.unquote(request.get_full_path()),
                                                  total_time,
-                                                 len(connection.queries)) 
+                                                 len(connection.queries))
+            
+        if int(response.status_code) == 500:
+            import tempfile
+            t = tempfile.NamedTemporaryFile(delete=False,prefix="error_500_",suffix=".html")
+            t.write(response.content)
+            t.write("\n")
+            t.close()
+            print '*******************************************'
+            print '** ERROR_500 Wrote to ' + t.name
+            print '*******************************************'
+ 
         return response
 
     def process_request(self,request):

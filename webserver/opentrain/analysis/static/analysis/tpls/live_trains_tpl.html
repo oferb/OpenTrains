@@ -1,7 +1,9 @@
 <div class="row">
 	<div class="col-md-4">
-		<h2>Current Trips</h2>
-		<h4>Work in progress</h4>
+		<div class="page-header">
+		<h2>Current Trips [WIP]</h2>
+		<h4>{{currentDateTime | date: "hh:mm:ss"}}</h4>
+		</div>
 		<div ng-hide="initialDone">
 			<div class="progress progress-striped active">
 				<div class="progress-bar"  role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%">

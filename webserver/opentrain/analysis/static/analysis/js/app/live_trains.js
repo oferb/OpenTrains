@@ -155,6 +155,10 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			$scope.initialDone = true;
 		}, 500);
 	};
+	$scope.currentDateTime = new Date();
+	$interval(function() {
+		$scope.currentDateTime = new Date();
+	},1000);
 	$scope.initTrips();
 }]);
 

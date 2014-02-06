@@ -150,9 +150,8 @@ def get_live_trips(dt=None):
         trip_id = trip.trip_id
         exp_shape=gtfs.logic.get_expected_location(trip, dt)
         result.append(dict(trip_id=trip_id,
-                           exp_point = dict(lat=exp_shape.shape_pt_lat,
-                                            lon=exp_shape.shape_pt_lon),
-                            timestamp = dt.isoformat()))                                 
+                           exp_point = exp_shape,
+                           timestamp = dt.isoformat()))                                 
     return result
 
     

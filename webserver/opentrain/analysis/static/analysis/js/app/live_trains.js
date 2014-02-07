@@ -142,7 +142,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 					}, 500);
 					$interval(function() {
 						$scope.updateTripsLive();
-					}, 3000);
+					}, 1000);
 				}
 			}
 		});

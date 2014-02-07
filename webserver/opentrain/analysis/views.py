@@ -1,11 +1,10 @@
 import urllib
-import datetime
 from django.shortcuts import render
 import forms
 import models
 from django.views.generic.base import View
 from django.http.response import HttpResponseRedirect, HttpResponse
-import common.ot_utils
+from django.conf import settings
 
 # Create your views here.
 
@@ -44,5 +43,6 @@ def get_live_trips(req):
     import json
     live_trips = logic.get_live_trips()    
     result = dict(objects=live_trips)
+    result['meta'] =  dict(is_fake=settings.FAKE_CUR)
     return HttpResponse(content=json.dumps(result),content_type='application/json',status=200)
 

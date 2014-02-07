@@ -49,6 +49,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		$scope.tripDatas = {};
 		$scope.trips = [];
 		MyHttp.get('/analysis/api/live-trips/').success(function(data) {
+			$scope.isFake = data.meta.is_fake;
 			$scope.trips = data.objects;
 			$scope.leftCounter = $scope.trips.length;
 			$scope.progressSegment = 100 / $scope.trips.length;

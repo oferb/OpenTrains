@@ -15,6 +15,8 @@
 		<button class="btn btn-sm" ng-click="showHideAll(false)">Hide All</button>
 		<hr/>
 		<div ng-repeat="trip in trips" ng-controller="TripController">
+			<img ng-show="trip.cur_point" width="32" height="15" ng-src="/static/common/img/live.gif"></img>
+			<img ng-hide="trip.cur_point" width="32" height="15" ng-src="/static/common/img/no_live.png"></img>
 			<input type="checkbox" ng-change="showTripsChange()"  ng-model="input.showTrips[tripId]">
 			<span ng-hide="input.showDetails[tripId]" ng-click="input.showDetails[tripId] = true" class="glyphicon glyphicon-expand"></span>
 			<span ng-show="input.showDetails[tripId]" ng-click="input.showDetails[tripId] = false" class="glyphicon glyphicon-collapse-up"></span>

@@ -37,7 +37,7 @@ function(MyUtils) {
 					icon : icon,
 					title : title,
 				}
-			).bindPopup(text);
+			).bindPopup(title);
 		},
 		drawShapes : function(points) {
 			var polyline = this.createLine(null, points, {

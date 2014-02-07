@@ -3,6 +3,8 @@ import json
 import reports.models
 import common.ot_utils
 
+from django.conf import settings
+
 def analyze_raw_reports(clean=True):
     if clean:
         delete_all_reports()
@@ -148,10 +150,13 @@ def get_live_trips(dt=None):
     current_trips = gtfs.logic.get_all_trips_in_datetime(dt)
     for trip in current_trips:
         trip_id = trip.trip_id
-        exp_shape=gtfs.logic.get_expected_location(trip, dt)
-        result.append(dict(trip_id=trip_id,
+        (exp_shape,cur_shape)=gtfs.logic.get_expected_location(trip, dt)
+        res = dict(trip_id=trip_id,
                            exp_point = exp_shape,
-                           timestamp = dt.isoformat()))                                 
+                           timestamp = dt.isoformat())
+        if cur_shape and settings.FAKE_CUR:
+            res['cur_point'] = cur_shape
+        result.append(res)                                 
     return result
 
     

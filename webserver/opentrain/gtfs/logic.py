@@ -1,6 +1,7 @@
 import models
 import common.ot_utils
 import json
+from django.conf import settings
 
 def get_stations():
     result = models.Stop.objects.all().order_by('stop_name')
@@ -20,7 +21,7 @@ def test1():
     secs = 1391451464.94
     dt = common.ot_utils.unix_time_to_localtime(secs)
     trip = Trip.objects.get(trip_id=trip_id)
-    loc = get_expected_location(trip,dt)
+    (loc,fake_loc) = get_expected_location(trip,dt)
     exp = [32.08201845, 34.79795221]
     print 'Loc = %s' % (loc)
     dist = common.ot_utils.latlon_to_meters(loc[0],loc[1],exp[0],exp[1])
@@ -72,9 +73,9 @@ def get_expected_location(trip,dt):
     # so we just return the after stop
     # if no after stop - the reverse
     if not before_stop:
-        return [after_stop.stop.stop_lat,after_stop.stop.stop_lon]
+        return ([after_stop.stop.stop_lat,after_stop.stop.stop_lon],[after_stop.stop.stop_lat,after_stop.stop.stop_lon])
     if not after_stop or after_stop == before_stop:
-        return [before_stop.stop.stop_lat,before_stop.stop.stop_lon]
+        return ([before_stop.stop.stop_lat,before_stop.stop.stop_lon],[before_stop.stop.stop_lat,before_stop.stop.stop_lon])
     points = json.loads(ShapeJson.objects.get(shape_id=trip.shape_id).points)
     idx_before = find_closest_point_index(trip,points,lat=before_stop.stop.stop_lat,lon=before_stop.stop.stop_lon)
     idx_after = find_closest_point_index(trip,points,lat=after_stop.stop.stop_lat,lon=after_stop.stop.stop_lon)
@@ -86,7 +87,22 @@ def get_expected_location(trip,dt):
     num_points = idx_after - idx_before
     idx_result = int(relative*num_points) +  idx_before
     result = points[idx_result]
-    return result
+    fake_result = None
+    last_digit = int(trip.trip_id[-1])
+    to_fake = False
+    if settings.FAKE_CUR and last_digit % 2 == 0: 
+        to_fake = True
+    if to_fake:
+        pt_delta = (int() -5 )*10;
+        if pt_delta == 0:
+            pt_delta = 1
+        idx_fake_result = idx_result + pt_delta
+        if idx_fake_result < 0:
+            idx_fake_result = 0
+        if idx_fake_result >= len(points):
+            idx_fake_result = points[-1]
+        fake_result = points[idx_fake_result]
+    return (result,fake_result)
     
 
 def find_closest_point_index(trip,points,lat,lon):

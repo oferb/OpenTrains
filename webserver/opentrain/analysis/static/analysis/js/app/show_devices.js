@@ -25,7 +25,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		$scope.liveMode = true;
 		$scope.intervalPromise = $interval(function() {
 			$scope.updateDevice();
-		}, 1000);
+		}, 5000);
 	};
 	$scope.stopLive = function() {
 		$scope.liveMode = false;

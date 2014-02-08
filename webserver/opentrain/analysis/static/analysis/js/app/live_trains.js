@@ -51,6 +51,9 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		MyHttp.get('/analysis/api/live-trips/').success(function(data) {
 			$scope.isFake = data.meta.is_fake;
 			$scope.trips = data.objects;
+			if ($scope.trips.length == 0) {
+				$scope.refreshInitial();
+			}
 			$scope.leftCounter = $scope.trips.length;
 			$scope.progressSegment = 100 / $scope.trips.length;
 			$scope.trips.forEach(function(trip) {
@@ -149,7 +152,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	};
 	$scope.refreshInitial = function() {
 		leafletData.getMap().then(function(map) {
-			if ($scope.trips) {
+			if ($scope.trips.length > 0) {
 				var trip = $scope.trips[0];
 				$scope.input.showTrips[trip.trip_id] = true;
 				$scope.refreshLayers(map);

@@ -115,20 +115,25 @@ def calc_tracker():
     return tracker
     
 def get_tracker(reset=False):
-    datafile = shelve.open(config.output_shelve_file)
-
-    if not datafile.has_key('bssid_tracker') or reset:
+    if reset:
         bssid_tracker = calc_tracker()
-        datafile['bssid_tracker'] = bssid_tracker
-    bssid_tracker = datafile['bssid_tracker']
+    else:
+        bssid_tracker = BSSIDTracker()
+    #datafile = shelve.open(config.output_shelve_file)
+
+    #if not datafile.has_key('bssid_tracker') or reset:
+        #bssid_tracker = calc_tracker()
+        #datafile['bssid_tracker'] = bssid_tracker
+    #bssid_tracker = datafile['bssid_tracker']
     
-    datafile.close() 
+    #datafile.close() 
     
     return bssid_tracker
 
 def save_tracker(tracker):
-    datafile = shelve.open(config.output_shelve_file)
-    datafile['bssid_tracker'] = tracker
-    datafile.close() 
+    pass
+    #datafile = shelve.open(config.output_shelve_file)
+    #datafile['bssid_tracker'] = tracker
+    #datafile.close() 
 
 tracker = get_tracker(False)

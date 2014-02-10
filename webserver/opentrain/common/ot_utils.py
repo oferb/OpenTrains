@@ -22,7 +22,9 @@ def mkdir_p(path):
         os.makedirs(path)
     
 def rmf(path):
+    print 'Trying to delete path %s' % (path)
     if os.path.exists(path):
+        print 'Deleting path %s' %(path)
         os.removedirs(path)
     
 def ftp_get_file(host,remote_name,local_path):

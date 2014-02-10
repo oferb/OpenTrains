@@ -7,7 +7,7 @@ app.controller('LiveTrainsController', ['$scope', 'MyHttp', 'MyUtils', 'MyLeafle
 function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $interval) {
 	$scope.input = {
 		showTrips : {},
-		showReportedOnly : false,
+		showDetails : {},
 	};
 	$scope.leftCounter = 0;
 	$scope.initialDone = false;
@@ -18,20 +18,19 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			$scope.refreshLayers(map);
 		});
 	};
-	$scope.showReportedOnlyChange = function() {
-		if ($scope.input.showReportedOnly) {
-			$scope.trips.forEach(function(trip) {
-				$scope.input.showTrips[trip.trip_id] = trip.cur_point ? true : false; 
-			});
-		} else {
-			for (var k in $scope.input.showTrips) {
-				$scope.input.showTrips[k] = true;
-			}
-		}
+	$scope.showReportedOnly = function() {
+		$scope.trips.forEach(function(trip) {
+			$scope.input.showTrips[trip.trip_id] = trip.cur_point ? true : false;
+		});
+		$scope.showTripsChange();
+	};
+	$scope.showHideAll = function(toShow) {
+		$scope.trips.forEach(function(trip) {
+			$scope.input.showTrips[trip.trip_id] = toShow;
+		});
 		$scope.showTripsChange();
 	};
 	$scope.refreshLayers = function(map) {
-		console.log('In refreshLayers');
 		for (var tripId in $scope.tripMapInfo) {
 			var lg = $scope.tripMapInfo[tripId].lg;
 			var toShow = $scope.input.showTrips[tripId];
@@ -50,7 +49,11 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		$scope.tripDatas = {};
 		$scope.trips = [];
 		MyHttp.get('/analysis/api/live-trips/').success(function(data) {
+			$scope.isFake = data.meta.is_fake;
 			$scope.trips = data.objects;
+			if ($scope.trips.length == 0) {
+				$scope.refreshInitial();
+			}
 			$scope.leftCounter = $scope.trips.length;
 			$scope.progressSegment = 100 / $scope.trips.length;
 			$scope.trips.forEach(function(trip) {
@@ -59,7 +62,6 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		});
 	};
 	$scope.loadTripData = function(trip_id, is_initial) {
-		$scope.input.showTrips[trip_id] = true;
 		MyHttp.get('/gtfs/api/trips/' + trip_id + '/').success(function(data) {
 			$scope.tripDatas[trip_id] = data;
 			$scope.drawTripData(trip_id, is_initial);
@@ -73,8 +75,8 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		}).success(function(data) {
 			$scope.trips = data.objects;
 			$scope.trips.forEach(function(trip) {
-				if (trip.trip_id && !$scope.tripDatas[trip.trip_id]) {
-					console.log('!!! found new trip id ' + trip_id);
+				if (!$scope.tripDatas[trip.trip_id]) {
+					console.log('!!! found new trip id ' + trip.trip_id);
 					$scope.loadTripData(trip.trip_id, false);
 				}
 			});
@@ -83,6 +85,14 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 					$scope.updateTripStatus(map, trip);
 				});
 			});
+		});
+	};
+
+	$scope.zoomToTrip = function(tripId) {
+		var points = $scope.tripDatas[tripId].shapes;
+		leafletData.getMap().then(function(map) {
+			var box = MyLeaflet.findBoundBox(points);
+			map.fitBounds(box);
 		});
 	};
 
@@ -109,7 +119,6 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		}
 		lg.addLayer(exp);
 	};
-
 	$scope.drawTripData = function(trip_id, is_initial) {
 		leafletData.getMap().then(function(map) {
 			var tripData = $scope.tripDatas[trip_id];
@@ -125,34 +134,51 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			$scope.tripMapInfo[trip_id] = {
 				lg : lg
 			};
-			lg.addTo(map);
 			if (is_initial) {
 				$scope.leftCounter--;
 				$scope.progress = $scope.progressSegment * ($scope.trips.length - $scope.leftCounter);
 				if ($scope.leftCounter <= 0) {
-					$scope.refreshBoundBox(map);
+					$scope.refreshInitial();
 					$scope.intervalCounter = 0;
+					$timeout(function() {
+						$scope.updateTripsLive();
+					}, 500);
 					$interval(function() {
 						$scope.updateTripsLive();
-					}, 10000);
+					}, 3000);
 				}
 			}
 		});
 	};
-	$scope.refreshBoundBox = function(map) {
-		var points = [];
-		for (var key in $scope.tripDatas) {
-			var trip = $scope.tripDatas[key];
-			trip.shapes.forEach(function(pt) {
-			     points.push(pt);
-			 });
-		};
-		var box = MyLeaflet.findBoundBox(points);
-		map.fitBounds(box);
-		$timeout(function() {
-			$scope.initialDone = true;
-		}, 500);
+	$scope.refreshInitial = function() {
+		leafletData.getMap().then(function(map) {
+			if ($scope.trips.length > 0) {
+				var trip = $scope.trips[0];
+				$scope.input.showTrips[trip.trip_id] = true;
+				$scope.refreshLayers(map);
+				$scope.zoomToTrip(trip.trip_id);
+			} else {
+				var box = [[31.06867403, 34.60432436], [33.00500359, 35.18816094]];
+				map.fitBounds(box);
+			};
+			$timeout(function() {
+				$scope.initialDone = true;
+			}, 500);
+		});
+	};
+	$scope.resizeMap = function() {
+		var w = $(window).width() * 0.6;
+		var h = $(window).height() - 70;
+		$(".angular-leaflet-map").css('width', 'auto');
+		$(".angular-leaflet-map").css('height', h + 'px');
+		return false;
 	};
 	$scope.initTrips();
 }]);
 
+app.controller('TripController', ['$scope',
+function($scope) {
+	console.log(10);
+	$scope.tripId = $scope.trip.trip_id;
+	$scope.tripData = $scope.tripDatas[$scope.tripId];
+}]);

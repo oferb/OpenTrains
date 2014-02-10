@@ -3,6 +3,8 @@ import json
 import reports.models
 import common.ot_utils
 
+from django.conf import settings
+
 def analyze_raw_reports(clean=True):
     if clean:
         delete_all_reports()
@@ -72,11 +74,11 @@ def _collect_items(offset,count):
     return result
 
 def analyze_single_raw_report(rr):
-    import algorithm.train_tracker
+    #import algorithm.train_tracker # TMP
     items = json.loads(rr.text)['items']
     reports = dump_items(items)
-    for report in reports:
-        algorithm.train_tracker.add_report(report)
+    #for report in reports: # TMP
+    #    algorithm.train_tracker.add_report(report) #TMP
     
     
 ## DEVICES SUMMAY ##    
@@ -121,18 +123,40 @@ class TripLocationObject(object):
     def get_cur_point(self):
         return self.cur_point
  
-def get_live_trips():
+@common.ot_utils.benchit
+def test3():
+    secs = 1391451464.94
+    dt = common.ot_utils.unix_time_to_localtime(secs)
+    result = get_live_trips(dt)
+    return result
+
+@common.ot_utils.benchit
+def test4():
+    import gtfs.models
+    import gtfs.logic
+    secs = 1391451464.94
+    dt = common.ot_utils.unix_time_to_localtime(secs)
+    trip_id = '030214_00089'
+    trip = gtfs.models.Trip.objects.get(trip_id=trip_id)
+    exp_shape=gtfs.logic.get_expected_location(trip, dt)
+    assert exp_shape.shape_pt_lat == 32.10497517
+    assert exp_shape.shape_pt_lon == 34.80547358
+ 
+def get_live_trips(dt=None):
     import gtfs.logic
     result = []
-    dt = common.ot_utils.get_localtime_now()
+    if not dt:
+        dt = common.ot_utils.get_localtime_now()
     current_trips = gtfs.logic.get_all_trips_in_datetime(dt)
     for trip in current_trips:
         trip_id = trip.trip_id
-        exp_shape=gtfs.logic.get_expected_location(trip, dt)
-        result.append(dict(trip_id=trip_id,
-                           exp_point = dict(lat=exp_shape.shape_pt_lat,
-                                            lon=exp_shape.shape_pt_lon),
-                            timestamp = dt.isoformat()))                                 
+        (exp_shape,cur_shape)=gtfs.logic.get_expected_location(trip, dt)
+        res = dict(trip_id=trip_id,
+                           exp_point = exp_shape,
+                           timestamp = dt.isoformat())
+        if cur_shape and settings.FAKE_CUR:
+            res['cur_point'] = cur_shape
+        result.append(res)                                 
     return result
 
     

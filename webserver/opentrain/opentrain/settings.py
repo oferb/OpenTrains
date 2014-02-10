@@ -114,11 +114,15 @@ TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
 
 TASTYPIE_DATETIME_FORMATTING = 'rfc-2822'
 
+FAKE_CUR=False
+
 # override settings using local_settings.py
 try:
     from local_settings import *
 except ImportError:
     pass
+
+
 
 
 #print '#DJANGO: DEBUG = %s' % (DEBUG)

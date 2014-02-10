@@ -1,7 +1,11 @@
 <div class="row">
 	<div class="col-md-4">
-		<h2>Current Trips</h2>
-		<h4>Work in progress</h4>
+		<div class="page-header">
+			<h2>Live Trains
+				<span ng-show="isFake">[Simulated]</span>
+				<span ng-hide="isFake">[WIP]</span>
+			</h2>
+		</div>
 		<div ng-hide="initialDone">
 			<div class="progress progress-striped active">
 				<div class="progress-bar"  role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%">
@@ -9,17 +13,48 @@
 				</div>
 			</div>
 		</div>
-		<input type="checkbox" ng-change="showReportedOnlyChange()" ng-model="input.showReportedOnly">Only Reported Trips
-		<hr/>
-		<div ng-repeat="(tripId,tripData) in tripDatas">
+		<div ng-show="initialDone && trips.length == 0">
+			No Trips Now
+		</div>
+		<div ng-repeat="trip in trips" ng-controller="TripController">
+			<img ng-show="trip.cur_point" width="32" height="15" ng-src="/static/common/img/live.gif"></img>
+			<img ng-hide="trip.cur_point" width="32" height="15" ng-src="/static/common/img/no_live.png"></img>
 			<input type="checkbox" ng-change="showTripsChange()"  ng-model="input.showTrips[tripId]">
+			<span ng-hide="input.showDetails[tripId]" ng-click="input.showDetails[tripId] = true" class="glyphicon glyphicon-expand"></span>
+			<span ng-show="input.showDetails[tripId]" ng-click="input.showDetails[tripId] = false" class="glyphicon glyphicon-collapse-up"></span>
 			{{tripId}} {{tripData.stop_times[0].stop.stop_name}} <span class="glyphicon glyphicon-arrow-right"></span>
 			{{tripData.stop_times[tripData.stop_times.length-1].stop.stop_name}}
+			<span ng-click="zoomToTrip(tripId)" class="glyphicon glyphicon-zoom-in"></span>
+			<div ng-show="input.showDetails[tripId]">
+				<table class="table table-striped">
+				<tr>
+					<th>Seq</th>
+					<th>Stop</th>
+					<th>Arrival</th>
+					<th>Departure</th>
+				</tr>
+				<tr ng-repeat="stop_time in tripData.stop_times">
+					<td>
+						{{stop_time.stop_sequence}}
+					</td>
+					<td>
+						{{stop_time.stop.stop_name}}
+					</td>
+					<td>
+						 {{stop_time.arrival_time | denormalTime}}&nbsp;&nbsp;
+					</td>
+					<td>
+						 {{stop_time.departure_time | denormalTime}}
+					</td>	
+				</tr>
+				</table>
+			</div>
 		</div>
 	</div>
-	<div class="col-md-8">
+	<div class="col-md-8" id="col8div">
+		<span ng-show="resizeMap()"></span>
 		<div>
-			<leaflet id="my-leaflet" width="800" height="600"></leaflet>
+			<leaflet id="mymap" width="600" height="600"></leaflet>
 		</div>
 	</div>
 </div>

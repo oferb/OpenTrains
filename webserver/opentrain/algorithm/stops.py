@@ -1,3 +1,5 @@
+import os
+os.environ['DJANGO_SETTINGS_MODULE']='opentrain.settings'
 import gtfs.models
 from scipy import spatial
 import shelve
@@ -62,14 +64,14 @@ class StopList(dict):
 
 
 def get_all_stops():
-    datafile = shelve.open(config.gtfs_stop_file)
+    #datafile = shelve.open(config.gtfs_stop_file)
 
-    if not datafile.has_key('stopList'):
-        gtfs_stops_data = gtfs.models.Stop.objects.all().values_list('stop_id', 'stop_name', 'stop_lat', 'stop_lon').order_by('stop_id')
-        datafile['stopList'] = StopList(gtfs_stops_data)
-    all_stops = datafile['stopList']
+    #if not datafile.has_key('stopList'):
+    gtfs_stops_data = gtfs.models.Stop.objects.all().values_list('stop_id', 'stop_name', 'stop_lat', 'stop_lon').order_by('stop_id')
+    all_stops = StopList(gtfs_stops_data)
+    #all_stops = datafile['stopList']
     
-    datafile.close() 
+    #datafile.close() 
     
     return all_stops
 

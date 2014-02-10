@@ -74,11 +74,11 @@ def _collect_items(offset,count):
     return result
 
 def analyze_single_raw_report(rr):
-    #import algorithm.train_tracker # TMP
+    import algorithm.train_tracker 
     items = json.loads(rr.text)['items']
     reports = dump_items(items)
-    #for report in reports: # TMP
-    #    algorithm.train_tracker.add_report(report) #TMP
+    for report in reports: 
+        algorithm.train_tracker.add_report(report) 
     
     
 ## DEVICES SUMMAY ##    

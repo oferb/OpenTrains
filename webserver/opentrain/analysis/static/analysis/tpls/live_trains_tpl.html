@@ -13,6 +13,9 @@
 				</div>
 			</div>
 		</div>
+		<div ng-show="initialDone && trips.length == 0">
+			No Trips Now
+		</div>
 		<div ng-repeat="trip in trips" ng-controller="TripController">
 			<img ng-show="trip.cur_point" width="32" height="15" ng-src="/static/common/img/live.gif"></img>
 			<img ng-hide="trip.cur_point" width="32" height="15" ng-src="/static/common/img/no_live.png"></img>

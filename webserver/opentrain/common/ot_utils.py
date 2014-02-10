@@ -21,6 +21,13 @@ def mkdir_p(path):
     if not os.path.exists(path):
         os.makedirs(path)
     
+def rmf(path):
+    import shutil
+    print 'Trying to delete path %s' % (path)
+    if os.path.exists(path):
+        print 'Deleting path %s' %(path)
+        shutil.rmtree(path)
+    
 def ftp_get_file(host,remote_name,local_path):
     """ get file remote_name from FTP host host and copied it inot local_path"""
     from ftplib import FTP

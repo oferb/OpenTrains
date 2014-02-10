@@ -148,6 +148,8 @@ def do_seatch_between(from_station,to_station,when,before,after):
 
 def create_all(clean=True,download=True):
     import utils
+    import os
+    common.ot_utils.rmf(os.path.join(settings.BASE_DIR,'tmp_data/gtfs/processed_data'))
     cls_list = models.GTFSModel.__subclasses__()  # @UndefinedVariable
     if clean:
         for cls in reversed(cls_list):

@@ -151,6 +151,7 @@ def reload_all():
     sudo('sudo supervisorctl reread')
     sudo('supervisorctl update')
     sudo('supervisorctl restart opentrain')
+    sudo('service nginx restart')
     reload_gunicorn()
 
 @task

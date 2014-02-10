@@ -232,9 +232,9 @@ class TrainTracker(object):
 
     def update_trips(self, report, coords):
         trips, time_deviation_in_seconds = self.get_possible_trips()
-        if len(trips) <= 3:
-            cl = get_redis_client()
-            cl.set("train_tracker:%s:trip_ids" % (self.id), ",".join(trips))
+        #if len(trips) <= 100:
+        cl = get_redis_client()
+        cl.set("train_tracker:%s:trip_ids" % (self.id), ",".join(trips))
           
             
     def update_stop_time(self, prev_stop_id, arrival_unix_timestamp, stop_id_and_departure_time):

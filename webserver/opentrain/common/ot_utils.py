@@ -21,6 +21,10 @@ def mkdir_p(path):
     if not os.path.exists(path):
         os.makedirs(path)
     
+def rmf(path):
+    if os.path.exists(path):
+        os.removedirs(path)
+    
 def ftp_get_file(host,remote_name,local_path):
     """ get file remote_name from FTP host host and copied it inot local_path"""
     from ftplib import FTP

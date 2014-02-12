@@ -1,3 +1,5 @@
+import os
+os.environ['DJANGO_SETTINGS_MODULE']='opentrain.settings'
 import gtfs.models
 from scipy import spatial
 import shelve
@@ -13,31 +15,34 @@ class Shape(object):
         self.coords = coords
 
 class ShapeList(dict):
-    def __init__(self, django_shape_coords_and_ids) :
-        self.point_shape_ids = []
-        all_coords = []
-        for shape_point in django_shape_coords_and_ids:
-            self.point_shape_ids.append(shape_point[0])
-            all_coords.append([float(shape_point[1]), float(shape_point[2])])
+    def __init__(self, gtfs_shapes_data) :
+        #self.point_shape_ids = []
+        self.all_unique_coords = []
+        #for gtfs_shape in gtfs_shapes_data:
+            #self.point_shape_ids.append(shape_point[0])
+            #all_coords.append([float(shape_point[1]), float(shape_point[2])])
             
-        #self.point_shape_ids = [x[0] for x in list(django_shape_coords_and_ids.all().values_list('shape_id'))]
-        self.point_shape_ids = np.array(self.point_shape_ids)
-        #lat_list = [float(x[0]) for x in list(django_shape_coords_and_ids.all().values_list('shape_pt_lat'))]
-        #lon_list = [float(x[0]) for x in list(django_shape_coords_and_ids.all().values_list('shape_pt_lon'))]      
-        #all_coords = zip(lat_list, lon_list)
-        all_coords = np.array(all_coords)
-        self.point_tree = spatial.cKDTree(all_coords)
-        unique_shape_ids = list(set(self.point_shape_ids))
-        unique_shape_ids.sort()
-        self.point_shape_int_ids = [unique_shape_ids.index(x) for x in self.point_shape_ids]
-        self.point_shape_int_ids = np.array(self.point_shape_int_ids)
+        ##self.point_shape_ids = [x[0] for x in list(django_shape_coords_and_ids.all().values_list('shape_id'))]
+        #self.point_shape_ids = np.array(self.point_shape_ids)
+        ##lat_list = [float(x[0]) for x in list(django_shape_coords_and_ids.all().values_list('shape_pt_lat'))]
+        ##lon_list = [float(x[0]) for x in list(django_shape_coords_and_ids.all().values_list('shape_pt_lon'))]      
+        ##all_coords = zip(lat_list, lon_list)
+        #all_coords = np.array(all_coords)
+        
+        #unique_shape_ids = list(set(self.point_shape_ids))
+        #unique_shape_ids.sort()
+        #self.point_shape_int_ids = [unique_shape_ids.index(x) for x in self.point_shape_ids]
+        #self.point_shape_int_ids = np.array(self.point_shape_int_ids)
         self.id_list = []
-        for shape_id in unique_shape_ids:
-            shape_coords = all_coords[self.point_shape_ids == shape_id]
-            shape = Shape(shape_id, shape_coords)
+        
+        import json
+        for gtfs_shape in gtfs_shapes_data:
+            shape_coords = json.loads(gtfs_shape.points)
+            shape = Shape(gtfs_shape.shape_id, shape_coords)
             self[shape.id] = shape
             self.id_list.append(shape.id)
-            
+            self.all_unique_coords.extend(shape_coords)
+        
         self.sampled_point_inds, self.sampled_point_tree = self.get_sampling_of_all_routes()
 
     def __getstate__(self):
@@ -55,23 +60,23 @@ class ShapeList(dict):
         del dict['sampled_coords']
         self.__dict__.update(dict)           
     
-    def query_all_points(self, coords, accuracies)   :
+    #def query_all_points(self, coords, accuracies)   :
         
-        res_shape_point_ids = query_coords(self.point_tree, coords, accuracies)    
+        #res_shape_point_ids = query_coords(self.point_tree, coords, accuracies)    
         
-        if (len(res_shape_point_ids) > 0):
-            if isinstance(res_shape_point_ids[0], (list, tuple)):
-                res_shape_int_ids = copy.deepcopy(res_shape_point_ids)
-                for i in xrange(len(res_shape_int_ids)):
-                    res_shape_int_ids[i] = self.point_shape_int_ids[res_shape_int_ids[i]]
-            else:
-                res_shape_int_ids = self.point_shape_int_ids[res_shape_point_ids]
-        else:
-            res_shape_int_ids = []
+        #if (len(res_shape_point_ids) > 0):
+            #if isinstance(res_shape_point_ids[0], (list, tuple)):
+                #res_shape_int_ids = copy.deepcopy(res_shape_point_ids)
+                #for i in xrange(len(res_shape_int_ids)):
+                    #res_shape_int_ids[i] = self.point_shape_int_ids[res_shape_int_ids[i]]
+            #else:
+                #res_shape_int_ids = self.point_shape_int_ids[res_shape_point_ids]
+        #else:
+            #res_shape_int_ids = []
             
-        res_shape_ids = [self.id_list[i] for i in res_shape_int_ids]
+        #res_shape_ids = [self.id_list[i] for i in res_shape_int_ids]
 
-        return res_shape_point_ids, res_shape_ids
+        #return res_shape_point_ids, res_shape_ids
 
     def query_sampled_points(self, coords, accuracies)   :
         sampled_coord_ids = query_coords(self.sampled_point_tree, coords, accuracies)    
@@ -81,9 +86,10 @@ class ShapeList(dict):
     
     def get_sampling_of_all_routes(self):
         from common.ot_utils import meter_distance_to_coord_distance
-        shape_point_tree = self.point_tree
-        inds_to_go_over = np.zeros(len(shape_point_tree.data)) == 0
-        inds_to_keep = np.zeros(len(shape_point_tree.data)) == -1
+        shape_point_tree = spatial.cKDTree(self.all_unique_coords)
+        
+        inds_to_go_over = np.zeros(len(self.all_unique_coords)) == 0
+        inds_to_keep = np.zeros(len(self.all_unique_coords)) == -1
         dist_threshold = meter_distance_to_coord_distance(config.route_sampling__min_distance_between_points_meters)
         count = 0
         while count < len(inds_to_go_over):
@@ -100,17 +106,19 @@ class ShapeList(dict):
   
 
 def get_all_shapes():
-    from shapes import ShapeList
-    import shapes
-    datafile = shelve.open(config.gtfs_shape_file)
+    #from shapes import ShapeList
+    #import shapes
+    #datafile = shelve.open(config.gtfs_shape_file)
 
-    if not datafile.has_key('shapesList'):
-        gtfs_shapes_data = gtfs.models.Shape.objects.all().values_list('shape_id', 'shape_pt_lat', 'shape_pt_lon').order_by('shape_id', 'shape_pt_sequence')
-        gtfs_shapes_data = list(gtfs_shapes_data)
-        datafile['shapesList'] = ShapeList(gtfs_shapes_data)
-    all_shapes = datafile['shapesList']
+    #if not datafile.has_key('shapesList'):
+        #gtfs_shapes_data = gtfs.models.Shape.objects.all().values_list('shape_id', 'shape_pt_lat', 'shape_pt_lon').order_by('shape_id', 'shape_pt_sequence')
+    gtfs_shapes_data = list(gtfs.models.ShapeJson.objects.all())
+    all_shapes = ShapeList(gtfs_shapes_data)
+        #gtfs_shapes_data = list(gtfs_shapes_data)
+        #datafile['shapesList'] = ShapeList(gtfs_shapes_data)
+    #all_shapes = datafile['shapesList']
     
-    datafile.close() 
+    #datafile.close() 
     
     return all_shapes
 

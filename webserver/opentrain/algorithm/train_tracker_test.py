@@ -32,8 +32,9 @@ from redis_intf.client import get_redis_pipeline, get_redis_client
 
 class train_tracker_test(TestCase):
     
-    def track_device(self, device_id, do_print=False, do_preload_reports=True):
+    def track_device(self, device_id, do_print=False, do_preload_reports=True, set_reports_to_today=True):
         #device_coords, device_timestamps, device_accuracies_in_meters, device_accuracies_in_coords = get_location_info_from_device_id(device_id)
+        now = datetime.datetime.now()
         reports_queryset = self.get_data_from_device_id(device_id)
         
         tracker = TrainTracker(device_id)
@@ -56,6 +57,8 @@ class train_tracker_test(TestCase):
                 trips = tracker.get_possible_trips()
             report = reports_queryset[i]
             
+            if set_reports_to_today:
+                report.timestamp = report.timestamp.replace(year=now.year, month=now.month, day=now.day)
             tracker.add(report)
             
 
@@ -70,26 +73,31 @@ class train_tracker_test(TestCase):
         keys = cl.keys(pattern='train_tracker:*')
         if len(keys) > 0:
             cl.delete(*keys)
-
-        device_id = '02090d12' # Eran's trip
-        trips, tracker = self.track_device(device_id, do_preload_reports=True)
-        print trips
-        self.assertEquals(len(trips), 2)
-        self.assertTrue('130114_00077' in trips)
-        self.assertTrue('130114_00177' in trips)
-        
-        device_id = 'f752c40d' # Ofer's trip
-        trips, tracker = self.track_device(device_id)
-        print trips
-        self.assertEquals(len(trips), 1)        
-        self.assertTrue('130114_00283' in trips)
-        tracker.print_possible_trips()
-        
+            
         device_id = '1cb87f1e' # Udi's trip        
         trips, tracker = self.track_device(device_id)
         print trips
         self.assertEquals(len(trips), 1)        
-        self.assertTrue('160114_00073' in trips)
+        self.assertTrue(self.is_trip_in_list(trips, '_00073'))
+        
+        device_id = '02090d12' # Eran's trip
+        trips, tracker = self.track_device(device_id, do_preload_reports=True)
+        print trips
+        self.assertEquals(len(trips), 2)
+        self.assertTrue(self.is_trip_in_list(trips, '_00077'))
+        self.assertTrue(self.is_trip_in_list(trips, '_00177'))
+        
+        device_id = 'f752c40d' # Ofer's trip
+        trips, tracker = self.track_device(device_id)
+        print trips
+        self.assertEquals(len(trips), 1)  
+        self.assertTrue(self.is_trip_in_list(trips, '_00283'))
+        tracker.print_possible_trips()
+
+    def is_trip_in_list(self, trips, trip_id_end):
+        return len([x for x in trips if x.endswith(trip_id_end)]) > 0
+        
+
 
     def get_data_from_device_id(self, device_id):
         qs = analysis.models.Report.objects.filter(device_id=device_id)#,my_loc__isnull=False)

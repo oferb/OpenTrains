@@ -69,30 +69,37 @@ class train_tracker_test(TestCase):
         
   
     def test_tracker_on_devices(self):
-        cl = get_redis_client()
-        keys = cl.keys(pattern='train_tracker:*')
-        if len(keys) > 0:
-            cl.delete(*keys)
-            
-        device_id = '1cb87f1e' # Udi's trip        
+        device_ids = ['1cb87f1e', '02090d12', 'f752c40d']
+        self.remove_from_redis(device_ids)
+        device_id = device_ids[0] # Udi's trip        
         trips, tracker = self.track_device(device_id)
         print trips
         self.assertEquals(len(trips), 1)        
         self.assertTrue(self.is_trip_in_list(trips, '_00073'))
         
-        device_id = '02090d12' # Eran's trip
+        device_id = device_ids[1] # Eran's trip
         trips, tracker = self.track_device(device_id, do_preload_reports=True)
         print trips
         self.assertEquals(len(trips), 2)
         self.assertTrue(self.is_trip_in_list(trips, '_00077'))
         self.assertTrue(self.is_trip_in_list(trips, '_00177'))
         
-        device_id = 'f752c40d' # Ofer's trip
+        device_id = device_ids[2] # Ofer's trip
         trips, tracker = self.track_device(device_id)
         print trips
         self.assertEquals(len(trips), 1)  
         self.assertTrue(self.is_trip_in_list(trips, '_00283'))
         tracker.print_possible_trips()
+        self.remove_from_redis(device_ids)
+        
+    def remove_from_redis(self, device_ids):
+        cl = get_redis_client()
+        keys = []
+        for device_id in device_ids:
+            keys.extend(cl.keys(pattern='train_tracker:%s*' % (device_id)))
+        if len(keys) > 0:
+            cl.delete(*keys)
+            
 
     def is_trip_in_list(self, trips, trip_id_end):
         return len([x for x in trips if x.endswith(trip_id_end)]) > 0

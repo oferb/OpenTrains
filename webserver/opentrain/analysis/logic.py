@@ -156,11 +156,20 @@ def get_live_trips(dt=None):
                            timestamp = dt.isoformat())
         if cur_shape and settings.FAKE_CUR:
             res['cur_point'] = cur_shape
+        cur_loc = get_current_location(trip)
+        if cur_loc:
+            res['cur_point'] = cur_loc
         result.append(res)                                 
     return result
 
+def get_current_location(trip):
+    from redis_intf.client import get_redis_pipeline, get_redis_client
+    cl = get_redis_client()
+    loc = cl.get('current_trip_id:coords:%s' % (trip.trip_id))
+    if loc:
+        return json.loads(loc)
     
-
+    return None
 
 
 

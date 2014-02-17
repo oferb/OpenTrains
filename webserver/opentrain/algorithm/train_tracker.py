@@ -19,6 +19,9 @@ except ImportError:
 import datetime
 import bssid_tracker 
 from redis_intf.client import get_redis_pipeline, get_redis_client
+import json
+
+TRACKER_TTL = 10 * 60
 
 class TrackedStopTime(object):
     def __init__(self, stop_id):
@@ -83,11 +86,11 @@ class TrainTracker(object):
         trip = trips.split(',')[0] if trips is not None and len(trips) > 0 else None
         if added_count > 0:
             p = get_redis_pipeline()
-            p.set("train_tracker:%s:coords" % (self.id), coords)
+            p.set("train_tracker:%s:coords" % (self.id), json.dumps(coords))
             
             if trip is not None:
-                p.set('current_trip_id:coords:%s' % (trip), coords)
-                p.set('current_trip_id:coords_timestamp:%s' % (trip), ot_utils.dt_time_to_unix_time(report.timestamp))
+                p.setex('current_trip_id:coords:%s' % (trip), TRACKER_TTL, json.dumps(coords))
+                p.setex('current_trip_id:coords_timestamp:%s' % (trip), TRACKER_TTL, ot_utils.dt_time_to_unix_time(report.timestamp))
             p.execute()              
         
         if trip is not None:    

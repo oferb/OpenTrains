@@ -118,17 +118,13 @@ def get_utc_now():
 def get_localtime_now():
     return get_localtime(get_utc_now())
     
-def delete_from_model(model):
+def delete_from_model(*models):
     from django.db import connection
     cursor = connection.cursor()
-    table_name = model._meta.db_table
-    if 'sqlite3' not in settings.DATABASES['default']['ENGINE']:
-        cascade = ' CASCADE'
-    else:
-        cascade = ''
-    sql = "DELETE FROM %s%s;" % (table_name,cascade )
+    table_names = [model._meta.db_table for model in models]
+    sql = "truncate %s RESTART IDENTITY CASCADE;" % (','.join(table_names))
     cursor.execute(sql)    
-    print 'DELETED %s' % (table_name)
+    print 'DELETED %s' % (table_names)
 
 def get_localtime(dt):
     tz = pytz.timezone(settings.TIME_ZONE)

@@ -18,10 +18,11 @@ except ImportError:
     pass
 import datetime
 import bssid_tracker 
-from redis_intf.client import get_redis_pipeline, get_redis_client
+from redis_intf.client import get_redis_pipeline, get_redis_client, load_by_key, save_by_key 
 import json
 
-TRACKER_TTL = 10 * 60
+TRACKER_TTL = 1 * 60
+TRACKER_REPORT_FOR_TRIP_COUNT_LOWER_THAN = 3
 
 class TrackedStopTime(object):
     def __init__(self, stop_id):
@@ -82,19 +83,20 @@ class TrainTracker(object):
         res_shape_sampled_point_ids, _ = shapes.all_shapes.query_sampled_points(coords, report.my_loc.accuracy_in_coords)
         cl = get_redis_client()   
         added_count = cl.sadd("train_tracker:%s:visited_shape_sampled_point_ids" % (self.id), res_shape_sampled_point_ids)
-        trips = cl.get("train_tracker:%s:trip_ids" % (self.id))
-        trip = trips.split(',')[0] if trips is not None and len(trips) > 0 else None
+
+        trips = load_by_key("train_tracker:%s:trip_ids" % (self.id))
+        trip = trips[0] if trips else None
         if added_count > 0:
             p = get_redis_pipeline()
-            p.set("train_tracker:%s:coords" % (self.id), json.dumps(coords))
+            save_by_key("train_tracker:%s:coords" % (self.id), coords, cl=p)
             
-            if trip is not None:
-                p.setex('current_trip_id:coords:%s' % (trip), TRACKER_TTL, json.dumps(coords))
-                p.setex('current_trip_id:coords_timestamp:%s' % (trip), TRACKER_TTL, ot_utils.dt_time_to_unix_time(report.timestamp))
+            if trip is not None and len(trips) <= TRACKER_REPORT_FOR_TRIP_COUNT_LOWER_THAN:
+                save_by_key('current_trip_id:coords:%s' % (trip), coords, timeout=TRACKER_TTL, cl=p)
+                save_by_key('current_trip_id:coords_timestamp:%s' % (trip), ot_utils.dt_time_to_unix_time(report.timestamp), timeout=TRACKER_TTL, cl=p)
             p.execute()              
         
         if trip is not None:    
-            cl.set('current_trip_id:report_timestamp:%s' % (trip), ot_utils.dt_time_to_unix_time(report.timestamp))
+            cl.setex('current_trip_id:report_timestamp:%s' % (trip), TRACKER_TTL, ot_utils.dt_time_to_unix_time(report.timestamp))
         
         ##commented out below is code that filters trips based on shape
         #coords_updated = False
@@ -212,10 +214,10 @@ class TrainTracker(object):
         trips, time_deviation_in_seconds = self.get_possible_trips()
         #if len(trips) <= 100:
         cl = get_redis_client()
-        cl.set("train_tracker:%s:trip_ids" % (self.id), ",".join(trips))
-        val = ",".join([unicode(x) for x in time_deviation_in_seconds])
-        cl.set("train_tracker:%s:trip_ids_deviation_seconds" % (self.id), val)
-          
+        
+        save_by_key("train_tracker:%s:trip_ids" % (self.id), trips)
+        save_by_key("train_tracker:%s:trip_ids_deviation_seconds" % (self.id), time_deviation_in_seconds)
+      
             
     def update_stop_time(self, prev_stop_id, arrival_unix_timestamp, stop_id_and_departure_time):
         p = get_redis_pipeline()

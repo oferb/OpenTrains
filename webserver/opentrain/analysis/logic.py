@@ -163,13 +163,10 @@ def get_live_trips(dt=None):
     return result
 
 def get_current_location(trip):
-    from redis_intf.client import get_redis_pipeline, get_redis_client
-    cl = get_redis_client()
-    loc = cl.get('current_trip_id:coords:%s' % (trip.trip_id))
-    if loc:
-        return json.loads(loc)
-    
-    return None
+    from redis_intf.client import load_by_key
+    return load_by_key('current_trip_id:coords:%s' % (trip.trip_id))
+
+
 
 
 

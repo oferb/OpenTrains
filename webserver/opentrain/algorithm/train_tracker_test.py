@@ -115,4 +115,6 @@ class train_tracker_test(TestCase):
         return qs    
         
 if __name__ == '__main__':
+    #reports = analysis.models.Report.objects.filter(pk__gt=10, my_loc__isnull=True)
+    
     unittest.main()

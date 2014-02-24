@@ -1,4 +1,5 @@
 {% load ot_filters %}
+{% load i18n %}
 <table>
 	<tr>
 		<td>Seq</td>
@@ -9,7 +10,7 @@
 	{%for stop_time in trip.get_stop_times%}
 	<tr>
 		<td>{{stop_time.stop_sequence}}</td>
-		<td>{{stop_time.stop.stop_name}}</td>
+		<td>{% trans stop_time.stop.stop_name %}</td>
 		<td>{{stop_time.arrival_time | denorm_time}}</td>
 		<td>{{stop_time.departure_time | denorm_time}}</td>
 	</tr>

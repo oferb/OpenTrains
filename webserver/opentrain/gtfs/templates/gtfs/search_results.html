@@ -1,5 +1,6 @@
 {% load ot_filters %}
 {% load staticfiles %}
+{% load i18n %}
 
 <script src="{% static 'gtfs/js/gtfs.js' %}"></script>
 
@@ -16,7 +17,7 @@
 			<td>{{result.trip.route.route_long_name}}</td>
 		</tr>
 		<tr>
-			<td>Trip Details</td>
+			<td>{% trans 'Trip Details' %}</td>
 			<td>
 			<p class="text-center">
 				<button id="trip_details_button_{{forloop.counter}}">
@@ -34,23 +35,23 @@
 			</script></td>
 		</tr>
 		<tr>
-			<td>Trip Id</td>
+			<td>{% trans 'Trip Id' %}</td>
 			<td>{{result.trip.trip_id}}</td>
 		</tr>
 		<tr>
-			<td>Direction</td>
+			<td>{% trans 'Direction' %}</td>
 			<td>{{result.trip.direction_id | direction_to_string }}</td>
 		</tr>
 		<tr>
-			<td>Arrives</td>
+			<td>{% trans 'Arrives' %}</td>
 			<td>{{result.arrival_time | denorm_time }}</td>
 		</tr>
 		<tr>
-			<td>Departs</td>
+			<td>{% trans 'Departs' %}</td>
 			<td>{{result.departure_time | denorm_time }}</td>
 		</tr>
 		<tr>
-			<td>Show on Map</td>
+			<td>{% trans 'Show on Map' %}</td>
 			<td><a target="_blank" href="/gtfs/maps/{{result.trip.trip_id}}/?zoom_stop_id={{result.stop.stop_id}}">Map</a></td>
 		</tr>
 	</table>

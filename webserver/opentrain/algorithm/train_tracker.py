@@ -9,6 +9,7 @@ import stops
 import shapes
 from sklearn.hmm import MultinomialHMM
 from utils import *
+from common.ot_utils import *
 from collections import deque
 from common import ot_utils
 try:
@@ -17,7 +18,11 @@ except ImportError:
     pass
 import datetime
 import bssid_tracker 
-from redis_intf.client import get_redis_pipeline, get_redis_client
+from redis_intf.client import get_redis_pipeline, get_redis_client, load_by_key, save_by_key 
+import json
+
+TRACKER_TTL = 1 * 60
+TRACKER_REPORT_FOR_TRIP_COUNT_LOWER_THAN = 3
 
 class TrackedStopTime(object):
     def __init__(self, stop_id):
@@ -43,11 +48,6 @@ class TrainTracker(object):
 
     def __init__(self, id_) :
         self.id = id_
-        #self.track_shape_int_ids = []
-        #self.coords = []
-        #self.visited_shape_point_ids = set()
-        #self.shape_counts = np.zeros((len(shapes.all_shapes), 1))
-        #self.current_stop_id = None
         cl = get_redis_client()
         cl.set("train_tracker:%s:current_stop_id" % (self.id), stops.NOSTOP)
         
@@ -68,11 +68,8 @@ class TrainTracker(object):
                                     startprob=startprob,
                                     transmat=transmat)        
         self.hmm._set_emissionprob(emissionprob)
-        
+ 
         self.history_length = 1000
-        #self.prev_stops = deque(maxlen=self.history_length)
-        #self.prev_stops_timestamps = deque(maxlen=self.history_length)
-        #self.stop_times = []
         
     def add(self, report):
         if not hasattr(self, 'relevant_service_ids'):
@@ -80,46 +77,49 @@ class TrainTracker(object):
             relevant_services = gtfs.models.Service.objects.filter(start_date = start_date)
             self.relevant_service_ids = relevant_services.all().values_list('service_id')
             
-        
+        cl = get_redis_client()  
         # update train position
-        coords = [report.my_loc.lat, report.my_loc.lon]
-        res_shape_sampled_point_ids, _ = shapes.all_shapes.query_sampled_points(coords, report.my_loc.accuracy_in_coords)
-        cl = get_redis_client()   
-        added_count = cl.sadd("train_tracker:%s:visited_shape_sampled_point_ids" % (self.id), res_shape_sampled_point_ids)
-        trips = cl.get("train_tracker:%s:trip_ids" % (self.id))
-        trip = trips.split(',')[0] if trips is not None and len(trips) > 0 else None
-        if added_count > 0:
-            p = get_redis_pipeline()
-            p.set("train_tracker:%s:coords" % (self.id), coords)
+        if hasattr(report, 'my_loc'):
+            coords = [report.my_loc.lat, report.my_loc.lon]
+            res_shape_sampled_point_ids, _ = shapes.all_shapes.query_sampled_points(coords, report.my_loc.accuracy_in_coords)
+             
+            added_count = cl.sadd("train_tracker:%s:visited_shape_sampled_point_ids" % (self.id), res_shape_sampled_point_ids)
+    
+            trips = load_by_key("train_tracker:%s:trip_ids" % (self.id))
+            trip = trips[0] if trips else None
+            if added_count > 0:
+                p = get_redis_pipeline()
+                save_by_key("train_tracker:%s:coords" % (self.id), coords, cl=p)
+                
+                if trip is not None and len(trips) <= TRACKER_REPORT_FOR_TRIP_COUNT_LOWER_THAN:
+                    save_by_key('current_trip_id:coords:%s' % (trip), coords, timeout=TRACKER_TTL, cl=p)
+                    save_by_key('current_trip_id:coords_timestamp:%s' % (trip), ot_utils.dt_time_to_unix_time(report.timestamp), timeout=TRACKER_TTL, cl=p)
+                p.execute()              
             
-            if trip is not None:
-                p.set('current_trip_id:coords:%s' % (trip), coords)
-                p.set('current_trip_id:coords_timestamp:%s' % (trip), ot_utils.dt_time_to_unix_time(report.timestamp))
-            p.execute()              
-        
-        if trip is not None:    
-            cl.set('current_trip_id:report_timestamp:%s' % (trip), ot_utils.dt_time_to_unix_time(report.timestamp))
-        
-        #coords_updated = False
-        #p = get_redis_pipeline()
-        #p.zincrby("train_tracker:%s:counters" % (self.id), res_shape_ids[i], inc_by)
-        #p.incr("train_tracker:%s:total" % (self.id), inc_by)
-        #p.execute()        
-
-        #for i in xrange(len(res_shape_point_ids)):
-            #cl = get_redis_client()
-            #if cl.sadd("train_tracker:%s:visited_shape_point_ids" % (self.id), res_shape_point_ids[i]) == 0:
-                #if not coords_updated: #update if report adds new points on tracks
-                    #self.coords = coords
-                    #coords_updated = True
-                #p = get_redis_pipeline()
-                #p.zincrby("train_tracker:%s:counters" % (self.id), res_shape_ids[i], 1)
-                #p.incr("train_tracker:%s:total" % (self.id))
-                #p.execute()
-                ##self.shape_counts[res_shape_ids[i]] = self.shape_counts[res_shape_ids[i]] + 1
-        
-        # 1) add stop or non-stop to prev_stops and prev_stops_timestamps     
-        # 2) set calc_hmm to true if according to wifis and/or location, our state changed from stop to non-stop or vice versa
+            if trip is not None:    
+                cl.setex('current_trip_id:report_timestamp:%s' % (trip), TRACKER_TTL, ot_utils.dt_time_to_unix_time(report.timestamp))
+            
+            ##commented out below is code that filters trips based on shape
+            #coords_updated = False
+            #p = get_redis_pipeline()
+            #p.zincrby("train_tracker:%s:counters" % (self.id), res_shape_ids[i], inc_by)
+            #p.incr("train_tracker:%s:total" % (self.id), inc_by)
+            #p.execute()        
+    
+            #for i in xrange(len(res_shape_point_ids)):
+                #cl = get_redis_client()
+                #if cl.sadd("train_tracker:%s:visited_shape_point_ids" % (self.id), res_shape_point_ids[i]) == 0:
+                    #if not coords_updated: #update if report adds new points on tracks
+                        #self.coords = coords
+                        #coords_updated = True
+                    #p = get_redis_pipeline()
+                    #p.zincrby("train_tracker:%s:counters" % (self.id), res_shape_ids[i], 1)
+                    #p.incr("train_tracker:%s:total" % (self.id))
+                    #p.execute()
+                    ##self.shape_counts[res_shape_ids[i]] = self.shape_counts[res_shape_ids[i]] + 1
+            
+            # 1) add stop or non-stop to prev_stops and prev_stops_timestamps     
+            # 2) set calc_hmm to true if according to wifis and/or location, our state changed from stop to non-stop or vice versa
         calc_hmm = False
         prev_stop_id = None
         current_stop_id = cl.get("train_tracker:%s:current_stop_id" % (self.id))
@@ -138,30 +138,24 @@ class TrainTracker(object):
             if len(wifi_stops_ids) > 0 and np.all(wifi_stops_ids == wifi_stops_ids[0]):
                 timestamp = report.get_timestamp_israel_time()
                 stop_id = wifi_stops_ids[0]
-                #self.prev_stops.append(stops.all_stops.id_list.index(stop_id))
-                #self.prev_stops_timestamps.append(timestamp)
                 prev_stop_id = self.add_prev_stop(stop_id, timestamp)
                 
                 if current_stop_id == stops.NOSTOP:
                     calc_hmm = True
             # comment explained in quotes: "in wifi we trust", "if they have no wifi let them use location"            
-            elif report.loc_ts_delta() < config.stop_discovery_location_timeout_seconds:  
+            elif hasattr(report, 'my_loc') and (report.loc_ts_delta() < config.stop_discovery_location_timeout_seconds):  
                 
                 coords = [report.my_loc.lat, report.my_loc.lon]
                 stop_id_list = stops.all_stops.query_stops(coords, ot_utils.meter_distance_to_coord_distance(config.station_radius_in_meters))
                 if len(stop_id_list) == 1:
                     timestamp = report.get_timestamp_israel_time()
                     stop_id = stop_id_list[0]                    
-                    #self.prev_stops.append(stops.all_stops.id_list.index(stop_id))
-                    #self.prev_stops_timestamps.append(timestamp)
                     prev_stop_id = self.add_prev_stop(stop_id, timestamp)
                     if current_stop_id == stops.NOSTOP:
                         calc_hmm = True
                     
 
         else:
-            #self.prev_stops.append(self.non_stop_component_num)
-            #self.prev_stops_timestamps.append(report.get_timestamp_israel_time())
             timestamp = report.get_timestamp_israel_time()
             stop_id = stops.all_stops.id_list[self.non_stop_component_num]
             prev_stop_id = self.add_prev_stop(stop_id, timestamp)
@@ -186,15 +180,7 @@ class TrainTracker(object):
             current_stop_id = stops.all_stops.id_list[state_sequence[-1]]
             ##cl.set("train_tracker:%s:current_stop_id" % (self.id), current_stop_id)
             cl.set("train_tracker:%s:current_stop_id" % (self.id), current_stop_id)
-            #if stops.all_stops.id_list[state_sequence[-1]] == self.non_stop_component_num:
-                #current_stop_id = stops.NOSTOP
-                #cl.set("train_tracker:%s:current_stop_id" % (self.id), current_stop_id)
-                #self.current_stop_id = None
-            #else:
-                #current_stop_id = stops.all_stops.id_list[state_sequence[-1]]
-                #cl.set("train_tracker:%s:current_stop_id" % (self.id), current_stop_id)
-                #self.current_stop_id = stops.all_stops.id_list[state_sequence[-1]]
-            
+
             prev_timestamp = None
             if prev_current_stop != current_stop_id:
                 
@@ -205,13 +191,11 @@ class TrainTracker(object):
                     # test if this is where we changed states, or this is the first state
                     if (stop_id != current_stop_id or i == 0):
                         if current_stop_id == stops.NOSTOP: # we need to set departure
-                            #self.stop_times[-1].departure = timestamp
                             stop_time = cl.zrange("train_tracker:%s:tracked_stops" % (self.id), -1, -1, withscores=True)
-                            #arrival_unix_timestamp = ot_utils.dt_time_to_unix_time(self.stop_times[-1].arrival)
                             departure_unix_timestamp = ot_utils.dt_time_to_unix_time(timestamp)
                             stop_id_and_departure_time = "%s_%d" % (prev_current_stop, departure_unix_timestamp)
                             self.update_stop_time(prev_stop_id, stop_time[0][1], stop_id_and_departure_time)
-                            self.update_trips(report, coords)
+                            self.update_trips()
                         else: # we need to set arrival
                              # set new stop_time if no stop_time exists or on stop_id change
                             stop_time = cl.zrange("train_tracker:%s:tracked_stops" % (self.id), -1, -1, withscores=True)
@@ -221,21 +205,20 @@ class TrainTracker(object):
                                 
                                 stop_id_and_departure_time = "%s_" % (current_stop_id)
                                 self.update_stop_time(prev_stop_id, arrival_unix_timestamp, stop_id_and_departure_time)
-                                self.update_trips(report, coords)
+                                self.update_trips()
                                 
-                                #stop_time = TrackedStopTime(current_stop_id)
-                                #self.stop_times.append(stop_time)
-                                #stop_time.arrival = prev_timestamp if prev_timestamp is not None else timestamp
                         break
                     prev_timestamp = timestamp
             self.print_tracked_stop_times()
 
-    def update_trips(self, report, coords):
+    def update_trips(self):
         trips, time_deviation_in_seconds = self.get_possible_trips()
         #if len(trips) <= 100:
         cl = get_redis_client()
-        cl.set("train_tracker:%s:trip_ids" % (self.id), ",".join(trips))
-          
+        
+        save_by_key("train_tracker:%s:trip_ids" % (self.id), trips)
+        save_by_key("train_tracker:%s:trip_ids_deviation_seconds" % (self.id), time_deviation_in_seconds)
+      
             
     def update_stop_time(self, prev_stop_id, arrival_unix_timestamp, stop_id_and_departure_time):
         p = get_redis_pipeline()
@@ -412,6 +395,7 @@ class TrainTracker(object):
  
 trackers_by_device_id = {}
 def add_report(report):  
+    bssid_tracker.tracker.add(report)
     if not trackers_by_device_id.has_key(report.device_id):
         trackers_by_device_id[report.device_id] = TrainTracker(report.device_id)
     

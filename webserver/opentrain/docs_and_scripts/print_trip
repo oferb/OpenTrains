@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+import os
+import sys
+dir=os.path.dirname(os.path.dirname(__file__))
+sys.path.append(dir)
+os.environ['DJANGO_SETTINGS_MODULE']='opentrain.settings'
+import sys
+import gtfs.models
+
+trips = gtfs.models.Trip.objects.filter(trip_id=sys.argv[1])
+print('')
+trips[0].print_stoptimes()
+print('')

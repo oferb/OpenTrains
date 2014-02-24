@@ -6,6 +6,19 @@ from django.conf import settings
 from django.utils import timezone
 import pytz
 
+def datetime_to_db_time(adatetime):
+    return adatetime.hour * 3600 + 60 * adatetime.minute + adatetime.second
+
+def datetime_range_to_db_time(datetime1, datetime2):
+    d1 = datetime_to_db_time(datetime1)
+    d2 = datetime_to_db_time(datetime2)
+    if d1 > d2: # in gtfs, instead of midnight passing to the next day, you count in more time for the same day, i.e 25:00 instead of 01:00
+        d2 = d2 + 24*3600    
+    return d1,d2
+
+def db_time_to_datetime(db_time):
+    return datetime.time(db_time / 3600 % 24, (db_time % 3600) / 60, db_time % 60)
+
 def get_utc_time_underscored():
     """ return UTC time as underscored, to timestamp folders """
     t = datetime.datetime.utcnow()
@@ -105,17 +118,13 @@ def get_utc_now():
 def get_localtime_now():
     return get_localtime(get_utc_now())
     
-def delete_from_model(model):
+def delete_from_model(*models):
     from django.db import connection
     cursor = connection.cursor()
-    table_name = model._meta.db_table
-    if 'sqlite3' not in settings.DATABASES['default']['ENGINE']:
-        cascade = ' CASCADE'
-    else:
-        cascade = ''
-    sql = "DELETE FROM %s%s;" % (table_name,cascade )
+    table_names = [model._meta.db_table for model in models]
+    sql = "truncate %s RESTART IDENTITY CASCADE;" % (','.join(table_names))
     cursor.execute(sql)    
-    print 'DELETED %s' % (table_name)
+    print 'DELETED %s' % (table_names)
 
 def get_localtime(dt):
     tz = pytz.timezone(settings.TIME_ZONE)

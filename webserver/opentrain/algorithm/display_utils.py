@@ -1,7 +1,12 @@
+import os
+os.environ['DJANGO_SETTINGS_MODULE']='opentrain.settings'
 import gtfs.models
 import analysis.models
 import numpy as np
-from scipy import spatial
+import warnings
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from scipy import spatial
 import shelve
 try:
     import matplotlib.pyplot as plt
@@ -11,6 +16,8 @@ import simplekml
 import config
 import itertools
 import os
+import common.ot_utils as ot_utils
+import utils
 
 
 def print_array(arr):
@@ -53,3 +60,8 @@ def plot_and_save_shape_matches(shape_point_tree, sampled_all_routes_tree, shape
         plt.title('shape_id=%s, score=%d%%' % (shape_id, int(100*shape_probs[shape_id])))
         plt.savefig(os.path.join(config.output_data, 'shape_%d.png' % (shape_id)), bbox_inches=0)
         plt.close('all')
+        
+
+if __name__ == "__main__":
+    trips = gtfs.models.Trip.objects.filter(trip_id='170214_00517')
+    trips[0].print_stoptimes()

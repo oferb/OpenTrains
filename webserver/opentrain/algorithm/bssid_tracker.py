@@ -19,12 +19,8 @@ from export_utils import *
 
 class BSSIDTracker(object):
     def __init__(self) :
-        #self.bssid_prob_map = {}
-        #self.bssid_counts_map = {}
         self.wifis_near_no_station = deque(maxlen=100) # limit size to avoid server memory issues
-        self.wifis_near_two_or_more_stations = deque(maxlen=100)
-    
-        
+        self.wifis_near_two_or_more_stations = deque(maxlen=100) 
     
     def add(self, report):
         if report.loc_ts_delta() < config.stop_discovery_location_timeout_seconds:
@@ -36,13 +32,7 @@ class BSSIDTracker(object):
             stop_id_list = stops.all_stops.query_stops(coords, meter_distance_to_coord_distance(config.station_radius_in_meters))
         
         for wifi in wifis:
-            if len(stop_id_list) == 1:
-                #if not self.bssid_prob_map.has_key(wifi.key):
-                    #self.bssid_prob_map[wifi.key] = np.zeros(len(stops.all_stops))
-                    #self.bssid_counts_map[wifi.key] = 0
-                #self.bssid_prob_map[wifi.key][stop_id_list[0]] += 1
-                #self.bssid_counts_map[wifi.key] += 1
-                
+            if len(stop_id_list) == 1:                
                 p = get_redis_pipeline()
                 stop_id = stops.all_stops[stop_id_list[0]].id
                 p.zincrby("bssid:%s:counters" % (wifi.key), stop_id, 1)
@@ -63,9 +53,7 @@ class BSSIDTracker(object):
         stop_id, score = res[0][0]
         total = res[1]
         stop_probability = float(score)/float(total)
-        #stop_id = np.argmax(self.bssid_prob_map[bssid])
-        #stop_probability = self.bssid_prob_map[bssid][stop_id]/self.bssid_counts_map[bssid]
-        
+
         return stop_id, stop_probability, total
     
     def has_bssid(self, bssid):
@@ -119,21 +107,7 @@ def get_tracker(reset=False):
         bssid_tracker = calc_tracker()
     else:
         bssid_tracker = BSSIDTracker()
-    #datafile = shelve.open(config.output_shelve_file)
-
-    #if not datafile.has_key('bssid_tracker') or reset:
-        #bssid_tracker = calc_tracker()
-        #datafile['bssid_tracker'] = bssid_tracker
-    #bssid_tracker = datafile['bssid_tracker']
-    
-    #datafile.close() 
     
     return bssid_tracker
-
-def save_tracker(tracker):
-    pass
-    #datafile = shelve.open(config.output_shelve_file)
-    #datafile['bssid_tracker'] = tracker
-    #datafile.close() 
 
 tracker = get_tracker(False)

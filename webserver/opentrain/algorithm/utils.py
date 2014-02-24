@@ -13,6 +13,9 @@ import config
 import itertools
 import datetime
 
+def enum(**enums):
+    return type('Enum', (), enums)
+
 def get_XY_pos(relativeNullPoint, p):
     """ Calculates X and Y distances in meters.
     """

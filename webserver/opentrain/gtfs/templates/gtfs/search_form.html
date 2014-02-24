@@ -1,12 +1,13 @@
 {% extends 'common/base.html' %}
+{% load i18n %}
 {% block content %}
 {{ form.media }}
 <div class="container">
-	<h2>{{title}}</h2>
+	<h2>{% trans title %}</h2>
 	<form method="post" role="form" action="{% url url_name %}">
 		<table>
 			{% for field in form %}
-			<tr><td>{{field.label_tag}}</td><td>{{ field }}</td></tr>
+			<tr><td>{% trans field.label_tag %}</td><td>{{ field }}</td></tr>
 			{% endfor %}
 		</table>
 		{% csrf_token %}

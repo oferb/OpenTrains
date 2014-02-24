@@ -1,0 +1,79 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-02-24 15:41+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: common/static/common/ot_i18n.py:3
+msgid "Search In"
+msgstr "חיפוש בתחנה"
+
+#: common/static/common/ot_i18n.py:4
+msgid "Device Reports"
+msgstr "מעקב מכשיר"
+
+#: common/static/common/ot_i18n.py:5
+msgid "Live Trains"
+msgstr "מפה חיה"
+
+#: common/static/common/ot_i18n.py:6
+msgid "Report Details"
+msgstr "פירוט דיווח"
+
+#: common/static/common/ot_i18n.py:7
+#, fuzzy
+msgid "In Station:"
+msgstr ":בתחנה"
+
+#: common/static/common/ot_i18n.py:8
+#, fuzzy
+msgid "Before:"
+msgstr ":לפני"
+
+#: common/static/common/ot_i18n.py:9
+#, fuzzy
+msgid "After:"
+msgstr ":אחרי"
+
+#: common/static/common/ot_i18n.py:10
+#, fuzzy
+msgid "When:"
+msgstr ":מתי"
+
+#: common/templates/common/base.html:43
+msgid "Open Train"
+msgstr "רכבת פתוחה"
+
+#: common/templates/common/base.html:67
+msgid "From"
+msgstr "מ"
+
+#: common/templates/common/base.html:67
+msgid "Hackita"
+msgstr "הכיתה - 2014"
+
+#: common/templates/common/base.html:69
+msgid "Download the"
+msgstr "הורד את ה"
+
+#: common/templates/common/base.html:69
+msgid "app"
+msgstr "אפליקציה"
+
+#: common/templates/common/base.html:69
+msgid "Alpha version - on your own risk"
+msgstr "גרסת אלפא, על אחריותך"

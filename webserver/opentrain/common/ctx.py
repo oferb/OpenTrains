@@ -1,4 +1,5 @@
 from django.core.urlresolvers import reverse
+
 def menu(req):
     menu_items = [dict(title="Search In",name = 'gtfs:search-in'),
                   dict(title="Device Reports",name = 'analysis:device-reports'),

@@ -7,7 +7,7 @@
 	<form method="post" role="form" action="{% url url_name %}">
 		<table>
 			{% for field in form %}
-			<tr><td>{% trans field.label_tag %}</td><td>{{ field }}</td></tr>
+			<tr><td>{{field.label_tag}}</td><td>{{ field }}</td></tr>
 			{% endfor %}
 		</table>
 		{% csrf_token %}

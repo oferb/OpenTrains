@@ -23,7 +23,6 @@ import unittest
 from display_utils import *
 from export_utils import *
 import shapes
-from train_tracker import TrainTracker
 
 from analysis.models import SingleWifiReport
 import bssid_tracker

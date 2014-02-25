@@ -144,42 +144,30 @@ def add_report_to_tracker(tracker_id, report):
         
         # 1) add stop or non-stop to prev_stops and prev_stops_timestamps     
         # 2) set calc_hmm to true if according to wifis and/or location, our state changed from stop to non-stop or vice versa
-    calc_hmm = False
-    prev_stop_id = None
     prev_current_stop_id_by_hmm = cl.get(get_train_tracker_current_stop_id_key(tracker_id))
-
-    if report.is_station():
-        stop_id = try_get_stop_id(report)
-        if stop_id and (prev_current_stop_id_by_hmm == stops.NOSTOP):
-            calc_hmm = True            
-    else:
-        stop_id = stops.all_stops.id_list[hmm_non_stop_component_num]
-        
-        if prev_current_stop_id_by_hmm != stops.NOSTOP:
-            calc_hmm = True
-    
-    if stop_id:
-        timestamp = report.get_timestamp_israel_time()
-        prev_stop_id = add_prev_stop(tracker_id, stop_id, timestamp)
-            
-    if not prev_current_stop_id_by_hmm: # set initial state
-        calc_hmm = True
-
+      
     if not prev_current_stop_id_by_hmm:
         prev_state = tracker_states.INITIAL
     elif prev_current_stop_id_by_hmm == stops.NOSTOP:
         prev_state = tracker_states.NOSTOP
     else:
         prev_state = tracker_states.STOP
-   
-    # possible states:
-    #0) initial state
-    #1) in station, arrival date known
-    #2) in station, arrival date unknown (e.g got to the station when train was already there)
-    #3) not in station
-    
+
+    stop_id = try_get_stop_id(report)
+    if not stop_id:
+        current_state = tracker_states.UNKNOWN
+    elif stop_id == nostop_id:
+        current_state = tracker_states.NOSTOP
+    else:
+        current_state = tracker_states.STOP
+
+    if current_state != tracker_states.UNKNOWN:
+        timestamp = report.get_timestamp_israel_time()
+        prev_stop_id = add_prev_stop(tracker_id, stop_id, timestamp)
+        
     # calculate hmm to get state_sequence, update stop_times and current_stop if needed
-    if calc_hmm:
+    if  current_state != tracker_states.UNKNOWN and prev_state != current_state:
+
         prev_stops_and_timestamps = cl.zrange(get_train_tracker_timestamp_sorted_stop_ids_key(tracker_id), 0, -1, withscores=True)
 
         prev_stop_ids = [x[0].split("_")[1] for x in prev_stops_and_timestamps]
@@ -188,9 +176,9 @@ def add_report_to_tracker(tracker_id, report):
         prev_stop_hmm_logprob, prev_stop_int_ids_by_hmm = hmm.decode(prev_stop_int_ids)
         prev_stop_int_ids_by_hmm_for_debug = prev_stop_int_ids_by_hmm
         
+        # update current_stop_id_by_hmm and current_state by hmm:        
         current_stop_id_by_hmm = stops.all_stops.id_list[prev_stop_int_ids_by_hmm[-1]]
         cl.set(get_train_tracker_current_stop_id_key(tracker_id), current_stop_id_by_hmm)
-        
         if current_stop_id_by_hmm == stops.NOSTOP:
             current_state = tracker_states.NOSTOP
         else:
@@ -201,9 +189,8 @@ def add_report_to_tracker(tracker_id, report):
             prev_stops_timestamps = [ot_utils.unix_time_to_localtime((x[1])) for x in prev_stops_and_timestamps]
             index_of_oldest_current_state = max(0, find_index_of_first_consecutive_value(prev_stops_by_hmm, len(prev_stops_by_hmm)-1))
             index_of_most_recent_previous_state = index_of_oldest_current_state-1
-            #current_stop_component_num = stops.all_stops.ids_list.index(current_stop_id)
-            # test if this is where we changed states, or this is the first state                
-            if current_stop_id_by_hmm == stops.NOSTOP: # going from state (0), (1) or (2) to (3)
+              
+            if current_state == tracker_states.NOSTOP:
                 stop_id = prev_stops_by_hmm[index_of_most_recent_previous_state]
                 unix_timestamp = ot_utils.dt_time_to_unix_time(prev_stops_timestamps[index_of_most_recent_previous_state])
 
@@ -215,12 +202,10 @@ def add_report_to_tracker(tracker_id, report):
                     stop_id_and_departure_time = "%s_%d" % (prev_current_stop_id_by_hmm, departure_unix_timestamp)
                     update_stop_time(tracker_id, prev_stop_id, stop_time[0][1], stop_id_and_departure_time)
                     update_trips(tracker_id)
-            else: # current_stop_id_by_hmm == stops.STOP
+            else: # current_state == tracker_states.STOP
                 stop_id = prev_stops_by_hmm[index_of_oldest_current_state]
                 unix_timestamp = ot_utils.dt_time_to_unix_time(prev_stops_timestamps[index_of_oldest_current_state])
                 
-                #stop_time = cl.zrange("train_tracker:%s:tracked_stops" % (tracker_id), -1, -1, withscores=True)
-                #if len(stop_time) == 0 or stop_time[0][0].split('_')[0] != current_stop_id_by_hmm:
                 arrival_unix_timestamp = unix_timestamp
                 stop_id_and_departure_time = "%s_" % (current_stop_id_by_hmm)
                 update_stop_time(tracker_id, prev_stop_id, arrival_unix_timestamp, stop_id_and_departure_time)
@@ -251,21 +236,24 @@ def try_update_coords(report, tracker_id):
         cl.setex(get_current_trip_id_report_timestamp_key(trip), TRACKER_TTL, ot_utils.dt_time_to_unix_time(report.timestamp))
 
 def try_get_stop_id(report):
-    wifis = [x for x in report.wifi_set.all() if x.SSID == 'S-ISRAEL-RAILWAYS']
-    wifi_stops_ids = set()
-    for wifi in wifis:
-        if bssid_tracker.tracker.has_bssid_high_confidence(wifi.key):
-            stop_id ,_ ,_ = bssid_tracker.tracker.get_stop_id(wifi.key)
-            wifi_stops_ids.add(stop_id)
-    
-    wifi_stops_ids = np.array(list(wifi_stops_ids))
-    
-    # check all wifis show same station:
-    if len(wifi_stops_ids) > 0 and np.all(wifi_stops_ids == wifi_stops_ids[0]):
-        stop_id = wifi_stops_ids[0]
+    if report.is_station():
+        wifis = [x for x in report.wifi_set.all() if x.SSID == 'S-ISRAEL-RAILWAYS']
+        wifi_stops_ids = set()
+        for wifi in wifis:
+            if bssid_tracker.tracker.has_bssid_high_confidence(wifi.key):
+                stop_id ,_ ,_ = bssid_tracker.tracker.get_stop_id(wifi.key)
+                wifi_stops_ids.add(stop_id)
+        
+        wifi_stops_ids = np.array(list(wifi_stops_ids))
+        
+        # check all wifis show same station:
+        if len(wifi_stops_ids) > 0 and np.all(wifi_stops_ids == wifi_stops_ids[0]):
+            stop_id = wifi_stops_ids[0]
+        else:
+            stop_id = None          
     else:
-        stop_id = None
-    
+        stop_id = nostop_id
+           
     return stop_id
 
 def find_index_of_first_consecutive_value(values, start_index):
@@ -459,7 +447,8 @@ def add_report(report):
     add_report_to_tracker(report.device_id, report)
 
 hmm, hmm_non_stop_component_num = setup_hmm()
-tracker_states = enum(INITIAL='initial', NOSTOP='nostop', STOP='stop')
+tracker_states = enum(INITIAL='initial', NOSTOP='nostop', STOP='stop', UNKNOWN='unknown')
+nostop_id = stops.all_stops.id_list[hmm_non_stop_component_num]
 
 cl = get_redis_client()
 p = get_redis_pipeline()

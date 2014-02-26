@@ -48,24 +48,18 @@ class TrackedStopTime(object):
 # relevant_services = services for today. used to filter trips by day
 def get_train_tracker_relevant_services_key(tracker_id):
     return "train_tracker:%s:relevant_services" % (tracker_id)
- 
+
+def get_train_tracker_coords_key(tracker_id):
+    return "train_tracker:%s:coords" % (tracker_id)
+
 def get_train_tracker_visited_shape_sampled_point_ids_key(tracker_id):
     return "train_tracker:%s:visited_shape_sampled_point_ids" % (tracker_id)   
 
 def get_train_tracker_trip_ids_key(tracker_id):
     return "train_tracker:%s:trip_ids" % (tracker_id)
 
-def get_train_tracker_coords_key(tracker_id):
-    return "train_tracker:%s:coords" % (tracker_id)
-
-def get_current_trip_id_coords_key(trip_id):
-    return 'current_trip_id:coords:%s' % (trip_id)
-
-def get_current_trip_id_coords_timestamp_key(trip_id):
-    return 'current_trip_id:coords:%s' % (trip_id)
-
-def get_current_trip_id_report_timestamp_key(trip_id):
-    return 'current_trip_id:report_timestamp:%s' % (trip_id)
+def get_train_tracker_trip_ids_deviation_seconds_key(tracker_id):
+    return "train_tracker:%s:trip_ids_deviation_seconds" % (tracker_id)
 
 def get_train_tracker_current_stop_id_key(tracker_id):
     return "train_tracker:%s:current_stop_id" % (tracker_id)
@@ -76,8 +70,8 @@ def get_train_tracker_timestamp_sorted_stop_ids_key(tracker_id):
 def get_train_tracker_tracked_stops_key(tracker_id):
     return "train_tracker:%s:tracked_stops" % (tracker_id)
 
-def get_train_tracker_trip_ids_deviation_seconds_key(tracker_id):
-    return "train_tracker:%s:trip_ids_deviation_seconds" % (tracker_id)
+def get_train_tracker_tracked_stops_prev_stops_counter_key(tracker_id):
+    return "train_tracker:%s:tracked_stops:prev_stops_counter" % (tracker_id)
 
 def get_train_tracker_prev_stops_counter_key(tracker_id):
     return "train_tracker:%s:prev_stops_counter" % (tracker_id)
@@ -88,8 +82,15 @@ def get_train_tracker_counters_key(tracker_id):
 def get_train_tracker_total_key(tracker_id):
     return "train_tracker:%s:total" % (tracker_id)
 
-def get_train_tracker_tracked_stops_prev_stops_counter_key(tracker_id):
-    return "train_tracker:%s:tracked_stops:prev_stops_counter" % (tracker_id)
+def get_current_trip_id_coords_key(trip_id):
+    return 'current_trip_id:coords:%s' % (trip_id)
+
+def get_current_trip_id_coords_timestamp_key(trip_id):
+    return 'current_trip_id:coords_timestamp:%s' % (trip_id)
+
+def get_current_trip_id_report_timestamp_key(trip_id):
+    return 'current_trip_id:report_timestamp:%s' % (trip_id)
+
 
 def setup_hmm():
     stop_count = len(stops.all_stops)

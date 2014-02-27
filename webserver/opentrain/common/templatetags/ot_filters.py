@@ -1,4 +1,5 @@
 from django import template
+from django.utils.translation import ugettext as _
 
 import common.ot_utils
 
@@ -18,8 +19,8 @@ def denorm_time(t):
 
 @register.filter(name="direction_to_string")
 def direction_to_string(d):
-    if d == 0: return 'Backward'
-    if d == 1: return 'Forward'
+    if d == 0: return _('Backward')
+    if d == 1: return _('Forward')
     return '???'
 
 @register.filter(name="shapes_to_points")
@@ -28,13 +29,12 @@ def shapes_to_points(shapes):
     
 @register.filter(name="truefalse")
 def truefalse(val):
-    return 'true' if val else 'false'
+    return _('true') if val else _('false')
+        
 
-from django.template import Library
 from django.template.defaultfilters import stringfilter
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
-import re
 
 @stringfilter
 def spacify(value, autoescape=None):

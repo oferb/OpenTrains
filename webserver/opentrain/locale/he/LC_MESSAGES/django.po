@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-27 07:29+0200\n"
+"POT-Creation-Date: 2014-02-27 07:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -274,6 +274,22 @@ msgstr "אפליקציה"
 msgid "Alpha version - on your own risk"
 msgstr "גרסת אלפא, על אחריותך"
 
+#: common/templatetags/ot_filters.py:22
+msgid "Backward"
+msgstr "חזור"
+
+#: common/templatetags/ot_filters.py:23
+msgid "Forward"
+msgstr "הלוך"
+
+#: common/templatetags/ot_filters.py:32
+msgid "true"
+msgstr "כן"
+
+#: common/templatetags/ot_filters.py:32
+msgid "false"
+msgstr "לא"
+
 #: gtfs/forms.py:19
 msgid "In Station"
 msgstr "בתחנה"
@@ -349,4 +365,4 @@ msgstr "מגיע"
 
 #: gtfs/templates/gtfs/trip_details.html:8
 msgid "Out"
-msgstr ""
+msgstr "יוצא"

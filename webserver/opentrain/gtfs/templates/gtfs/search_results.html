@@ -5,7 +5,7 @@
 <script src="{% static 'gtfs/js/gtfs.js' %}"></script>
 
 {% if results %}
-<h3>{{results | length }} {% 'results for' %} {{when | nicedate }}</h3>
+<h3>{{results | length }} {% trans 'results for' %} {{when | nicedate }}</h3>
 <button id="trip_details_button_global">
 	Toggle
 </button>
@@ -21,7 +21,7 @@
 			<td>
 			<p class="text-center">
 				<button id="trip_details_button_{{forloop.counter}}">
-					{% %trans 'Toggle' %}
+					{% trans 'Toggle' %}
 				</button>
 				{% trans 'Trip Details' %}
 			</p>

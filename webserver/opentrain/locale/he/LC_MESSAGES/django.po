@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-27 07:23+0200\n"
+"POT-Creation-Date: 2014-02-27 07:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -290,6 +290,10 @@ msgstr "אחרי"
 msgid "When"
 msgstr "מתי"
 
+#: gtfs/templates/gtfs/search_results.html:8
+msgid "results for"
+msgstr "תוצאות עבור"
+
 #: gtfs/templates/gtfs/search_results.html:16
 msgid "Route name"
 msgstr "שם נתיב"
@@ -298,6 +302,10 @@ msgstr "שם נתיב"
 #: gtfs/templates/gtfs/search_results.html:26
 msgid "Trip Details"
 msgstr "פירוט נסיעה"
+
+#: gtfs/templates/gtfs/search_results.html:24
+msgid "Toggle"
+msgstr "החלף"
 
 #: gtfs/templates/gtfs/search_results.html:38
 msgid "Trip Id"
@@ -323,6 +331,10 @@ msgstr "הראה על מפה"
 msgid "Map"
 msgstr "מפה"
 
+#: gtfs/templates/gtfs/search_results.html:69
+msgid "No Results"
+msgstr "אין תוצאות"
+
 #: gtfs/templates/gtfs/trip_details.html:5
 msgid "Seq"
 msgstr "מספר"
@@ -335,3 +347,6 @@ msgstr "שם"
 msgid "In"
 msgstr "מגיע"
 
+#: gtfs/templates/gtfs/trip_details.html:8
+msgid "Out"
+msgstr ""

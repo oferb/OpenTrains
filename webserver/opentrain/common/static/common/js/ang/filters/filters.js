@@ -182,6 +182,11 @@ myFilters.filter('reverse',function() {
 	};
 });
 
+myFilters.filter('trans',function() {
+	return function(w) {
+		return gettext(w);
+	};
+});
 
 
 

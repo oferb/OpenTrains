@@ -81,3 +81,13 @@ ugettext_noop("Thursday")
 ugettext_noop("Friday")
 ugettext_noop("Saturday")
 
+ugettext_noop("Stop")
+ugettext_noop("Arrival")
+ugettext_noop("Departure")
+ugettext_noop("Live")
+
+ugettext_noop('Live Trains');
+ugettext_noop('Simulated');
+ugettext_noop('WIP');
+ugettext_noop('No Trips Now');
+                

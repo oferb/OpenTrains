@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'algorithm',
     'django_extensions',
     'redis_intf',
+    'statici18n'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -116,6 +117,11 @@ TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
 TASTYPIE_DATETIME_FORMATTING = 'rfc-2822'
 
 FAKE_CUR=False
+
+if DEBUG:
+    STATICFILES_DIRS = (
+                        os.path.join(BASE_DIR, "tmp-trans"),
+                        )
 
 # override settings using local_settings.py
 try:

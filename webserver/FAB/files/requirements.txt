@@ -21,3 +21,5 @@ scipy==0.12.0
 simplekml==1.2.3
 six==1.4.1
 wsgiref==0.1.2
+django-statici18n==1.1
+

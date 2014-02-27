@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-27 08:49+0200\n"
+"POT-Creation-Date: 2014-02-27 23:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,7 @@ msgstr "חיפוש בתחנה"
 msgid "Device Reports"
 msgstr "מעקב מכשיר"
 
-#: common/static/common/ot_i18n.py:5
+#: common/static/common/ot_i18n.py:5 common/static/common/ot_i18n.py:89
 msgid "Live Trains"
 msgstr "מפה חיה"
 
@@ -251,7 +251,6 @@ msgid "Rishon LeTsiyyon - Moshe Dayan"
 msgstr "ראשון לציון משה דיין"
 
 #: common/static/common/ot_i18n.py:64
-#, fuzzy
 msgid "Tel Aviv Center - Rishon LeTsiyyon HaRishonim"
 msgstr "ראשון לציון הראשונים"
 
@@ -260,7 +259,6 @@ msgid "Nahariyya - Modiin Center"
 msgstr "נהריה - מודיעין מרכז"
 
 #: common/static/common/ot_i18n.py:66
-#, fuzzy
 msgid "Nahariyya - Be'er Sheva Center"
 msgstr "נהריה - באר שבע מרכז"
 
@@ -320,43 +318,71 @@ msgstr "יום שישי"
 msgid "Saturday"
 msgstr "יום שבת"
 
-#: common/templates/common/base.html:43
+#: common/static/common/ot_i18n.py:84
+msgid "Stop"
+msgstr "תחנה"
+
+#: common/static/common/ot_i18n.py:85
+msgid "Arrival"
+msgstr "הגעה"
+
+#: common/static/common/ot_i18n.py:86
+msgid "Departure"
+msgstr "יציאה"
+
+#: common/static/common/ot_i18n.py:87
+msgid "Live"
+msgstr "חי"
+
+#: common/static/common/ot_i18n.py:90
+msgid "Simulated"
+msgstr "סימולציה"
+
+#: common/static/common/ot_i18n.py:91
+msgid "WIP"
+msgstr "בעבודה"
+
+#: common/static/common/ot_i18n.py:92
+msgid "No Trips Now"
+msgstr "איו נסיעות כרגע"
+
+#: common/templates/common/base.html:44
 msgid "Open Train"
 msgstr "רכבת פתוחה"
 
-#: common/templates/common/base.html:67
+#: common/templates/common/base.html:68
 msgid "From"
 msgstr "מ"
 
-#: common/templates/common/base.html:67
+#: common/templates/common/base.html:68
 msgid "Hackita"
 msgstr "הכיתה - 2014"
 
-#: common/templates/common/base.html:69
+#: common/templates/common/base.html:70
 msgid "Download the"
 msgstr "הורד את ה"
 
-#: common/templates/common/base.html:69
+#: common/templates/common/base.html:70
 msgid "app"
 msgstr "אפליקציה"
 
-#: common/templates/common/base.html:69
+#: common/templates/common/base.html:70
 msgid "Alpha version - on your own risk"
 msgstr "גרסת אלפא, על אחריותך"
 
-#: common/templatetags/ot_filters.py:22
+#: common/templatetags/ot_filters.py:24
 msgid "Backward"
 msgstr "חזור"
 
-#: common/templatetags/ot_filters.py:23
+#: common/templatetags/ot_filters.py:25
 msgid "Forward"
 msgstr "הלוך"
 
-#: common/templatetags/ot_filters.py:32
+#: common/templatetags/ot_filters.py:34
 msgid "true"
 msgstr "כן"
 
-#: common/templatetags/ot_filters.py:32
+#: common/templatetags/ot_filters.py:34
 msgid "false"
 msgstr "לא"
 

@@ -97,6 +97,7 @@ def update_git():
     with cd(env.django_base_dir):
         run('python manage.py collectstatic --noinput')
         run('python manage.py compilemessages')
+        run('python manage.py compilejsi18n -l he -d django')
     
            
 @task

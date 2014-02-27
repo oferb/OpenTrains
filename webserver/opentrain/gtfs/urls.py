@@ -13,3 +13,5 @@ urlpatterns = patterns('',
     url(r'^api/trips/(?P<trip_id>\w+)/$',views.get_trip_details),
 )
 
+
+

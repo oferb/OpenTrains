@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-28 00:24+0200\n"
+"POT-Creation-Date: 2014-02-28 00:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: analysis/forms.py:52
+msgid "Report ID"
+msgstr "מזהה דיווח"
+
+#: analysis/templates/analysis/report_details.html:6
+#: common/static/common/ot_i18n.py:6
+msgid "Report Details"
+msgstr "פירוט דיווח"
 
 #: analysis/templates/analysis/report_details.html:17
 msgid "General"
@@ -82,10 +91,6 @@ msgstr "מעקב מכשיר"
 #: common/static/common/ot_i18n.py:5 common/static/common/ot_i18n.py:89
 msgid "Live Trains"
 msgstr "מפה חיה"
-
-#: common/static/common/ot_i18n.py:6
-msgid "Report Details"
-msgstr "פירוט דיווח"
 
 #: common/static/common/ot_i18n.py:7 common/static/common/ot_i18n.py:14
 msgid "Akko"

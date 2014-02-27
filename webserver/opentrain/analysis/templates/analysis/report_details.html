@@ -1,6 +1,7 @@
 {% extends 'common/base.html' %}
 {% load staticfiles %}
 {% load i18n %}
+{% load ot_filters %}
 {% block content %}
 <div class="container">
     <h2>{% trans 'Report Details' %}</h2>
@@ -21,20 +22,14 @@
     		</tr>
     		<tr>
 	    		<td>{% trans 'Timestamp' %}</td>
-	    		<td><span id="report_ts"></span></td>
-	    		<script>
-	    			$("#report_ts").html(toLocalDt(new Date("{{report.timestamp.isoformat}}")));
-	    		</script>
+	    		<td>{{ report.timestamp | nicedate | safe }}</td>
     		</tr>
     	</table>
     	<table class="table">
     		<caption class="pull-left">{% trans 'Location' %}</caption>
     		<tr>
     			<td class="col-md-3">{% trans 'Timestamp' %}</td>
-    			<td><span id="my_loc_ts"></span></td>
-    			<script>
-	    			$("#my_loc_ts").html(toLocalDt(new Date("{{report.my_loc.timestamp.isoformat}}")));
-	    		</script>
+    			<td>{{ report.my_loc.timestamp | nicedate | safe }}</td>
     		</tr>
     		<tr>
     			<td class="col-md-3">{% trans 'Timestamp Delta' %}</td>

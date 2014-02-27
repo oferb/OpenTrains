@@ -11,9 +11,11 @@ def week_day(dt):
 
 @register.filter(name="nicedate")
 def nice_date(dt):
+    import uuid
+    elemid = 'elem_%s' % (unicode(uuid.uuid4())).replace('-','')
     return '''
         <span id="%(elemid)s"></span><script>$("#%(elemid)s").html(new Date("%(isod)s").toLocaleString("he-il"))</script>
-        '''  % dict(elemid='trans123',isod=dt.isoformat())
+        '''  % dict(elemid=elemid,isod=dt.isoformat())
         
 @register.filter(name="denorm_time")
 def denorm_time(t):

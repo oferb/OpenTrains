@@ -1,39 +1,38 @@
 <div class="row">
 	<div class="col-md-3">
-		<h2>Search Reports</h2>
+		<h2>{{ 'Search Reports' | trans }}</h2>
 		<form class="form" method="post" role="form" ng-submit="redirectToReports()">
 			<select ng-options="getDeviceTitle(device) for device in devices" ng-model="input.selectedDevice"></select>
 			<button type="submit" class="btn btn-success btn-sm">
 				<span class="glyphicon glyphicon-search"></span>
 			</button>
 			<button type="button" ng-show="reportsStatus == 'done' && !liveMode" class="btn btn-success btn-sm" ng-click="goLive()">
-				Go Live
+				{{ 'Go Live' | trans }}
 			</button>
 			<button type="button" ng-show="reportsStatus == 'done' && liveMode" class="btn btn-danger btn-sm" ng-click="stopLive()">
-				Stop Live
+				{{ 'Stop Live' | trans }}
 			</button>
 			<span ng-show="reportsStatus == 'done' && liveMode">
 			<label>
 				<input type="checkbox"  ng-model="input.autoZoom">
-				auto zoom
+				{{ 'auto zoom' | trans }}
 			</label>
 			</span>
 		</form>
 		<br/>
 		<div class="well" ng-show="reportsStatus == 'wip'">
-			Please wait. Loading Reports, will take some time....
+			{{ 'Please wait. Loading Reports, will take some time...' | trans }}
 		</div>
 		<div class="well" ng-if="reportsStatus == 'done'">
 			<p>
-				Map for device id <b>{{input.selectedDevice.device_id}}</b>
+				{{ 'Map for device id' | trans }} <b>{{input.selectedDevice.device_id}}</b>
 			</p>
 			<p>
-				Total # of reports (with loc): {{reports.length}}
+				{{ 'Total # of reports (with loc)' | trans }} : {{reports.length}}
 			</p>
 			<p>
-				From {{reports[0].timestamp | date:'HH:mm:ss' }} <br/>
-				to {{reports[reports.length-1].timestamp | parseDate | date:'HH:mm:ss' }} <br/>
-				on {{reports[0].timestamp | date:'dd-MMM-yyyy'}}
+				{{ 'From' | trans }} {{reports[0].timestamp | date:'HH:mm:ss' }} {{ 'to' | trans }} {{reports[reports.length-1].timestamp | parseDate | date:'HH:mm:ss' }} <br/>
+				{{ 'on' | trans }} {{reports[0].timestamp | date:'dd-MMM-yyyy'}}
 			</p>
 			<p>
 				

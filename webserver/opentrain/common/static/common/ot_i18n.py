@@ -90,4 +90,15 @@ ugettext_noop('Live Trains');
 ugettext_noop('Simulated');
 ugettext_noop('WIP');
 ugettext_noop('No Trips Now');
-                
+
+ugettext_noop("Total # of reports (with loc)")
+ugettext_noop("to")
+ugettext_noop("on")
+ugettext_noop("Search Reports")
+ugettext_noop("Go Live")
+ugettext_noop("Stop Live")
+ugettext_noop("auto zoom")
+ugettext_noop("Please wait. Loading Reports, will take some time...")
+ugettext_noop("Map for device id")
+ugettext_noop("Total # of reports (with loc)")
+

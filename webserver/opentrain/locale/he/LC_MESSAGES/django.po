@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-28 00:32+0200\n"
+"POT-Creation-Date: 2014-02-28 00:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,61 +22,61 @@ msgstr ""
 msgid "Report ID"
 msgstr "מזהה דיווח"
 
-#: analysis/templates/analysis/report_details.html:6
+#: analysis/templates/analysis/report_details.html:7
 #: common/static/common/ot_i18n.py:6
 msgid "Report Details"
 msgstr "פירוט דיווח"
 
-#: analysis/templates/analysis/report_details.html:17
+#: analysis/templates/analysis/report_details.html:18
 msgid "General"
 msgstr "כללי"
 
-#: analysis/templates/analysis/report_details.html:19
+#: analysis/templates/analysis/report_details.html:20
 msgid "ID"
 msgstr "מזהה"
 
-#: analysis/templates/analysis/report_details.html:23
-#: analysis/templates/analysis/report_details.html:33
+#: analysis/templates/analysis/report_details.html:24
+#: analysis/templates/analysis/report_details.html:31
 msgid "Timestamp"
 msgstr "חותמת זמן"
 
-#: analysis/templates/analysis/report_details.html:31
+#: analysis/templates/analysis/report_details.html:29
 msgid "Location"
 msgstr "מיקום"
 
-#: analysis/templates/analysis/report_details.html:40
+#: analysis/templates/analysis/report_details.html:35
 msgid "Timestamp Delta"
 msgstr "הפרש חותמות זמן"
 
-#: analysis/templates/analysis/report_details.html:41
+#: analysis/templates/analysis/report_details.html:36
 msgid "seconds"
 msgstr "שניות"
 
-#: analysis/templates/analysis/report_details.html:44
+#: analysis/templates/analysis/report_details.html:39
 msgid "Accuracy"
 msgstr "דיוק"
 
-#: analysis/templates/analysis/report_details.html:48
+#: analysis/templates/analysis/report_details.html:43
 msgid "Lon/Lat"
 msgstr "אורך/רוחב"
 
-#: analysis/templates/analysis/report_details.html:52
+#: analysis/templates/analysis/report_details.html:47
 msgid "Provider"
 msgstr "ספק"
 
-#: analysis/templates/analysis/report_details.html:61
+#: analysis/templates/analysis/report_details.html:56
 msgid "SSID"
 msgstr "מזהה רשת"
 
-#: analysis/templates/analysis/report_details.html:65
+#: analysis/templates/analysis/report_details.html:60
 msgid "key"
 msgstr "מפתח"
 
-#: analysis/templates/analysis/report_details.html:69
+#: analysis/templates/analysis/report_details.html:64
 msgid "Signal"
 msgstr "אות"
 
-#: analysis/templates/analysis/report_details.html:73
+#: analysis/templates/analysis/report_details.html:68
 msgid "Frequency"
 msgstr "תדירות"
 
@@ -404,6 +404,42 @@ msgstr "בעבודה"
 msgid "No Trips Now"
 msgstr "איו נסיעות כרגע"
 
+#: common/static/common/ot_i18n.py:94 common/static/common/ot_i18n.py:103
+msgid "Total # of reports (with loc)"
+msgstr "מספר דיווחים (עם מיקום)"
+
+#: common/static/common/ot_i18n.py:95
+msgid "to"
+msgstr "ל"
+
+#: common/static/common/ot_i18n.py:96
+msgid "on"
+msgstr "ב"
+
+#: common/static/common/ot_i18n.py:97
+msgid "Search Reports"
+msgstr "חפש דיווחים"
+
+#: common/static/common/ot_i18n.py:98
+msgid "Go Live"
+msgstr "מעקב חי"
+
+#: common/static/common/ot_i18n.py:99
+msgid "Stop Live"
+msgstr "הפסק מעקב חי"
+
+#: common/static/common/ot_i18n.py:100
+msgid "auto zoom"
+msgstr "אוטו-זום"
+
+#: common/static/common/ot_i18n.py:101
+msgid "Please wait. Loading Reports, will take some time..."
+msgstr "נא המתן. טוען דיווחים, עשוי לקחת זמן מה..."
+
+#: common/static/common/ot_i18n.py:102
+msgid "Map for device id"
+msgstr "מפה עבור מזהה התקן"
+
 #: common/templates/common/base.html:44
 msgid "Open Train"
 msgstr "רכבת פתוחה"
@@ -428,19 +464,19 @@ msgstr "אפליקציה"
 msgid "Alpha version - on your own risk"
 msgstr "גרסת אלפא, על אחריותך"
 
-#: common/templatetags/ot_filters.py:24
+#: common/templatetags/ot_filters.py:26
 msgid "Backward"
 msgstr "חזור"
 
-#: common/templatetags/ot_filters.py:25
+#: common/templatetags/ot_filters.py:27
 msgid "Forward"
 msgstr "הלוך"
 
-#: common/templatetags/ot_filters.py:34
+#: common/templatetags/ot_filters.py:36
 msgid "true"
 msgstr "כן"
 
-#: common/templatetags/ot_filters.py:34
+#: common/templatetags/ot_filters.py:36
 msgid "false"
 msgstr "לא"
 

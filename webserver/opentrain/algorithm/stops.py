@@ -59,7 +59,7 @@ class StopList(dict):
     def query_stops(self, coords, accuracies)   :
         
         res_coord_int_ids = query_coords(self.point_tree, coords, accuracies)    
-        res_coord_ids = [self.id_list[i] for i in res_coord_int_ids]
+        res_coord_ids = [self.id_list[i[0]] if i else NOSTOP for i in res_coord_int_ids]
         return res_coord_ids
 
 

@@ -29,6 +29,18 @@ class Report(models.Model):
         timestamp = timestamp.replace(microsecond=0)
         return timestamp
     
+    def get_my_loc(self):
+        if self.pk:
+            return self.my_loc
+        else:
+            return self.my_loc_mock
+
+    def get_wifi_set(self):
+        if self.pk:
+            return self.wifi_set
+        else:
+            return self.wifi_set_mock
+   
 class LocationInfo(models.Model):
     report = models.OneToOneField(Report,related_name='my_loc')
     accuracy = models.FloatField()

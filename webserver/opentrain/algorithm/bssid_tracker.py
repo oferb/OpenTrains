@@ -23,8 +23,8 @@ class BSSIDTracker(object):
         self.wifis_near_two_or_more_stations = deque(maxlen=100) 
     
     def add(self, report):
-        if report.loc_ts_delta() < config.stop_discovery_location_timeout_seconds:
-            pass
+        if not hasattr(report, 'my_loc') or report.loc_ts_delta() > config.stop_discovery_location_timeout_seconds:
+            return
         
         wifis = [x for x in report.wifi_set.all() if x.SSID == 'S-ISRAEL-RAILWAYS']
         if len(wifis) > 0:

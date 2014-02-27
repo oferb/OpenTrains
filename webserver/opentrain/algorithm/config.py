@@ -6,6 +6,10 @@ def set_config(base_dir):
     config.base = base_dir
     config.temp_data = os.path.join(config.base, 'tmp_data')
     
+    #general
+    config.STATION_SSID = 'S-ISRAEL-RAILWAYS'
+    config.TRAIN_SSID = 'ISRAEL-RAILWAYS'
+    
     # gtfs
     config.gtfs = os.path.join(config.temp_data, 'gtfs')
     config.gtfs_raw_data = os.path.join(config.gtfs, 'data')

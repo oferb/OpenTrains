@@ -106,9 +106,6 @@ def denormalize_time_to_string(value):
 def get_weekdayname(dt):
     return dt.strftime('%A')
     
-def format_date(dt):
-    return dt.strftime('%A, %b %d, %Y, %H:%M')
-
 def get_utc_time_from_timestamp(ts):
     return datetime.datetime.utcfromtimestamp(ts).replace(tzinfo=timezone.utc)
     

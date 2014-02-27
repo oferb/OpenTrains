@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-27 08:39+0200\n"
+"POT-Creation-Date: 2014-02-27 08:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -291,6 +291,34 @@ msgstr "הוד השרון - אשקלון"
 #: common/static/common/ot_i18n.py:73
 msgid "Hertsliyya - Be'er Sheva Center"
 msgstr "הרצליה - באר שבע מרכז"
+
+#: common/static/common/ot_i18n.py:76
+msgid "Sunday"
+msgstr "יום ראשון"
+
+#: common/static/common/ot_i18n.py:77
+msgid "Monday"
+msgstr "יום שני"
+
+#: common/static/common/ot_i18n.py:78
+msgid "Tuesday"
+msgstr "יום שלישי"
+
+#: common/static/common/ot_i18n.py:79
+msgid "Wendesay"
+msgstr "יום רביעי"
+
+#: common/static/common/ot_i18n.py:80
+msgid "Thursday"
+msgstr "יום חמישי"
+
+#: common/static/common/ot_i18n.py:81
+msgid "Friday"
+msgstr "יום שישי"
+
+#: common/static/common/ot_i18n.py:82
+msgid "Saturday"
+msgstr "יום שבת"
 
 #: common/templates/common/base.html:43
 msgid "Open Train"

@@ -7,12 +7,14 @@ register = template.Library()
 
 @register.filter(name="weekday")
 def week_day(dt):
-    return common.ot_utils.get_weekdayname(dt)
+    return _(common.ot_utils.get_weekdayname(dt))
 
 @register.filter(name="nicedate")
 def nice_date(dt):
-    return common.ot_utils.format_date(dt)
-
+    return '''
+        <span id="%(elemid)s"></span><script>$("#%(elemid)s").html(new Date("%(isod)s").toLocaleString("he-il"))</script>
+        '''  % dict(elemid='trans123',isod=dt.isoformat())
+        
 @register.filter(name="denorm_time")
 def denorm_time(t):
     return common.ot_utils.denormalize_time_to_string(t)

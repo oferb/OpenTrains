@@ -72,3 +72,12 @@ ugettext_noop("Be'er Sheva North University - Dimona")
 ugettext_noop("Hod HaSharon - Ashkelon")
 ugettext_noop("Hertsliyya - Be'er Sheva Center")
 
+# days
+ugettext_noop("Sunday")
+ugettext_noop("Monday")
+ugettext_noop("Tuesday")
+ugettext_noop("Wendesay")
+ugettext_noop("Thursday")
+ugettext_noop("Friday")
+ugettext_noop("Saturday")
+

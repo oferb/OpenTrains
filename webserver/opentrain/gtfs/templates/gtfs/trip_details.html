@@ -2,10 +2,10 @@
 {% load i18n %}
 <table>
 	<tr>
-		<td>Seq</td>
-		<td>Name</td>
-		<td>In</td>
-		<td>Out</td>
+		<td>{% trans 'Seq' %}</td>
+		<td>{% trans 'Name' %}</td>
+		<td>{% trans 'In' %}</td>
+		<td>{% tarans 'Out' %}</td>
 	</tr>
 	{%for stop_time in trip.get_stop_times%}
 	<tr>

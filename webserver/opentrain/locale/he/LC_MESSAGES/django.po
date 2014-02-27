@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-27 07:34+0200\n"
+"POT-Creation-Date: 2014-02-27 08:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -249,6 +249,48 @@ msgstr "שדרות"
 #: common/static/common/ot_i18n.py:61
 msgid "Rishon LeTsiyyon - Moshe Dayan"
 msgstr "ראשון לציון משה דיין"
+
+#: common/static/common/ot_i18n.py:64
+#, fuzzy
+msgid "Tel Aviv Center - Rishon LeTsiyyon HaRishonim"
+msgstr "ראשון לציון הראשונים"
+
+#: common/static/common/ot_i18n.py:65
+msgid "Nahariyya - Modiin Center"
+msgstr "נהריה - מודיעין מרכז"
+
+#: common/static/common/ot_i18n.py:66
+#, fuzzy
+msgid "Nahariyya - Be'er Sheva Center"
+msgstr "נהריה - באר שבע מרכז"
+
+#: common/static/common/ot_i18n.py:67
+msgid "Binyamina - Ashkelon"
+msgstr "בנימיניה - אשקלון"
+
+#: common/static/common/ot_i18n.py:68
+msgid "Nahariyya - Ben Gurion Airport -Be'er Sheva Center"
+msgstr "נהריה- נתבג - באר שבע מרכז"
+
+#: common/static/common/ot_i18n.py:69
+msgid "Kiryat Motzkin - Haifa Hof HaKarmel (Razi'el)"
+msgstr "חיפה חוף הכרמל - קרית מוצקין"
+
+#: common/static/common/ot_i18n.py:70
+msgid "Tel Aviv Center - Savidor - Jerusalem Malha"
+msgstr "תל אביב מרכז סבידור - ירושלים מלחה"
+
+#: common/static/common/ot_i18n.py:71
+msgid "Be'er Sheva North University - Dimona"
+msgstr "באר שבע צפון אוניברסיטה - דימונה"
+
+#: common/static/common/ot_i18n.py:72
+msgid "Hod HaSharon - Ashkelon"
+msgstr "הוד השרון - אשקלון"
+
+#: common/static/common/ot_i18n.py:73
+msgid "Hertsliyya - Be'er Sheva Center"
+msgstr "הרצליה - באר שבע מרכז"
 
 #: common/templates/common/base.html:43
 msgid "Open Train"

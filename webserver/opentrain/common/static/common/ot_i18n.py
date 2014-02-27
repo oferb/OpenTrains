@@ -60,3 +60,15 @@ ugettext_noop("Hod HaSharon")
 ugettext_noop("Sderot")
 ugettext_noop("Rishon LeTsiyyon - Moshe Dayan")
 
+# routes
+ugettext_noop("Tel Aviv Center - Rishon LeTsiyyon HaRishonim")
+ugettext_noop("Nahariyya - Modiin Center")
+ugettext_noop("Nahariyya - Be'er Sheva Center")
+ugettext_noop("Binyamina - Ashkelon")
+ugettext_noop("Nahariyya - Ben Gurion Airport -Be'er Sheva Center")
+ugettext_noop("Kiryat Motzkin - Haifa Hof HaKarmel (Razi'el)")
+ugettext_noop("Tel Aviv Center - Savidor - Jerusalem Malha")
+ugettext_noop("Be'er Sheva North University - Dimona")
+ugettext_noop("Hod HaSharon - Ashkelon")
+ugettext_noop("Hertsliyya - Be'er Sheva Center")
+

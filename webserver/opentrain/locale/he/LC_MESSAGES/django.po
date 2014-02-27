@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-27 23:08+0200\n"
+"POT-Creation-Date: 2014-02-28 00:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,59 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: analysis/templates/analysis/report_details.html:17
+msgid "General"
+msgstr "כללי"
+
+#: analysis/templates/analysis/report_details.html:19
+msgid "ID"
+msgstr "מזהה"
+
+#: analysis/templates/analysis/report_details.html:23
+#: analysis/templates/analysis/report_details.html:33
+msgid "Timestamp"
+msgstr "חותמת זמן"
+
+#: analysis/templates/analysis/report_details.html:31
+msgid "Location"
+msgstr "מיקום"
+
+#: analysis/templates/analysis/report_details.html:40
+msgid "Timestamp Delta"
+msgstr "הפרש חותמות זמן"
+
+#: analysis/templates/analysis/report_details.html:41
+msgid "seconds"
+msgstr "שניות"
+
+#: analysis/templates/analysis/report_details.html:44
+msgid "Accuracy"
+msgstr "דיוק"
+
+#: analysis/templates/analysis/report_details.html:48
+msgid "Lon/Lat"
+msgstr "אורך/רוחב"
+
+#: analysis/templates/analysis/report_details.html:52
+msgid "Provider"
+msgstr "ספק"
+
+#: analysis/templates/analysis/report_details.html:61
+msgid "SSID"
+msgstr "מזהה רשת"
+
+#: analysis/templates/analysis/report_details.html:65
+msgid "key"
+msgstr "מפתח"
+
+#: analysis/templates/analysis/report_details.html:69
+msgid "Signal"
+msgstr "אות"
+
+#: analysis/templates/analysis/report_details.html:73
+msgid "Frequency"
+msgstr "תדירות"
 
 #: common/static/common/ot_i18n.py:3
 msgid "Search In"

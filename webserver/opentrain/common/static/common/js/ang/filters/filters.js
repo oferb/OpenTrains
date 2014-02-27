@@ -184,7 +184,11 @@ myFilters.filter('reverse',function() {
 
 myFilters.filter('trans',function() {
 	return function(w) {
-		return gettext(w);
+		var res = gettext(w);
+		if (res == w) {
+			console.log('ugettext_noop("' + res + '")');
+		}
+		return res;
 	};
 });
 

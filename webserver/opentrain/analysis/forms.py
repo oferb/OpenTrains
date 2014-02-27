@@ -1,5 +1,6 @@
 from django import forms
 from bootstrap3_datetime.widgets import DateTimePicker
+from django.utils.translation import ugettext_lazy as _
 
 def get_labels():
     import models
@@ -48,7 +49,7 @@ class ReportsForm(forms.Form):
 
     
 class ReportDetailForm(forms.Form):
-    report_id = forms.CharField(max_length=20,label='Report ID')
+    report_id = forms.CharField(max_length=20,label=_('Report ID'))
     def clean_report_id(self):
         import models
         data = self.cleaned_data['report_id']

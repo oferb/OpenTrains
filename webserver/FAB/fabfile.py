@@ -95,6 +95,7 @@ def update_git():
 
     # collect static / compile translations
     with cd(env.django_base_dir):
+        run('mkdir -p tmp-trans') # fake folder for debug
         run('python manage.py collectstatic --noinput')
         run('python manage.py compilemessages')
         run('python manage.py compilejsi18n -l he -d django')

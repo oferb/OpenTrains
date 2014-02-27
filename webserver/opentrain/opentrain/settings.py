@@ -118,17 +118,16 @@ TASTYPIE_DATETIME_FORMATTING = 'rfc-2822'
 
 FAKE_CUR=False
 
-if DEBUG:
-    STATICFILES_DIRS = (
-                        os.path.join(BASE_DIR, "tmp-trans"),
-                        )
-
 # override settings using local_settings.py
 try:
     from local_settings import *
 except ImportError:
     pass
 
+if DEBUG:
+    STATICFILES_DIRS = (
+                        os.path.join(BASE_DIR, "tmp-trans"),
+                        )
 
 
 

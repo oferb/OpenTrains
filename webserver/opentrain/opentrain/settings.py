@@ -47,7 +47,8 @@ INSTALLED_APPS = (
     'algorithm',
     'django_extensions',
     'redis_intf',
-    'statici18n'
+    'statici18n',
+    'south',
 )
 
 MIDDLEWARE_CLASSES = (

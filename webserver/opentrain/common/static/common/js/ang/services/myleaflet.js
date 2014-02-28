@@ -29,9 +29,9 @@ function(MyUtils) {
 			var trip_pt = is_cur ? trip.cur_point : trip.exp_point;
 			if (!trip_pt) {
 				return null;
-			} 
-			var text = tripData.stop_times[0].stop.stop_name + ' to ' + tripData.stop_times[tripData.stop_times.length-1].stop.stop_name;
-			var title = (is_cur ? 'cur ' : 'exp ') +  '@ ' + tripData.stop_times[0].stop.stop_name + ' to ' + tripData.stop_times[tripData.stop_times.length-1].stop.stop_name;
+			}
+			var title = '<b>' + (is_cur ? gettext('cur') : gettext('exp')) +  '</b> @ ' + gettext(tripData.stop_times[0].stop.stop_name) 
+			+ ' ' + gettext('to') + ' ' + gettext(tripData.stop_times[tripData.stop_times.length-1].stop.stop_name);
 			var icon = is_cur ? this.curIcon : this.expIcon;
 			return L.marker(trip_pt,{
 					icon : icon,
@@ -51,7 +51,7 @@ function(MyUtils) {
 			var that = this;
 			var result = [];
 			stops.forEach(function(stop) {
-				var text = stop.stop_name;
+				var text = gettext(stop.stop_name);
 				var pt = stop.latlon;
 				var marker = L.marker(pt, {
 					icon : that.trainIcon

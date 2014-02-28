@@ -21,7 +21,7 @@ def get_device_ids_summary():
     tuples = cursor.fetchall()
     for t in tuples:
         tuple_id = '%s::::%s:%s:%s' % (t[0],t[1].year,t[1].month,t[1])
-        tuple_print = '%s @%s (%d)' % t
+        tuple_print = '%s @%s [%d]' % t
         result.append((tuple_id,tuple_print))
     return result
         

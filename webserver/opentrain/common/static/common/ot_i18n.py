@@ -102,3 +102,5 @@ ugettext_noop("Please wait. Loading Reports, will take some time...")
 ugettext_noop("Map for device id")
 ugettext_noop("Total # of reports (with loc)")
 
+ugettext_noop('cur')
+ugettext_noop('exp')

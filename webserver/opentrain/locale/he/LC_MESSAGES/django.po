@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-28 00:50+0200\n"
+"POT-Creation-Date: 2014-02-28 08:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -439,6 +439,14 @@ msgstr "נא המתן. טוען דיווחים, עשוי לקחת זמן מה...
 #: common/static/common/ot_i18n.py:102
 msgid "Map for device id"
 msgstr "מפה עבור מזהה התקן"
+
+#: common/static/common/ot_i18n.py:105
+msgid "cur"
+msgstr "נוכחי"
+
+#: common/static/common/ot_i18n.py:106
+msgid "exp"
+msgstr "צפוי"
 
 #: common/templates/common/base.html:44
 msgid "Open Train"

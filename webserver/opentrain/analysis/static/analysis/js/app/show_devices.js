@@ -123,7 +123,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		});
 	};
 	$scope.getDeviceTitle = function(device) {
-		return device.device_id + ' @' + device.device_date + ' (' + device.device_count + ')';
+		return device.device_id + '@' + new Date(device.device_date).toLocaleDateString('he') + ' ' + device.device_count;
 	};
 	
 	$scope.resizeMap = function() {

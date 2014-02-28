@@ -10,7 +10,7 @@ function MapWrapper() {
 		var marker = L.marker([stop.lat, stop.lon], {
 			icon : this.trainIcon
 		}).addTo(this.map);
-		var popup = marker.bindPopup('(' + stop.seqId + ') ' + stop.name + "<br/>@" + stop.time);
+		var popup = marker.bindPopup('(' + stop.seqId + ') ' + gettext(stop.name) + "<br/>@" + stop.time);
 		if (stop.stopId == this.zoomStopId) {
 			popup.openPopup();
 		}

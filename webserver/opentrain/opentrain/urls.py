@@ -19,7 +19,7 @@ urlpatterns = patterns('',
     url(r'^reports/',include('reports.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^analysis/',include('analysis.urls',namespace='analysis')),
-    url(r'^api/',include('ot_api.urls',namespace='ot_api')),
+    url(r'^api/1/',include('ot_api.urls',namespace='ot_api')),
     url(r'^api2/', include(tp.urls)),
     url(r'^static/jsi18n/he/django.js$', 'gtfs.views.home'),
 )

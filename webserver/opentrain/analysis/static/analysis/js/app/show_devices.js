@@ -40,7 +40,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	};
 
 	$scope.loadDeviceList = function(device_id) {
-		MyHttp.get('/api/v1/devices/?limit=100').success(function(data) {
+		MyHttp.get('/api2/v1/devices/?limit=100').success(function(data) {
 			$scope.devices = data.objects;
 			var found = false;
 			$scope.devices.forEach(function(d) {
@@ -65,7 +65,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	$scope.loadLiveReports = function() {
 		var curId = $scope.input.selectedDevice.device_id;
 		var last_report_id = $scope.reports.length > 0 ? $scope.reports[$scope.reports.length - 1].id : 0;
-		var url = '/api/v1/reports-loc/?device_id=' + curId + '&limit=200&id__gt=' + last_report_id;
+		var url = '/api2/v1/reports-loc/?device_id=' + curId + '&limit=200&id__gt=' + last_report_id;
 		$scope.appendReportsRec(url);
 	};
 	$scope.loadReports = function() {
@@ -73,7 +73,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		var curId = $scope.input.selectedDevice.device_id;
 		$scope.reports = [];
 		$scope.lastShownReportIndex = -1;
-		var url = '/api/v1/reports-loc/?device_id=' + curId + '&limit=200';
+		var url = '/api2/v1/reports-loc/?device_id=' + curId + '&limit=200';
 		$scope.appendReportsRec(url);
 	};
 

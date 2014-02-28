@@ -31,42 +31,9 @@ class ReportLocResource(ModelResource):
         resource_name = "reports-loc"
         ordering = 'id'
         filtering = {'device_id' : ALL, 'id' : ALL_WITH_RELATIONS}
-
-
-class DeviceResource(Resource):
-    device_id = fields.CharField(attribute='device_id')
-    device_date = fields.DateTimeField(attribute='device_date')
-    device_count = fields.IntegerField(attribute='device_count')
-    
-    class Meta:
-        resource_name = 'devices'
-        object_class = logic.DeviceObject
-    
-    def detail_uri_kwargs(self, bundle_or_obj):
-        kwargs = {}
-        if isinstance(bundle_or_obj, Bundle):
-            kwargs['pk'] = bundle_or_obj.obj.device_id
-        else:
-            kwargs['pk'] = bundle_or_obj.device_id
-
-        return kwargs
-
-    def get_object_list(self, request):
-        return logic.get_devices_summary()
-
-    def obj_get_list(self, bundle, **kwargs):
-        # Filtering disabled for brevity...
-        return self.get_object_list(bundle.request)
-
-    def obj_get(self, bundle, **kwargs):
-        objects = self.get_object_list(bundle.request)
-        for obj in objects:
-            if obj.device_id == kwargs['pk']:
-                return obj
-                                    
+                                
 def register_all(tp):
     tp.register(ReportResource())
     tp.register(ReportLocResource())
-    tp.register(DeviceResource())
     
     

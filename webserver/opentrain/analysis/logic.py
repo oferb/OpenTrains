@@ -95,20 +95,24 @@ def get_devices_summary():
     tuples = cursor.fetchall()
     result = []
     for t in tuples:
-        d = DeviceObject(device_id=t[0],
-                         device_date=t[1],
-                         device_count=t[2])
+        d = dict(device_id=t[0],
+                device_date=t[1].isoformat(),
+                device_count=t[2])
         result.append(d)
     return result
 
-class DeviceObject(object):
-    def __init__(self,device_id=None,device_date=None,device_count=None):
-        self.device_id = device_id
-        self.device_date = device_date
-        self.device_count = device_count
+def get_device_reports(device_id,info):
+    qs = models.Report.objects.order_by('id').filter(my_loc__isnull=False,
+                                                     id__gte=info['since_id'],
+                                                     device_id=device_id).prefetch_related('my_loc','wifi_set')
+    info['total_count'] = qs.count()
+    qs = qs[info['offset']:info['offset'] + info['limit']]
+    result = []
+    for obj in qs:
+        result.append(obj.to_api_dict())
+    return result
 
-    
-## CUR TRIPS ##
+## CUR TRIPS #
     
 class TripLocationObject(object):
     def __init__(self,trip_id=None,cur_point=None,exp_point=None,timestamp=None):
@@ -165,7 +169,6 @@ def get_live_trips(dt=None):
 def get_current_location(trip):
     from redis_intf.client import load_by_key
     return load_by_key('current_trip_id:coords:%s' % (trip.trip_id))
-
 
 
 

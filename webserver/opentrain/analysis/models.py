@@ -51,10 +51,6 @@ class SingleWifiReport(models.Model):
     def __unicode__(self):
         return self.SSID
     
-class AnalysisMarker(models.Model):
-    label = models.CharField(max_length=30)
-    text = models.TextField()
-    lat = models.CharField(max_length=10)
-    lon = models.CharField(max_length=10)
+
     
     

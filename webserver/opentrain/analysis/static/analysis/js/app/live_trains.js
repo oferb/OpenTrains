@@ -62,7 +62,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		});
 	};
 	$scope.loadTripData = function(trip_id, is_initial) {
-		MyHttp.get('/gtfs/api/trips/' + trip_id + '/').success(function(data) {
+		MyHttp.get('/api/1/trips/' + trip_id + '/').success(function(data) {
 			$scope.tripDatas[trip_id] = data;
 			$scope.drawTripData(trip_id, is_initial);
 		});

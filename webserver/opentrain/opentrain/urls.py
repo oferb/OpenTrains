@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.views.generic.base import RedirectView
-from django.conf import settings
 admin.autodiscover()
 
 from tastypie.api import Api
@@ -20,7 +19,8 @@ urlpatterns = patterns('',
     url(r'^reports/',include('reports.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^analysis/',include('analysis.urls',namespace='analysis')),
-    url(r'^api/', include(tp.urls)),
+    url(r'^api/',include('ot_api.urls',namespace='ot_api')),
+    url(r'^api2/', include(tp.urls)),
     url(r'^static/jsi18n/he/django.js$', 'gtfs.views.home'),
 )
 

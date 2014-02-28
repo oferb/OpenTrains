@@ -20,7 +20,6 @@ function MapWrapper() {
 		reports.forEach(function(r) {
 			points.push([r.loc.lat, r.loc.lon]);
 		});
-		console.log(points.length);
 		var that = this;
 		var polyline = this.createLineAndZoom(points, {
 			color : '#0000CD',

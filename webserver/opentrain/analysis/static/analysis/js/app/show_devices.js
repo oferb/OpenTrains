@@ -79,7 +79,6 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 
 	$scope.appendReportsRec = function(url) {
 		MyHttp.get(url).success(function(data) {
-			console.log('GOT ' + data.objects.length);
 			$scope.reports.push.apply($scope.reports, data.objects);
 			if (data.meta.next) {
 				$scope.appendReportsRec(data.meta.next);

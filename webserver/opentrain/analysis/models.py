@@ -1,5 +1,4 @@
 from django.db import models
-import datetime 
 
 class Report(models.Model):
     device_id = models.CharField(max_length=50)

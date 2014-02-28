@@ -6,12 +6,6 @@ from django.views.generic.base import View
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 
-# Create your views here.
-
-def show_labels(req):
-    ctx = dict(form=forms.LabelsForm)
-    return render(req,'analysis/show_labels.html',ctx)
-
 class ShowReportDetails(View):
     def get(self,req):
         ctx = dict()

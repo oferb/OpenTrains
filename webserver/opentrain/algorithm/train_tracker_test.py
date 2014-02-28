@@ -114,58 +114,8 @@ class train_tracker_test(TestCase):
         #reports = list(qs) takes a long time
         return qs    
         
-def generate_reports(device_id='fake_device_1', trip_id='260214_00077'):
-    trips = gtfs.models.Trip.objects.filter(trip_id=trip_id)
-    trip = trips[0]
-    shape_points = gtfs.models.Shape.objects.filter(shape_id=trip.shape_id).order_by('shape_pt_sequence')
-    stop_times = gtfs.models.StopTime.objects.filter(trip=trip_id).order_by('arrival_time')
-    stop_times[0].stop
-    
-    coords = []
-    for x in shape_points:
-        coords.append([x.shape_pt_lat, x.shape_pt_lon])
-    coords = np.array(coords)
-    accuracies = np.ones((len(coords),1))*ot_utils.meter_distance_to_coord_distance(config.station_radius_in_meters)
-    
-    stop_ids = stops.all_stops.query_stops(coords, accuracies)
-    # create WifiReport with fake train bssid and fake station bssid when in train according to stops    
-    
-    reports = []
-    for shape_point in shape_points:
-        report = analysis.models.Report()
-        reports.append(report)
-        loc = analysis.models.LocationInfo()
-        loc.report = report
-        loc.accuracy = 0.1
-        loc.lat = 32
-        loc.lon = 34
-        loc.provider = 'aaa'
-        loc.timestamp = 9999999
-        report.my_loc_mock = loc
-        
-        wifi_report_train = analysis.models.SingleWifiReport()
-        wifi_report_train.report = report
-        wifi_report_train.SSID = config.STATION_SSID
-        wifi_report_train.key = 'fake_bssid_train__%s' % (device_id)    
-        report.wifi_set_mock = [wifi_report_train]
-    
-        if stop_id != stops.NOSTOP:
-            wifi_report_station = analysis.models.SingleWifiReport()
-            wifi_report_station.report = report
-            wifi_report_station.SSID = config.STATION_SSID
-            wifi_report_station.key = 'fake_bssid_%s' % (stop_id)
-            report.wifi_set_mock.append(wifi_report_station)
-        
-        report.device_id = device_id
-        report.timestamp = models.DateTimeField()
-        report.created = models.DateTimeField(auto_now_add=True)
-        
-        report.device_id = device_id
-        for x in shape_points:
-            print x.shape_pt_sequence
-            
+
         
         
 if __name__ == '__main__':
-    #generate_reports()
     unittest.main()

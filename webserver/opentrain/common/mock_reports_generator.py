@@ -13,11 +13,12 @@ import algorithm.shapes as shapes
 import algorithm.stops as stops
 import ot_utils
 
-def generate_reports(device_id='fake_device_1', trip_id='260214_00077', from_stop_id=None, to_stop_id=None, nostop_percent=0.2, station_radius_in_meters=300):
+def generate_mock_reports(device_id='fake_device_1', trip_id='260214_00077', from_stop_id=None, to_stop_id=None, nostop_percent=0.2, station_radius_in_meters=300):
     trips = gtfs.models.Trip.objects.filter(trip_id=trip_id)
-    trip = trips[0]
     shape_points = gtfs.models.Shape.objects.filter(shape_id=trip.shape_id).order_by('shape_pt_sequence')
     stop_times = gtfs.models.StopTime.objects.filter(trip=trip_id).order_by('arrival_time')
+    
+    # filter stop times by from_stop_id and to_stop_id:
     trip_stop_ids = [str(x.stop.stop_id) for x in stop_times]
     from_stop_ind = 0
     if from_stop_id:
@@ -28,16 +29,17 @@ def generate_reports(device_id='fake_device_1', trip_id='260214_00077', from_sto
     stop_times = stop_times[from_stop_ind:to_stop_ind]
     trip_stop_ids = set([str(x.stop.stop_id) for x in stop_times])
 
+    # get coords:
     coords = []
     for x in shape_points:
         coords.append([x.shape_pt_lat, x.shape_pt_lon])
     coords = np.array(coords)
     accuracies = np.ones((len(coords),1))*ot_utils.meter_distance_to_coord_distance(station_radius_in_meters)
     
+    # map shape-points to stops:
     stop_ids = stops.all_stops.query_stops(coords, accuracies)
     
-    # create WifiReport with fake train bssid and fake station bssid when in train according to stops    
-    
+    # filter out stops not in trip:
     stop_ids_uniques = set(stop_ids)
     if len(trip_stop_ids - stop_ids_uniques) > 0:
         unfound_stops = trip_stop_ids - stop_ids_uniques
@@ -45,19 +47,20 @@ def generate_reports(device_id='fake_device_1', trip_id='260214_00077', from_sto
     stops_not_in_trip = stop_ids_uniques - trip_stop_ids - set([stops.NOSTOP])
     stop_ids = [x if x not in stops_not_in_trip else stops.NOSTOP for x in stop_ids]
 
-    # strip nostops
+    # strip nostops from start and end
     while len(stop_ids) > 0 and stop_ids[0] == stops.NOSTOP:
         del stop_ids[0]
     while len(stop_ids) > 0 and stop_ids[-1] == stops.NOSTOP:
         del stop_ids[-1]    
 
+    # remove nostop reports according to nostop_percent:
     nostop_inds = [i for i in xrange(len(stop_ids)) if stop_ids[i] == stops.NOSTOP]
     keep_inds = [i for i in xrange(len(stop_ids)) if stop_ids[i] != stops.NOSTOP]
     nostop_inds = nostop_inds[::int(1/nostop_percent)]
     keep_inds.extend(nostop_inds)
-
     stop_ids = [stop_ids[i] for i in xrange(len(stop_ids)) if i in keep_inds]
     shape_points = [shape_points[i] for i in xrange(len(shape_points)) if i in keep_inds]
+
 
     stop_id_to_stop_time_dict = {}
     for stop_time in stop_times:
@@ -73,6 +76,7 @@ def generate_reports(device_id='fake_device_1', trip_id='260214_00077', from_sto
         stop_id_group_lens.append(len(g))
         stop_id_unique_keys.append(k)     
 
+    # create reports with corresponding location and wifi:
     reports = []
     last_stop = None
     prev_stop_id = None
@@ -115,7 +119,7 @@ def generate_reports(device_id='fake_device_1', trip_id='260214_00077', from_sto
             wifi_report_station = analysis.models.SingleWifiReport()
             wifi_report_station.report = report
             wifi_report_station.SSID = STATION_SSID
-            wifi_report_station.key = 'fake_bssid_%s' % (stop_id)
+            wifi_report_station.key = 'fake_bssid_stop__%s' % (stop_id)
             report.wifi_set_mock.append(wifi_report_station)
         
         report.device_id = device_id

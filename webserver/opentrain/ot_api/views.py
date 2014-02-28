@@ -2,6 +2,7 @@ import json
 import common.ot_utils
 import datetime
 from django.http.response import HttpResponse
+from django.conf import settings
 
 
 def get_trip_ids_for_date(request,*args,**kwargs):
@@ -26,4 +27,11 @@ def get_trip_details(request,trip_id):
     trip = Trip.objects.get(trip_id=trip_id)
     result = trip.to_json_full()
     return HttpResponse(status=200,content=json.dumps(result),content_type='application/json')
+
+def get_live_trips(req):
+    import analysis.logic
+    live_trips = analysis.logic.get_live_trips()    
+    result = dict(objects=live_trips)
+    result['meta'] = dict(is_fake=settings.FAKE_CUR)
+    return HttpResponse(content=json.dumps(result),content_type='application/json',status=200)
 

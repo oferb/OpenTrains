@@ -32,11 +32,3 @@ def show_device_reports(req):
 def show_live_trains(req):
     return render(req,'analysis/show_live_trains.html')
          
-def get_live_trips(req):
-    import logic
-    import json
-    live_trips = logic.get_live_trips()    
-    result = dict(objects=live_trips)
-    result['meta'] =  dict(is_fake=settings.FAKE_CUR)
-    return HttpResponse(content=json.dumps(result),content_type='application/json',status=200)
-

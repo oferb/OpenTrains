@@ -175,4 +175,15 @@ def latlon_to_meters(lat1,lon1,lat2,lon2):
     km = 6367 * c
     return km * 1000
 
+def autoregister(*app_list):
+    from django.db.models import get_models, get_app
+    from django.contrib import admin
+    from django.contrib.admin.sites import AlreadyRegistered
+    for app_name in app_list:
+        app_models = get_app(app_name)
+        for model in get_models(app_models):
+            try:
+                admin.site.register(model)
+            except AlreadyRegistered:
+                pass
 

@@ -65,7 +65,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	$scope.loadLiveReports = function() {
 		var curId = $scope.input.selectedDevice.device_id;
 		var last_report_id = $scope.reports.length > 0 ? $scope.reports[$scope.reports.length - 1].id : 0;
-		var url = '/api/v1/devices/' + curId + '/reports/' + '?limit=200&since_id=' + last_report_id;
+		var url = '/api/1/devices/' + curId + '/reports/' + '?limit=200&since_id=' + last_report_id;
 		$scope.appendReportsRec(url);
 	};
 	$scope.loadReports = function() {

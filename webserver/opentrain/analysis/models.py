@@ -12,7 +12,7 @@ class Report(models.Model):
         """ this function returns using iteration and not using filter().exists()
         since it is called after prefetch_related, and using this style
         does not force acceess to the DB """
-        for wifi in self.wifi_set.all():
+        for wifi in self.get_wifi_set_all():
             if wifi.SSID == 'S-ISRAEL-RAILWAYS':
                 return True 
         return False
@@ -35,9 +35,9 @@ class Report(models.Model):
         else:
             return self.my_loc_mock
 
-    def get_wifi_set(self):
+    def get_wifi_set_all(self):
         if self.pk:
-            return self.wifi_set
+            return self.wifi_set.all()
         else:
             return self.wifi_set_mock
    

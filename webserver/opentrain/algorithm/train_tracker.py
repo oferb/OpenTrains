@@ -238,7 +238,7 @@ def try_update_coords(report, tracker_id):
 
 def try_get_stop_id(report):
     if report.is_station():
-        wifis = [x for x in report.get_wifi_set().all() if x.SSID == 'S-ISRAEL-RAILWAYS']
+        wifis = [x for x in report.get_wifi_set_all() if x.SSID == 'S-ISRAEL-RAILWAYS']
         wifi_stops_ids = set()
         for wifi in wifis:
             if bssid_tracker.tracker.has_bssid_high_confidence(wifi.key):

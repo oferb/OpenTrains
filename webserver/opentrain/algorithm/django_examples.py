@@ -56,7 +56,7 @@ def print_all_devices():
 def print_device_wifis(device_id):
     results = analysis.models.Report.objects.all()
     for result in results:
-        print result, result.get_wifi_set().all()
+        print result, result.get_wifi_set_all()
         
 #print_all_stop_names();
 #print_device_id("02090d12")

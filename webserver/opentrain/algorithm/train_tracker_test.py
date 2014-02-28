@@ -32,7 +32,7 @@ from redis_intf.client import get_redis_pipeline, get_redis_client
 
 class train_tracker_test(TestCase):
 
-    def track_device(self, device_id, do_print=False, do_preload_reports=True, set_reports_to_today=True):
+    def track_device(self, device_id, do_print=False, do_preload_reports=True, set_reports_to_same_day_last_week=True):
         #device_coords, device_timestamps, device_accuracies_in_meters, device_accuracies_in_coords = get_location_info_from_device_id(device_id)
         now = datetime.datetime.now()
         reports_queryset = self.get_device_id_reports(device_id)
@@ -57,8 +57,9 @@ class train_tracker_test(TestCase):
                 trips = get_possible_trips(tracker_id)
             report = reports_queryset[i]
             
-            if set_reports_to_today:
-                report.timestamp = report.timestamp.replace(year=now.year, month=now.month, day=now.day)
+            if set_reports_to_same_day_last_week:
+                day_fix = (now.weekday() - report.timestamp.weekday()) % 7
+                report.timestamp = report.timestamp.replace(year=now.year, month=now.month, day=now.day - day_fix)
             add_report(report)
             
 

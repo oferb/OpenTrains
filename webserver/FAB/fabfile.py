@@ -57,11 +57,14 @@ def update_apt(package=None):
     			'postgresql',
     			'supervisor',
                 'python-pip',
-		'gfortran',
+		        'gfortran',
                 'libpq-dev',
                 'python-dev',
                 'redis-server',
-                'libfreetype6-dev'
+                'libfreetype6-dev',
+                'python-scipy',
+                'python-numpy',
+                'python'
     	)
 
     for p in packages:

@@ -140,7 +140,9 @@ def get_current_trips(dt=None):
     current_trips = gtfs.logic.get_all_trips_in_datetime(dt)
     result = []
     for trip in current_trips:
-        result.append(trip.to_json_full(with_shapes=False))
+        trip_dict = trip.to_json_full(with_shapes=False)
+        trip_dict['is_live'] = is_live(trip)
+        result.append(trip_dict)
     return result
  
 def get_trips_location(trip_ids):
@@ -165,6 +167,13 @@ def get_current_location(trip):
     from redis_intf.client import load_by_key
     return load_by_key('current_trip_id:coords:%s' % (trip.trip_id))
 
+def is_live(trip):
+    import gtfs.logic
+    if get_current_location(trip):
+        return True
+    return gtfs.logic.fake_cur_location(trip)
+    
+    
 
 
 

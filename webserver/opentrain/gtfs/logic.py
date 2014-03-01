@@ -90,10 +90,7 @@ def get_expected_location(trip,dt):
     idx_result = int(relative*num_points) +  idx_before
     result = points[idx_result]
     fake_result = None
-    last_digit = int(trip.trip_id[-1])
-    to_fake = False
-    if settings.FAKE_CUR and last_digit % 2 == 0: 
-        to_fake = True
+    to_fake = fake_cur_location(trip) 
     if to_fake:
         pt_delta = (int() -5 )*10;
         if pt_delta == 0:
@@ -178,4 +175,10 @@ def create_shape_json():
             point_list.append([point.shape_pt_lat,point.shape_pt_lon])
         ShapeJson(shape_id=shape_id,points=json.dumps(point_list)).save()
         print 'saved %d/%d' % (idx,len(shape_ids)) 
+
+def fake_cur_location(trip):
+    last_digit = int(trip.trip_id[-1])
+    if settings.FAKE_CUR and last_digit % 2 == 0: 
+        return True
+    return False
 

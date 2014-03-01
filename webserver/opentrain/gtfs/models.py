@@ -145,14 +145,15 @@ class Trip(GTFSModel):
     def get_stop_times_qs(self):
         return self.stoptime_set.all().order_by('stop_sequence')
     
-    def to_json_full(self):
+    def to_json_full(self,with_shapes=True):
         import json
-        shapes = json.loads(ShapeJson.objects.get(shape_id=self.shape_id).points)
         stop_times = self.get_stop_times_qs().select_related('stop')
         stop_times_json = [st.to_json() for st in stop_times]
-        return dict(trip_id=self.trip_id,
-                    shapes=shapes,
-                    stop_times=stop_times_json)
+        result = dict(trip_id=self.trip_id,
+                      stop_times=stop_times_json)
+        if with_shapes:
+            result['shapes'] = json.loads(ShapeJson.objects.get(shape_id=self.shape_id).points)
+        return result
     
     def __unicode__(self):
         return self.trip_id

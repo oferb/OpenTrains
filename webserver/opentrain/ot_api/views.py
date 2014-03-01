@@ -42,6 +42,11 @@ def get_trip_details(request,trip_id):
     result = trip.to_json_full()
     return HttpResponse(status=200,content=json.dumps(result),content_type='application/json')
 
+def get_current_trips(req):
+    import analysis.logic
+    current_trips = analysis.logic.get_current_trips()    
+    return _prepare_list_resp(req, current_trips)
+
 def get_live_trips(req):
     import analysis.logic
     live_trips = analysis.logic.get_live_trips()    

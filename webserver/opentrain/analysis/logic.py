@@ -113,20 +113,7 @@ def get_device_reports(device_id,info):
     return result
 
 ## CUR TRIPS #
-    
-class TripLocationObject(object):
-    def __init__(self,trip_id=None,cur_point=None,exp_point=None,timestamp=None):
-        self.trip_id = trip_id
-        self.cur_point = cur_point
-        self.exp_point = exp_point
-        self.timestamp = timestamp 
-        
-    def get_exp_point(self):
-        return self.exp_point
-    
-    def get_cur_point(self):
-        return self.cur_point
- 
+     
 @common.ot_utils.benchit
 def test3():
     secs = 1391451464.94
@@ -145,6 +132,16 @@ def test4():
     exp_shape=gtfs.logic.get_expected_location(trip, dt)
     assert exp_shape.shape_pt_lat == 32.10497517
     assert exp_shape.shape_pt_lon == 34.80547358
+ 
+def get_current_trips(dt=None):
+    import gtfs.logic
+    if not dt:
+        dt = common.ot_utils.get_localtime_now() #.replace(day=2)
+    current_trips = gtfs.logic.get_all_trips_in_datetime(dt)
+    result = []
+    for trip in current_trips:
+        result.append(trip.to_json_full(with_shapes=False))
+    return result
  
 def get_live_trips(dt=None):
     import gtfs.logic

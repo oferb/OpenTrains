@@ -18,8 +18,8 @@ class Report(models.Model):
         return False
     
     def loc_ts_delta(self):
-        if self.my_loc:
-            return (self.timestamp - self.my_loc.timestamp).total_seconds()
+        if self.get_my_loc():
+            return (self.timestamp - self.get_my_loc().timestamp).total_seconds()
     
     def get_timestamp_israel_time(self):
         #local_time_delta = datetime.timedelta(0,2*3600)
@@ -30,10 +30,12 @@ class Report(models.Model):
         return timestamp
     
     def get_my_loc(self):
-        if self.pk:
+        if self.pk and hasattr(self, 'my_loc'):
             return self.my_loc
-        else:
+        elif not self.pk and hasattr(self, 'my_loc_mock'):
             return self.my_loc_mock
+        else:
+            return None
 
     def get_wifi_set_all(self):
         if self.pk:

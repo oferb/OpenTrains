@@ -121,7 +121,7 @@ def add_report_to_tracker(tracker_id, report):
         save_by_key(get_train_tracker_relevant_services_key(tracker_id), relevant_service_ids)
          
     # update train position
-    if hasattr(report, 'my_loc'):
+    if report.get_my_loc():
         try_update_coords(report, tracker_id)
         
         ##commented out below is code that filters trips based on shape
@@ -220,8 +220,9 @@ def add_report_to_tracker(tracker_id, report):
         print_tracked_stop_times(tracker_id)
 
 def try_update_coords(report, tracker_id):
-    coords = [report.my_loc.lat, report.my_loc.lon]
-    res_shape_sampled_point_ids, _ = shapes.all_shapes.query_sampled_points(coords, report.my_loc.accuracy_in_coords)
+    loc = report.get_my_loc()
+    coords = [loc.lat, loc.lon]
+    res_shape_sampled_point_ids, _ = shapes.all_shapes.query_sampled_points(coords, loc.accuracy_in_coords)
      
     added_count = cl.sadd(get_train_tracker_visited_shape_sampled_point_ids_key(tracker_id), res_shape_sampled_point_ids)
 

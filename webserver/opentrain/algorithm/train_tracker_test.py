@@ -79,11 +79,14 @@ class train_tracker_test(TestCase):
         trips, deviation_in_seconds = get_possible_trips(tracker_id)
         return tracker_id, trips
     
-    def test_tracker_on_mock_device(self, device_id = 'fake_device_1', trip_id = '260214_00077'):
+    def test_tracker_on_mock_device(self, device_id = 'fake_device_1', trip_id = '260214_00077', remove_some_locations=True):
         day = datetime.datetime.strptime(trip_id.split('_')[0], '%d%m%y')
         now = ot_utils.get_localtime_now() # we want to get the correct timezone so we take it from get_localtime_now()
         day = now.replace(year=day.year, month=day.month, day=day.day)
         reports = generate_mock_reports(device_id=device_id, trip_id=trip_id, nostop_percent=0.05, day=day)
+
+        for report in reports[::2]:
+            del report.my_loc_mock
         
         tracker_id = reports[0].device_id
         self.remove_from_redis(tracker_id)

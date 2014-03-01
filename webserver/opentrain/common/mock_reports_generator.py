@@ -105,7 +105,7 @@ def generate_mock_reports(device_id='fake_device_1', trip_id='260214_00077', day
         report = analysis.models.Report()
         reports.append(report)
         loc = analysis.models.LocationInfo()
-        loc.report = report
+        #loc.report = report
         loc.accuracy = 0.1
         loc.lat = shape_point.shape_pt_lat
         loc.lon = shape_point.shape_pt_lon

@@ -170,8 +170,11 @@ def add_report_to_tracker(tracker_id, report):
     if  current_state != tracker_states.UNKNOWN and prev_state != current_state:
 
         prev_stops_and_timestamps = cl.zrange(get_train_tracker_timestamp_sorted_stop_ids_key(tracker_id), 0, -1, withscores=True)
-
+        prev_stop_ids_order = [int(x[0].split("_")[0]) for x in prev_stops_and_timestamps]
+        prev_stops_and_timestamps = [x for (y,x) in sorted(zip(prev_stop_ids_order,prev_stops_and_timestamps))]
+        
         prev_stop_ids = [x[0].split("_")[1] for x in prev_stops_and_timestamps]
+        
         prev_stop_int_ids = np.array([stops.all_stops.id_list.index(x) for x in prev_stop_ids])
         #assert np.array_equal(prev_stop_int_ids, np.array(self.prev_stops))
         prev_stop_hmm_logprob, prev_stop_int_ids_by_hmm = hmm.decode(prev_stop_int_ids)

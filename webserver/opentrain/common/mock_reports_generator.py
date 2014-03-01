@@ -13,10 +13,13 @@ import algorithm.shapes as shapes
 import algorithm.stops as stops
 import ot_utils
 
-def generate_mock_reports(device_id='fake_device_1', trip_id='260214_00077', from_stop_id=None, to_stop_id=None, nostop_percent=0.2, station_radius_in_meters=300):
+def generate_mock_reports(device_id='fake_device_1', trip_id='260214_00077', day=None, from_stop_id=None, to_stop_id=None, nostop_percent=0.2, station_radius_in_meters=300):
     trips = gtfs.models.Trip.objects.filter(trip_id=trip_id)
+    trip = trips[0]
     shape_points = gtfs.models.Shape.objects.filter(shape_id=trip.shape_id).order_by('shape_pt_sequence')
     stop_times = gtfs.models.StopTime.objects.filter(trip=trip_id).order_by('arrival_time')
+    if not day:
+        day = ot_utils.get_localtime_now()
     
     # filter stop times by from_stop_id and to_stop_id:
     trip_stop_ids = [str(x.stop.stop_id) for x in stop_times]
@@ -96,7 +99,8 @@ def generate_mock_reports(device_id='fake_device_1', trip_id='260214_00077', fro
         #print i, stop_id       
         counter += 1
         interval_ratio = float(counter)/stop_id_group_lens[stop_index]
-        timestamp = interval_start + interval_ratio*(interval_end-interval_start)
+        timestamp = int(interval_start + interval_ratio*(interval_end-interval_start))
+        timestamp = day.replace(hour=timestamp/3600, minute=timestamp % 3600 / 60, second=timestamp % 60 / 60)
         
         report = analysis.models.Report()
         reports.append(report)
@@ -137,5 +141,5 @@ STATION_SSID = 'S-ISRAEL-RAILWAYS'
 TRAIN_SSID = 'ISRAEL-RAILWAYS'
 
 if __name__ == '__main__':
-    reports = generate_reports(nostop_percent=0.05)
+    reports = generate_mock_reports(nostop_percent=0.05)
     print len(reports)

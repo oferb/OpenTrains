@@ -31,7 +31,6 @@ function GlobalSearchResults() {
 window.GLOBAL_SEARCH_RESULTS = new GlobalSearchResults();
 
 function SearchResult(index) {
-	console.log("index = " + index);
 	var that = this;
 	this.index = index;
 	this.state = true;
@@ -58,7 +57,6 @@ function SearchResult(index) {
 			this.btn.html('<span class="glyphicon glyphicon-plus-sign"></span>');
 		}
 	};
-	console.log(GLOBAL_SEARCH_RESULTS);
 	window.GLOBAL_SEARCH_RESULTS.all.push(this);
 }
 

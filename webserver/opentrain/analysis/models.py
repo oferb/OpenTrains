@@ -29,6 +29,17 @@ class Report(models.Model):
         timestamp = timestamp.replace(microsecond=0)
         return timestamp
     
+    def to_api_dict(self):
+        result = dict()
+        result['created'] = self.created.isoformat()
+        result['timestamp'] = self.timestamp.isoformat()
+        result['device_id'] = self.device_id
+        result['id'] = self.id
+        result['is_station'] = self.is_station()
+        if self.my_loc:
+            result['loc'] = self.my_loc.to_api_dict()
+        return result
+  
     def get_my_loc(self):
         if self.pk and hasattr(self, 'my_loc'):
             return self.my_loc
@@ -56,6 +67,14 @@ class LocationInfo(models.Model):
         from common.ot_utils import meter_distance_to_coord_distance
         return meter_distance_to_coord_distance(self.accuracy)
     
+    def to_api_dict(self):
+        return dict(lat=self.lat,
+                    lon=self.lon,
+                    id=self.id,
+                    provider=self.provider,
+                    accuracy=self.accuracy,
+                    timestamp=self.timestamp.isoformat())
+     
 class SingleWifiReport(models.Model):
     report = models.ForeignKey(Report,related_name='wifi_set')
     SSID = models.CharField(max_length=50)

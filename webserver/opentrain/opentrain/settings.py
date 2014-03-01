@@ -47,6 +47,9 @@ INSTALLED_APPS = (
     'algorithm',
     'django_extensions',
     'redis_intf',
+    'statici18n',
+    'south',
+    'ot_api'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -87,7 +90,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'HE'
 
 TIME_ZONE = 'Asia/Jerusalem'
 
@@ -97,6 +100,7 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOCALE_PATHS = (os.path.join(BASE_DIR,'locale'),)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
@@ -112,7 +116,7 @@ TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
     "common.ctx.menu",
 )
 
-TASTYPIE_DATETIME_FORMATTING = 'rfc-2822'
+TASTYPIE_DATETIME_FORMATTING = 'iso-8601-strict'
 
 FAKE_CUR=False
 
@@ -122,6 +126,10 @@ try:
 except ImportError:
     pass
 
+if DEBUG:
+    STATICFILES_DIRS = (
+                        os.path.join(BASE_DIR, "tmp-trans"),
+                        )
 
 
 

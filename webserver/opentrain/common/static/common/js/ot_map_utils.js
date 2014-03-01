@@ -10,7 +10,7 @@ function MapWrapper() {
 		var marker = L.marker([stop.lat, stop.lon], {
 			icon : this.trainIcon
 		}).addTo(this.map);
-		var popup = marker.bindPopup('(' + stop.seqId + ') ' + stop.name + "<br/>@" + stop.time);
+		var popup = marker.bindPopup('(' + stop.seqId + ') ' + gettext(stop.name) + "<br/>@" + stop.time);
 		if (stop.stopId == this.zoomStopId) {
 			popup.openPopup();
 		}
@@ -20,7 +20,6 @@ function MapWrapper() {
 		reports.forEach(function(r) {
 			points.push([r.loc.lat, r.loc.lon]);
 		});
-		console.log(points.length);
 		var that = this;
 		var polyline = this.createLineAndZoom(points, {
 			color : '#0000CD',
@@ -74,19 +73,4 @@ function otCreateMap(mapDiv, options) {
 	return result;
 }
 
-var otLiveMode = false;
-var otLiveIntervalID = null;
-function otRefreshLive(isLive) {
-	otLiveMode = isLive;
-	$("#go_live_btn").prop('disabled', otLiveMode);
-	$("#stop_live_btn").prop('disabled', !otLiveMode);
-	if (otLiveMode) {
-		otLiveIntervalID = window.setInterval(otRefreshDevice, 2000);
-	} else {
-		window.clearInterval(otLiveIntervalID);
-	}
-}
 
-function otRefreshDevice() {
-	console.log('in otRefreshDevice');
-}

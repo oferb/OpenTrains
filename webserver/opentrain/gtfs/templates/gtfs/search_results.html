@@ -1,10 +1,11 @@
 {% load ot_filters %}
 {% load staticfiles %}
+{% load i18n %}
 
 <script src="{% static 'gtfs/js/gtfs.js' %}"></script>
 
 {% if results %}
-<h3>{{results | length }} results for {{when | nicedate }}</h3>
+<h3>{{results | length }} {% trans 'results for' %} {{when | nicedate | safe }}</h3>
 <button id="trip_details_button_global">
 	Toggle
 </button>
@@ -12,17 +13,17 @@
 <div class="row">
 	<table class="table-bordered table-hover table-striped col-md-6 results-table">
 		<tr>
-			<td>Route name</td>
-			<td>{{result.trip.route.route_long_name}}</td>
+			<td>{% trans 'Route name' %}</td>
+			<td>{% trans result.trip.route.route_long_name %}</td>
 		</tr>
 		<tr>
-			<td>Trip Details</td>
+			<td>{% trans 'Trip Details' %}</td>
 			<td>
 			<p class="text-center">
 				<button id="trip_details_button_{{forloop.counter}}">
-					Toggle
+					{% trans 'Toggle' %}
 				</button>
-				Trip Details
+				{% trans 'Trip Details' %}
 			</p>
 			<div id="trip_details_{{forloop.counter}}">
 				{% include "gtfs/trip_details.html" with trip=result.trip %}
@@ -34,24 +35,24 @@
 			</script></td>
 		</tr>
 		<tr>
-			<td>Trip Id</td>
+			<td>{% trans 'Trip Id' %}</td>
 			<td>{{result.trip.trip_id}}</td>
 		</tr>
 		<tr>
-			<td>Direction</td>
+			<td>{% trans 'Direction' %}</td>
 			<td>{{result.trip.direction_id | direction_to_string }}</td>
 		</tr>
 		<tr>
-			<td>Arrives</td>
+			<td>{% trans 'Arrives' %}</td>
 			<td>{{result.arrival_time | denorm_time }}</td>
 		</tr>
 		<tr>
-			<td>Departs</td>
+			<td>{% trans 'Departs' %}</td>
 			<td>{{result.departure_time | denorm_time }}</td>
 		</tr>
 		<tr>
-			<td>Show on Map</td>
-			<td><a target="_blank" href="/gtfs/maps/{{result.trip.trip_id}}/?zoom_stop_id={{result.stop.stop_id}}">Map</a></td>
+			<td>{% trans 'Show on Map' %}</td>
+			<td><a target="_blank" href="/gtfs/maps/{{result.trip.trip_id}}/?zoom_stop_id={{result.stop.stop_id}}">{% trans 'Map' %}</a></td>
 		</tr>
 	</table>
 </div>
@@ -65,5 +66,5 @@ $(document).ready(function() {
 });
 </script>
 {% else %}
-<h3>No Results</h3>
+<h3>{% trans 'No Results' %}</h3>
 {% endif %}

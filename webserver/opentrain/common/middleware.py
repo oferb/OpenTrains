@@ -26,7 +26,13 @@ class OpenTrainMiddleware(CommonMiddleware):
 
     def process_request(self,request):
         request.prof_start_time = time.time()
+        self.set_admin_english(request)
         
+    def set_admin_english(self,req):
+        from django.utils import translation
+        if req.path.startswith('/admin/'):
+            translation.activate('en')
+            req.LANGUAGE_CODE = translation.get_language()
         
 
     

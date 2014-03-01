@@ -2,6 +2,7 @@ import models
 import common.ot_utils
 import json
 from django.conf import settings
+from django.utils.translation import ugettext as _
 
 def get_stations():
     result = models.Stop.objects.all().order_by('stop_name')
@@ -11,7 +12,8 @@ def get_stations_choices():
     stations = get_stations()
     result = []
     for station in stations:
-        result.append((unicode(station.stop_id),station.stop_name))
+        result.append((unicode(station.stop_id),_(station.stop_name)))
+    result.sort(key=lambda x : x[1])
     return tuple(result)
 
 @common.ot_utils.benchit

@@ -1,9 +1,9 @@
 <div class="row">
 	<div class="col-md-4">
 		<div class="page-header">
-			<h2>Live Trains
-				<span ng-show="isFake">[Simulated]</span>
-				<span ng-hide="isFake">[WIP]</span>
+			<h2>{{ 'Live Trains' | trans }} 
+				<span ng-show="isFake">[{{ 'Simulated' | trans }}]</span>
+				<span ng-hide="isFake">[{{ 'WIP' | trans }}]</span>
 			</h2>
 		</div>
 		<div ng-hide="initialDone">
@@ -14,31 +14,31 @@
 			</div>
 		</div>
 		<div ng-show="initialDone && trips.length == 0">
-			No Trips Now
+			{{ 'No Trips Now' | trans }}
 		</div>
 		<div ng-repeat="trip in trips" ng-controller="TripController">
 			<img ng-show="trip.cur_point" width="32" height="15" ng-src="/static/common/img/live.gif"></img>
 			<img ng-hide="trip.cur_point" width="32" height="15" ng-src="/static/common/img/no_live.png"></img>
 			<input type="checkbox" ng-change="showTripsChange()"  ng-model="input.showTrips[tripId]">
-			<span ng-hide="input.showDetails[tripId]" ng-click="input.showDetails[tripId] = true" class="glyphicon glyphicon-expand"></span>
-			<span ng-show="input.showDetails[tripId]" ng-click="input.showDetails[tripId] = false" class="glyphicon glyphicon-collapse-up"></span>
-			{{tripId}} {{tripData.stop_times[0].stop.stop_name}} <span class="glyphicon glyphicon-arrow-right"></span>
-			{{tripData.stop_times[tripData.stop_times.length-1].stop.stop_name}}
+			<span ng-hide="input.showDetails[tripId]" ng-click="input.showDetails[tripId] = true" class="glyphicon glyphicon-plus"></span>
+			<span ng-show="input.showDetails[tripId]" ng-click="input.showDetails[tripId] = false" class="glyphicon glyphicon-minus"></span>
+			{{tripId}} {{tripData.stop_times[0].stop.stop_name | trans}} <span class="glyphicon glyphicon-arrow-left"></span>
+			{{tripData.stop_times[tripData.stop_times.length-1].stop.stop_name | trans}}
 			<span ng-click="zoomToTrip(tripId)" class="glyphicon glyphicon-zoom-in"></span>
 			<div ng-show="input.showDetails[tripId]">
 				<table class="table table-striped">
 				<tr>
-					<th>Seq</th>
-					<th>Stop</th>
-					<th>Arrival</th>
-					<th>Departure</th>
+					<th>{{'Seq' | trans }}</th>
+					<th>{{'Stop' | trans }}</th>
+					<th>{{'Arrival' | trans }}</th>
+					<th>{{'Departure' | trans }}</th>
 				</tr>
 				<tr ng-repeat="stop_time in tripData.stop_times">
 					<td>
 						{{stop_time.stop_sequence}}
 					</td>
 					<td>
-						{{stop_time.stop.stop_name}}
+						{{stop_time.stop.stop_name | trans}}
 					</td>
 					<td>
 						 {{stop_time.arrival_time | denormalTime}}&nbsp;&nbsp;

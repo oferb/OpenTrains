@@ -1,0 +1,574 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-02-28 12:08+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: analysis/forms.py:5
+msgid "Report ID"
+msgstr "מזהה דיווח"
+
+#: analysis/templates/analysis/report_details.html:7
+#: common/static/common/ot_i18n.py:6
+msgid "Report Details"
+msgstr "פירוט דיווח"
+
+#: analysis/templates/analysis/report_details.html:18
+msgid "General"
+msgstr "כללי"
+
+#: analysis/templates/analysis/report_details.html:20
+msgid "ID"
+msgstr "מזהה"
+
+#: analysis/templates/analysis/report_details.html:24
+#: analysis/templates/analysis/report_details.html:31
+msgid "Timestamp"
+msgstr "חותמת זמן"
+
+#: analysis/templates/analysis/report_details.html:29
+msgid "Location"
+msgstr "מיקום"
+
+#: analysis/templates/analysis/report_details.html:35
+msgid "Timestamp Delta"
+msgstr "הפרש חותמות זמן"
+
+#: analysis/templates/analysis/report_details.html:36
+msgid "seconds"
+msgstr "שניות"
+
+#: analysis/templates/analysis/report_details.html:39
+msgid "Accuracy"
+msgstr "דיוק"
+
+#: analysis/templates/analysis/report_details.html:43
+msgid "Lon/Lat"
+msgstr "אורך/רוחב"
+
+#: analysis/templates/analysis/report_details.html:47
+msgid "Provider"
+msgstr "ספק"
+
+#: analysis/templates/analysis/report_details.html:56
+msgid "SSID"
+msgstr "מזהה רשת"
+
+#: analysis/templates/analysis/report_details.html:60
+msgid "key"
+msgstr "מפתח"
+
+#: analysis/templates/analysis/report_details.html:64
+msgid "Signal"
+msgstr "אות"
+
+#: analysis/templates/analysis/report_details.html:68
+msgid "Frequency"
+msgstr "תדירות"
+
+#: common/static/common/ot_i18n.py:3
+msgid "Search In"
+msgstr "חיפוש בתחנה"
+
+#: common/static/common/ot_i18n.py:4
+msgid "Device Reports"
+msgstr "מעקב מכשיר"
+
+#: common/static/common/ot_i18n.py:5 common/static/common/ot_i18n.py:89
+msgid "Live Trains"
+msgstr "מפה חיה"
+
+#: common/static/common/ot_i18n.py:7 common/static/common/ot_i18n.py:14
+msgid "Akko"
+msgstr "עכו"
+
+#: common/static/common/ot_i18n.py:8
+msgid "Modiin"
+msgstr "פאתי מודיעין"
+
+#: common/static/common/ot_i18n.py:9
+msgid "Modiin Center"
+msgstr "מודיעין מרכז"
+
+#: common/static/common/ot_i18n.py:10
+msgid "Kiryat Hayyim"
+msgstr "קרית חיים"
+
+#: common/static/common/ot_i18n.py:11
+msgid "Kiryat Motzkin"
+msgstr "קרית מוצקין"
+
+#: common/static/common/ot_i18n.py:12
+msgid "Leb Hmifratz"
+msgstr "לב המפרץ"
+
+#: common/static/common/ot_i18n.py:13
+msgid "Hutsot HaMifrats"
+msgstr "חוצות המפרץ"
+
+#: common/static/common/ot_i18n.py:15
+msgid "Nahariyya"
+msgstr "נהריה"
+
+#: common/static/common/ot_i18n.py:16
+msgid "Haifa Center HaShmona"
+msgstr "חיפה מרכז - השמונה"
+
+#: common/static/common/ot_i18n.py:17
+msgid "Haifa Bat Gallim"
+msgstr "חיפה - בת גלים"
+
+#: common/static/common/ot_i18n.py:18
+msgid "Haifa Hof HaKarmel (Razi'el)"
+msgstr "חיפה - חוף הכרמל רזיאל"
+
+#: common/static/common/ot_i18n.py:19
+msgid "Atlit"
+msgstr "עתלית"
+
+#: common/static/common/ot_i18n.py:20
+msgid "Binyamina"
+msgstr "בנימינה"
+
+#: common/static/common/ot_i18n.py:21
+msgid "Kesariyya - Pardes Hanna"
+msgstr "קיסריה - פרדס חנה"
+
+#: common/static/common/ot_i18n.py:22
+msgid "Hadera West"
+msgstr "חדרה מערב"
+
+#: common/static/common/ot_i18n.py:23
+msgid "Natanya"
+msgstr "נתניה"
+
+#: common/static/common/ot_i18n.py:24
+msgid "Bet Yehoshua"
+msgstr "בית יהושע"
+
+#: common/static/common/ot_i18n.py:25
+msgid "Herzliyya"
+msgstr "הרצליה"
+
+#: common/static/common/ot_i18n.py:26
+msgid "Tel Aviv - University"
+msgstr "תל אביב - אוניברסיטה"
+
+#: common/static/common/ot_i18n.py:27
+msgid "Tel Aviv Center - Savidor"
+msgstr "תל אביב - מרכז סבידור"
+
+#: common/static/common/ot_i18n.py:28
+msgid "Bne Brak"
+msgstr "בני ברק"
+
+#: common/static/common/ot_i18n.py:29
+msgid "Petah Tikva   Kiryat Arye"
+msgstr "פתח תקוה - קרית אריה"
+
+#: common/static/common/ot_i18n.py:30
+msgid "Petah Tikva Sgulla"
+msgstr "פתח תקוה סגולה"
+
+#: common/static/common/ot_i18n.py:31
+msgid "Tel Aviv HaShalom"
+msgstr "תל אביב - השלום"
+
+#: common/static/common/ot_i18n.py:32
+msgid "Holon Junction"
+msgstr "צמת חולון"
+
+#: common/static/common/ot_i18n.py:33
+msgid "Holon - Wolfson"
+msgstr "חולון - וולפסון"
+
+#: common/static/common/ot_i18n.py:34
+msgid "Bat Yam - Yoseftal"
+msgstr "בת ים - יוספטל"
+
+#: common/static/common/ot_i18n.py:35
+msgid "Bat Yam - Komemiyyut"
+msgstr "בת ים - קוממיות"
+
+#: common/static/common/ot_i18n.py:36
+msgid "Kfar Habbad"
+msgstr "כפר חבד"
+
+#: common/static/common/ot_i18n.py:37
+msgid "Tel Aviv HaHagana"
+msgstr "תל אביב - ההגנה"
+
+#: common/static/common/ot_i18n.py:38
+msgid "Lod"
+msgstr "לוד"
+
+#: common/static/common/ot_i18n.py:39
+msgid "Ramla"
+msgstr "רמלה"
+
+#: common/static/common/ot_i18n.py:40
+msgid "Ganey Aviv"
+msgstr "גני אביב"
+
+#: common/static/common/ot_i18n.py:41
+msgid "Rehovot E. Hadar"
+msgstr "רחובות מזרח - הדר"
+
+#: common/static/common/ot_i18n.py:42
+msgid "Be'er Ya'akov"
+msgstr "באר יעקב"
+
+#: common/static/common/ot_i18n.py:43
+msgid "Yavne"
+msgstr "יבנה"
+
+#: common/static/common/ot_i18n.py:44
+msgid "Ashdod Ad Halom"
+msgstr "אשדוד עד הלום"
+
+#: common/static/common/ot_i18n.py:45
+msgid "Ashkelon"
+msgstr "אשקלון"
+
+#: common/static/common/ot_i18n.py:46
+msgid "Bet Shemesh"
+msgstr "בית שמש"
+
+#: common/static/common/ot_i18n.py:47
+msgid "Jerusalem Biblical Zoo"
+msgstr "ירושלים - גן החיות התנכי"
+
+#: common/static/common/ot_i18n.py:48
+msgid "Jerusalem Malha"
+msgstr "ירושלים מלחה"
+
+#: common/static/common/ot_i18n.py:49
+msgid "Kiryat Gat"
+msgstr "קרית גת"
+
+#: common/static/common/ot_i18n.py:50
+msgid "Be'er Sheva North University"
+msgstr "באר שבע צפון אוניברסיטה"
+
+#: common/static/common/ot_i18n.py:51
+msgid "Be'er Sheva Center"
+msgstr "באר שבע מרכז"
+
+#: common/static/common/ot_i18n.py:52
+msgid "Dimona"
+msgstr "דימונה"
+
+#: common/static/common/ot_i18n.py:53
+msgid "Lehavim - Rahat"
+msgstr "להבים רהט"
+
+#: common/static/common/ot_i18n.py:54
+msgid "Ben Gurion Airport"
+msgstr "נתבג"
+
+#: common/static/common/ot_i18n.py:55
+msgid "Kfar Sava"
+msgstr "כפר סבא"
+
+#: common/static/common/ot_i18n.py:56
+msgid "Rosh Ha'Ayin North"
+msgstr "ראש העין צפון"
+
+#: common/static/common/ot_i18n.py:57
+msgid "Yavne - West"
+msgstr "יבנה מערב"
+
+#: common/static/common/ot_i18n.py:58
+msgid "Rishon LeTsiyyon HaRishonim"
+msgstr "ראשון לציון הראשונים"
+
+#: common/static/common/ot_i18n.py:59
+msgid "Hod HaSharon"
+msgstr "הוד השרון"
+
+#: common/static/common/ot_i18n.py:60
+msgid "Sderot"
+msgstr "שדרות"
+
+#: common/static/common/ot_i18n.py:61
+msgid "Rishon LeTsiyyon - Moshe Dayan"
+msgstr "ראשון לציון משה דיין"
+
+#: common/static/common/ot_i18n.py:64
+msgid "Tel Aviv Center - Rishon LeTsiyyon HaRishonim"
+msgstr "ראשון לציון הראשונים"
+
+#: common/static/common/ot_i18n.py:65
+msgid "Nahariyya - Modiin Center"
+msgstr "נהריה - מודיעין מרכז"
+
+#: common/static/common/ot_i18n.py:66
+msgid "Nahariyya - Be'er Sheva Center"
+msgstr "נהריה - באר שבע מרכז"
+
+#: common/static/common/ot_i18n.py:67
+msgid "Binyamina - Ashkelon"
+msgstr "בנימיניה - אשקלון"
+
+#: common/static/common/ot_i18n.py:68
+msgid "Nahariyya - Ben Gurion Airport -Be'er Sheva Center"
+msgstr "נהריה- נתבג - באר שבע מרכז"
+
+#: common/static/common/ot_i18n.py:69
+msgid "Kiryat Motzkin - Haifa Hof HaKarmel (Razi'el)"
+msgstr "חיפה חוף הכרמל - קרית מוצקין"
+
+#: common/static/common/ot_i18n.py:70
+msgid "Tel Aviv Center - Savidor - Jerusalem Malha"
+msgstr "תל אביב מרכז סבידור - ירושלים מלחה"
+
+#: common/static/common/ot_i18n.py:71
+msgid "Be'er Sheva North University - Dimona"
+msgstr "באר שבע צפון אוניברסיטה - דימונה"
+
+#: common/static/common/ot_i18n.py:72
+msgid "Hod HaSharon - Ashkelon"
+msgstr "הוד השרון - אשקלון"
+
+#: common/static/common/ot_i18n.py:73
+msgid "Hertsliyya - Be'er Sheva Center"
+msgstr "הרצליה - באר שבע מרכז"
+
+#: common/static/common/ot_i18n.py:76
+msgid "Sunday"
+msgstr "יום ראשון"
+
+#: common/static/common/ot_i18n.py:77
+msgid "Monday"
+msgstr "יום שני"
+
+#: common/static/common/ot_i18n.py:78
+msgid "Tuesday"
+msgstr "יום שלישי"
+
+#: common/static/common/ot_i18n.py:79
+msgid "Wendesay"
+msgstr "יום רביעי"
+
+#: common/static/common/ot_i18n.py:80
+msgid "Thursday"
+msgstr "יום חמישי"
+
+#: common/static/common/ot_i18n.py:81
+msgid "Friday"
+msgstr "יום שישי"
+
+#: common/static/common/ot_i18n.py:82
+msgid "Saturday"
+msgstr "יום שבת"
+
+#: common/static/common/ot_i18n.py:84
+msgid "Stop"
+msgstr "תחנה"
+
+#: common/static/common/ot_i18n.py:85
+msgid "Arrival"
+msgstr "הגעה"
+
+#: common/static/common/ot_i18n.py:86
+msgid "Departure"
+msgstr "יציאה"
+
+#: common/static/common/ot_i18n.py:87
+msgid "Live"
+msgstr "חי"
+
+#: common/static/common/ot_i18n.py:90
+msgid "Simulated"
+msgstr "סימולציה"
+
+#: common/static/common/ot_i18n.py:91
+msgid "WIP"
+msgstr "בעבודה"
+
+#: common/static/common/ot_i18n.py:92
+msgid "No Trips Now"
+msgstr "איו נסיעות כרגע"
+
+#: common/static/common/ot_i18n.py:94 common/static/common/ot_i18n.py:103
+msgid "Total # of reports (with loc)"
+msgstr "מספר דיווחים (עם מיקום)"
+
+#: common/static/common/ot_i18n.py:95
+msgid "to"
+msgstr "ל"
+
+#: common/static/common/ot_i18n.py:96
+msgid "on"
+msgstr "ב"
+
+#: common/static/common/ot_i18n.py:97
+msgid "Search Reports"
+msgstr "חפש דיווחים"
+
+#: common/static/common/ot_i18n.py:98
+msgid "Go Live"
+msgstr "מעקב חי"
+
+#: common/static/common/ot_i18n.py:99
+msgid "Stop Live"
+msgstr "הפסק מעקב חי"
+
+#: common/static/common/ot_i18n.py:100
+msgid "auto zoom"
+msgstr "אוטו-זום"
+
+#: common/static/common/ot_i18n.py:101
+msgid "Please wait. Loading Reports, will take some time..."
+msgstr "נא המתן. טוען דיווחים, עשוי לקחת זמן מה..."
+
+#: common/static/common/ot_i18n.py:102
+msgid "Map for device id"
+msgstr "מפה עבור מזהה התקן"
+
+#: common/static/common/ot_i18n.py:105
+msgid "cur"
+msgstr "נוכחי"
+
+#: common/static/common/ot_i18n.py:106
+msgid "exp"
+msgstr "צפוי"
+
+#: common/templates/common/base.html:44
+msgid "Open Train"
+msgstr "רכבת פתוחה"
+
+#: common/templates/common/base.html:68 gtfs/templates/gtfs/trip_map.html:14
+msgid "From"
+msgstr "מ"
+
+#: common/templates/common/base.html:68
+msgid "Hackita"
+msgstr "הכיתה - 2014"
+
+#: common/templates/common/base.html:70
+msgid "Download the"
+msgstr "הורד את ה"
+
+#: common/templates/common/base.html:70
+msgid "app"
+msgstr "אפליקציה"
+
+#: common/templates/common/base.html:70
+msgid "Alpha version - on your own risk"
+msgstr "גרסת אלפא, על אחריותך"
+
+#: common/templatetags/ot_filters.py:26
+msgid "Backward"
+msgstr "חזור"
+
+#: common/templatetags/ot_filters.py:27
+msgid "Forward"
+msgstr "הלוך"
+
+#: common/templatetags/ot_filters.py:36
+msgid "true"
+msgstr "כן"
+
+#: common/templatetags/ot_filters.py:36
+msgid "false"
+msgstr "לא"
+
+#: gtfs/forms.py:19
+msgid "In Station"
+msgstr "בתחנה"
+
+#: gtfs/forms.py:20
+msgid "Before"
+msgstr "לפני"
+
+#: gtfs/forms.py:21
+msgid "After"
+msgstr "אחרי"
+
+#: gtfs/forms.py:23
+msgid "When"
+msgstr "מתי"
+
+#: gtfs/templates/gtfs/search_results.html:8
+msgid "results for"
+msgstr "תוצאות עבור"
+
+#: gtfs/templates/gtfs/search_results.html:16
+msgid "Route name"
+msgstr "שם נתיב"
+
+#: gtfs/templates/gtfs/search_results.html:20
+#: gtfs/templates/gtfs/search_results.html:26
+msgid "Trip Details"
+msgstr "פירוט נסיעה"
+
+#: gtfs/templates/gtfs/search_results.html:24
+msgid "Toggle"
+msgstr "החלף"
+
+#: gtfs/templates/gtfs/search_results.html:38
+msgid "Trip Id"
+msgstr "מזהה נסיעה"
+
+#: gtfs/templates/gtfs/search_results.html:42
+msgid "Direction"
+msgstr "כיוון"
+
+#: gtfs/templates/gtfs/search_results.html:46
+msgid "Arrives"
+msgstr "הגעה"
+
+#: gtfs/templates/gtfs/search_results.html:50
+msgid "Departs"
+msgstr "יציאה"
+
+#: gtfs/templates/gtfs/search_results.html:54
+msgid "Show on Map"
+msgstr "הראה על מפה"
+
+#: gtfs/templates/gtfs/search_results.html:55
+msgid "Map"
+msgstr "מפה"
+
+#: gtfs/templates/gtfs/search_results.html:69
+msgid "No Results"
+msgstr "אין תוצאות"
+
+#: gtfs/templates/gtfs/trip_details.html:5
+msgid "Seq"
+msgstr "מספר"
+
+#: gtfs/templates/gtfs/trip_details.html:6
+msgid "Name"
+msgstr "שם"
+
+#: gtfs/templates/gtfs/trip_details.html:7
+msgid "In"
+msgstr "מגיע"
+
+#: gtfs/templates/gtfs/trip_details.html:8
+msgid "Out"
+msgstr "יוצא"
+
+#: gtfs/templates/gtfs/trip_map.html:7
+msgid "Trip Map for"
+msgstr "מפת מסלול עבור"
+
+#: gtfs/templates/gtfs/trip_map.html:14
+msgid "To"
+msgstr "ל"

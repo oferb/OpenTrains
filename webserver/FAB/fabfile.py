@@ -57,11 +57,14 @@ def update_apt(package=None):
     			'postgresql',
     			'supervisor',
                 'python-pip',
-		'gfortran',
+		        'gfortran',
                 'libpq-dev',
                 'python-dev',
                 'redis-server',
-                'libfreetype6-dev'
+                'libfreetype6-dev',
+                'python-scipy',
+                'python-numpy',
+                'python'
     	)
 
     for p in packages:
@@ -93,10 +96,13 @@ def update_git():
         with cd(env.repo_dir):
            run('git pull')
 
-    # collect static
+    # collect static / compile translations
     with cd(env.django_base_dir):
+        run('python manage.py migrate')
+        run('mkdir -p tmp-trans') # fake folder for debug
         run('python manage.py collectstatic --noinput')
-    
+        run('python manage.py compilemessages')
+        run('python manage.py compilejsi18n -l he -d django')
     
            
 @task

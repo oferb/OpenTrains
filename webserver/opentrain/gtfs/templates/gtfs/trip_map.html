@@ -1,18 +1,21 @@
 {% load staticfiles %}
 {% load ot_filters %}
+{% load i18n %}
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Trip Map for {{trip.trip_id}}</title>
+	<title>{% trans 'Trip Map for' %} {{trip.trip_id}}</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="{% static 'common/style/ot_map.css' %}">
-	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css" />
+	<link rel="stylesheet" href="{% static 'common/leaflet/leaflet.css' %}" />
 </head>
 <body onload="initMap()">
-	<h2>From {{trip.get_first_stop.stop_name}} To {{trip.get_last_stop.stop_name}}</h2>
+	<h2>{% trans 'Trip Map for' %} {{trip.trip_id}}</h2>
+	<h2>{% trans 'From' %} {% trans trip.get_first_stop.stop_name %} {% trans 'To' %} {% trans trip.get_last_stop.stop_name %}</h2>
 	<div id="tripMap" style="width: 600px; height: 400px"></div>
-	<script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>
+	<script src="{% static 'jsi18n/he/django.js' %}"></script>
+	<script src="{% static 'common/leaflet/leaflet-src.js' %}"></script>
 	<script src="{% static 'common/js/ot_map_utils.js' %}"></script>
 	<script>
 		{% include 'gtfs/trip_map.js' %}

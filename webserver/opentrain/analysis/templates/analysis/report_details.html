@@ -1,9 +1,10 @@
 {% extends 'common/base.html' %}
 {% load staticfiles %}
-
+{% load i18n %}
+{% load ot_filters %}
 {% block content %}
 <div class="container">
-    <h2>Report Details</h2>
+    <h2>{% trans 'Report Details' %}</h2>
     <form method="post" role="form">
         {{form}}
         {% csrf_token %}
@@ -14,42 +15,36 @@
     <br/>
     {% if report %}
     	<table class="table">
-    		<caption class="pull-left">General</caption>
+    		<caption class="pull-left">{% trans 'General' %}</caption>
     		<tr>
-	    		<td class="col-md-3">ID</td>
+	    		<td class="col-md-3">{% trans 'ID' %}</td>
 	    		<td>{{report.id}}</td>
     		</tr>
     		<tr>
-	    		<td>Timestamp</td>
-	    		<td><span id="report_ts"></span></td>
-	    		<script>
-	    			$("#report_ts").html(toLocalDt(new Date("{{report.timestamp.isoformat}}")));
-	    		</script>
+	    		<td>{% trans 'Timestamp' %}</td>
+	    		<td>{{ report.timestamp | nicedate | safe }}</td>
     		</tr>
     	</table>
     	<table class="table">
-    		<caption class="pull-left">Location</caption>
+    		<caption class="pull-left">{% trans 'Location' %}</caption>
     		<tr>
-    			<td class="col-md-3">Timestamp</td>
-    			<td><span id="my_loc_ts"></span></td>
-    			<script>
-	    			$("#my_loc_ts").html(toLocalDt(new Date("{{report.my_loc.timestamp.isoformat}}")));
-	    		</script>
+    			<td class="col-md-3">{% trans 'Timestamp' %}</td>
+    			<td>{{ report.my_loc.timestamp | nicedate | safe }}</td>
     		</tr>
     		<tr>
-    			<td class="col-md-3">Timestamp Delta</td>
-    			<td>{{report.loc_ts_delta}} seconds</td>
+    			<td class="col-md-3">{% trans 'Timestamp Delta' %}</td>
+    			<td>{{report.loc_ts_delta}} {% trans 'seconds' %}</td>
     		</tr>
     		<tr>
-    			<td>Accuracy</td>
+    			<td>{% trans 'Accuracy' %}</td>
     			<td>{{report.my_loc.accuracy}}</td>
     		</tr>
     		<tr>
-    			<td>Lon/Lat</td>
+    			<td>{% trans 'Lon/Lat' %}</td>
     			<td>{{report.my_loc.lat}} {{report.my_loc.lon}}</td>
     		</tr>
     		<tr>
-    			<td>Provider</td>
+    			<td>{% trans 'Provider' %}</td>
     			<td>{{report.my_loc.provider}}</td>
     		</tr>
     	</table>
@@ -58,19 +53,19 @@
     			<li class="list-group-item">
     			<table class="table">
     				<tr>
-    					<td class="col-md-3">SSID</td>
+    					<td class="col-md-3">{% trans 'SSID' %}</td>
     					<td>{{wifi.SSID}}</td>
     				</tr>
     				<tr>
-    					<td>key</td>
+    					<td>{% trans 'key' %}</td>
     					<td>{{wifi.key}}</td>
     				</tr>
     				<tr>
-    					<td>Signal</td>
+    					<td>{% trans 'Signal' %}</td>
     					<td>{{wifi.signal}}</td>
     				</tr>
     				<tr>
-    					<td>Frequency</td>
+    					<td>{% trans 'Frequency' %}</td>
     					<td>{{wifi.frequency}}</td>
     				</tr>
     			</table>

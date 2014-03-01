@@ -1,8 +1,9 @@
 {% extends 'common/base.html' %}
+{% load i18n %}
 {% block content %}
 {{ form.media }}
 <div class="container">
-	<h2>{{title}}</h2>
+	<h2>{% trans title %}</h2>
 	<form method="post" role="form" action="{% url url_name %}">
 		<table>
 			{% for field in form %}

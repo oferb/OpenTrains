@@ -1,15 +1,16 @@
 {% load ot_filters %}
+{% load i18n %}
 <table>
 	<tr>
-		<td>Seq</td>
-		<td>Name</td>
-		<td>In</td>
-		<td>Out</td>
+		<td>{% trans 'Seq' %}</td>
+		<td>{% trans 'Name' %}</td>
+		<td>{% trans 'In' %}</td>
+		<td>{% trans 'Out' %}</td>
 	</tr>
 	{%for stop_time in trip.get_stop_times%}
 	<tr>
 		<td>{{stop_time.stop_sequence}}</td>
-		<td>{{stop_time.stop.stop_name}}</td>
+		<td>{% trans stop_time.stop.stop_name %}</td>
 		<td>{{stop_time.arrival_time | denorm_time}}</td>
 		<td>{{stop_time.departure_time | denorm_time}}</td>
 	</tr>

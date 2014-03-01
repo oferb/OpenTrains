@@ -48,7 +48,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	$scope.initTrips = function() {
 		$scope.tripDatas = {};
 		$scope.trips = [];
-		MyHttp.get('/analysis/api/live-trips/').success(function(data) {
+		MyHttp.get('/api/1/trips/live-trips/').success(function(data) {
 			$scope.isFake = data.meta.is_fake;
 			$scope.trips = data.objects;
 			if ($scope.trips.length == 0) {
@@ -62,14 +62,14 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		});
 	};
 	$scope.loadTripData = function(trip_id, is_initial) {
-		MyHttp.get('/gtfs/api/trips/' + trip_id + '/').success(function(data) {
+		MyHttp.get('/api/1/trips/' + trip_id + '/').success(function(data) {
 			$scope.tripDatas[trip_id] = data;
 			$scope.drawTripData(trip_id, is_initial);
 		});
 	};
 	$scope.updateTripsLive = function() {
 		$scope.intervalCounter++;
-		MyHttp.get('/analysis/api/live-trips/', {
+		MyHttp.get('/api/1/trips/live-trips/', {
 			limit : 100,
 			counter : $scope.intervalCounter,
 		}).success(function(data) {

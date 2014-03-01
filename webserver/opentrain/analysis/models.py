@@ -1,4 +1,5 @@
 from django.db import models
+import datetime 
 
 class Report(models.Model):
     device_id = models.CharField(max_length=50)
@@ -11,14 +12,14 @@ class Report(models.Model):
         """ this function returns using iteration and not using filter().exists()
         since it is called after prefetch_related, and using this style
         does not force acceess to the DB """
-        for wifi in self.wifi_set.all():
+        for wifi in self.get_wifi_set_all():
             if wifi.SSID == 'S-ISRAEL-RAILWAYS':
                 return True 
         return False
     
     def loc_ts_delta(self):
-        if self.my_loc:
-            return (self.timestamp - self.my_loc.timestamp).total_seconds()
+        if self.get_my_loc():
+            return (self.timestamp - self.get_my_loc().timestamp).total_seconds()
     
     def get_timestamp_israel_time(self):
         #local_time_delta = datetime.timedelta(0,2*3600)
@@ -38,7 +39,21 @@ class Report(models.Model):
         if self.my_loc:
             result['loc'] = self.my_loc.to_api_dict()
         return result
-    
+  
+    def get_my_loc(self):
+        if self.pk and hasattr(self, 'my_loc'):
+            return self.my_loc
+        elif not self.pk and hasattr(self, 'my_loc_mock'):
+            return self.my_loc_mock
+        else:
+            return None
+
+    def get_wifi_set_all(self):
+        if self.pk:
+            return self.wifi_set.all()
+        else:
+            return self.wifi_set_mock
+   
 class LocationInfo(models.Model):
     report = models.OneToOneField(Report,related_name='my_loc')
     accuracy = models.FloatField()
@@ -69,6 +84,10 @@ class SingleWifiReport(models.Model):
     def __unicode__(self):
         return self.SSID
     
-
+class AnalysisMarker(models.Model):
+    label = models.CharField(max_length=30)
+    text = models.TextField()
+    lat = models.CharField(max_length=10)
+    lon = models.CharField(max_length=10)
     
     

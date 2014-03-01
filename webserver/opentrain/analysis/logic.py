@@ -136,7 +136,7 @@ def test4():
 def get_current_trips(dt=None):
     import gtfs.logic
     if not dt:
-        dt = common.ot_utils.get_localtime_now() #.replace(day=2)
+        dt = common.ot_utils.get_localtime_now()
     current_trips = gtfs.logic.get_all_trips_in_datetime(dt)
     result = []
     for trip in current_trips:

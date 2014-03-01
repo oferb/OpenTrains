@@ -8,20 +8,20 @@ function(MyUtils) {
 		trainIcon : L.icon({
 			iconUrl : '/static/common/img/open-train.png',
 			iconSize : [26, 26],
-			iconAnchor : [12,25]
+			iconAnchor : [12, 25]
 		}),
 		expIcon : L.icon({
 			iconUrl : '/static/common/img/exp.png',
 			iconSize : [26, 26],
-			iconAnchor : [12,25],
+			iconAnchor : [12, 25],
 		}),
 		curIcon : L.icon({
 			iconUrl : '/static/common/img/cur.png',
 			iconSize : [26, 26],
-			iconAnchor : [12,25],
+			iconAnchor : [12, 25],
 		}),
-		getTripMarker : function(trip,tripData,kind) {
-			if (kind != 'cur' && kind != 'exp' ) {
+		getTripMarker : function(trip, tripData, kind) {
+			if (kind != 'cur' && kind != 'exp') {
 				alert('wrong kind ' + kind);
 				return;
 			}
@@ -30,14 +30,12 @@ function(MyUtils) {
 			if (!trip_pt) {
 				return null;
 			}
-			var title = '<b>' + (is_cur ? gettext('cur') : gettext('exp')) +  '</b> @ ' + gettext(tripData.stop_times[0].stop.stop_name) 
-			+ ' ' + gettext('to') + ' ' + gettext(tripData.stop_times[tripData.stop_times.length-1].stop.stop_name);
+			var title = '<b>' + ( is_cur ? gettext('cur') : gettext('exp')) + '</b> @ ' + gettext(tripData.stop_times[0].stop.stop_name) + ' ' + gettext('to') + ' ' + gettext(tripData.stop_times[tripData.stop_times.length - 1].stop.stop_name);
 			var icon = is_cur ? this.curIcon : this.expIcon;
-			return L.marker(trip_pt,{
-					icon : icon,
-					title : title,
-				}
-			).bindPopup(title);
+			return L.marker(trip_pt, {
+				icon : icon,
+				title : title,
+			}).bindPopup(title);
 		},
 		drawShapes : function(points) {
 			var polyline = this.createLine(null, points, {
@@ -63,11 +61,19 @@ function(MyUtils) {
 		findBoundBox : function(points) {
 			var initialBox = [[points[0][0], points[0][1]], [points[0][0], points[0][1]]];
 			return points.reduce(function(box, p) {
-				return [[Math.min(box[0][0], p[0]),
-						Math.min(box[0][1], p[1])],
-						[Math.max(box[1][0], p[0]),
-						Math.max(box[1][1], p[1])]]; 
+				return [[Math.min(box[0][0], p[0]), Math.min(box[0][1], p[1])], [Math.max(box[1][0], p[0]), Math.max(box[1][1], p[1])]];
 			}, initialBox);
+		},
+		removeAllLayers : function(m) {
+			for (var i in m._layers) {
+				if (m._layers[i]._path != undefined) {
+					try {
+						m.removeLayer(m._layers[i]);
+					} catch(e) {
+						console.log("problem with " + e + m._layers[i]);
+					}
+				}
+			}
 		},
 		showReports : function(map, reports, showConfig) {
 			showConfig = showConfig || {};

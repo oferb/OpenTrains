@@ -15,6 +15,7 @@ def _prepare_list_resp(req,items,info=None):
             d = req.GET.dict()
             d['offset'] = info['offset'] + info['limit']
             meta['next'] = req.path + '?' + urllib.urlencode(d)
+    meta['is_fake'] = settings.FAKE_CUR
     content = dict(objects=items,meta=meta)
     return HttpResponse(content=json.dumps(content),content_type='application/json',status=200)
         

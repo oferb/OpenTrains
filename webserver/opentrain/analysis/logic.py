@@ -143,18 +143,16 @@ def get_current_trips(dt=None):
         result.append(trip.to_json_full(with_shapes=False))
     return result
  
-def get_live_trips(dt=None):
+def get_trips_location(trip_ids):
     import gtfs.logic
     result = []
-    if not dt:
-        dt = common.ot_utils.get_localtime_now()
-    current_trips = gtfs.logic.get_all_trips_in_datetime(dt)
+    dt = common.ot_utils.get_localtime_now()
+    current_trips = gtfs.models.Trip.objects.filter(trip_id__in=trip_ids)
     for trip in current_trips:
         trip_id = trip.trip_id
         (exp_shape,cur_shape)=gtfs.logic.get_expected_location(trip, dt)
         res = dict(trip_id=trip_id,
-                           exp_point = exp_shape,
-                           timestamp = dt.isoformat())
+                   exp_point = exp_shape)
         if cur_shape and settings.FAKE_CUR:
             res['cur_point'] = cur_shape
         cur_loc = get_current_location(trip)

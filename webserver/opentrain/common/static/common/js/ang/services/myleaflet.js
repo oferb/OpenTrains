@@ -20,13 +20,13 @@ function(MyUtils) {
 			iconSize : [26, 26],
 			iconAnchor : [12, 25],
 		}),
-		getTripMarker : function(trip, tripData, kind) {
+		getTripMarker : function(loc, tripData, kind) {
 			if (kind != 'cur' && kind != 'exp') {
 				alert('wrong kind ' + kind);
 				return;
 			}
 			var is_cur = kind == 'cur';
-			var trip_pt = is_cur ? trip.cur_point : trip.exp_point;
+			var trip_pt = is_cur ? loc.cur_point : loc.exp_point;
 			if (!trip_pt) {
 				return null;
 			}

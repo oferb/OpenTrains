@@ -12,6 +12,7 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 	$scope.tripsData = {};
 	$scope.tripMapInfo = {};
 	$scope.layers = [];
+	$scope.locationLayers = [];
 	$scope.showTripsChange = function() {
 		var counterObj = {
 			counter : $scope.trips.length,
@@ -45,6 +46,10 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 				map.removeLayer(l);
 			});
 			$scope.layers = [];
+			$scope.locationLayers.forEach(function(l) {
+				map.removeLayer(l);
+			});
+			$scope.locationLayers = [];
 			$scope.trips.forEach(function(trip) {
 				if ($scope.input.showOnMap[trip.trip_id]) {
 					$scope.addTripToMap(map, trip.trip_id);
@@ -76,32 +81,29 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 			$scope.trips = data.objects;
 			$scope.setInitialBox();
 		});
+		$scope.updateTripsLocation();
+		$interval(function() {
+			$scope.updateTripsLocation();
+		}, 3000);
 	};
-	$scope.loadTripData = function(trip_id, is_initial) {
-		MyHttp.get('/api/1/trips/' + trip_id + '/').success(function(data) {
-			$scope.tripDatas[trip_id] = data;
-			$scope.drawTripData(trip_id, is_initial);
-		});
-	};
-	$scope.updateTripsLive = function() {
-		$scope.intervalCounter++;
-		MyHttp.get('/api/1/trips/live-trips/', {
-			limit : 100,
-			counter : $scope.intervalCounter,
-		}).success(function(data) {
-			$scope.trips = data.objects;
-			$scope.trips.forEach(function(trip) {
-				if (!$scope.tripDatas[trip.trip_id]) {
-					console.log('!!! found new trip id ' + trip.trip_id);
-					$scope.loadTripData(trip.trip_id, false);
-				}
-			});
-			leafletData.getMap().then(function(map) {
-				$scope.trips.forEach(function(trip) {
-					$scope.updateTripStatus(map, trip);
+	$scope.updateTripsLocation = function() {
+		var tripIds = [];
+		for (var key in $scope.input.showOnMap) {
+			if ($scope.input.showOnMap[key]) {
+				tripIds.push(key);
+			}
+		}
+		if (tripIds.length > 0) {
+			MyHttp.get('/api/1/trips/cur-location/', {
+				trip_ids : tripIds.join(','),
+			}).success(function(data) {
+				leafletData.getMap().then(function(map) {
+					$scope.updateLocationsOnMap(map, data.objects);
 				});
 			});
-		});
+		} else {
+			console.log('no selected trips');
+		}
 	};
 
 	$scope.zoomToTrip = function(tripId) {
@@ -112,57 +114,24 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		});
 	};
 
-	$scope.updateTripStatus = function(map, trip) {
-		var tripData = $scope.tripDatas[trip.trip_id];
-		var ti = $scope.tripMapInfo[trip.trip_id];
-		if (!ti || !ti.lg) {
-			console.log('trip ' + trip.trip_id + ' is not ready yet');
-			return;
-		}
-		var lg = ti.lg;
-		var cur = MyLeaflet.getTripMarker(trip, tripData, 'cur');
-		var exp = MyLeaflet.getTripMarker(trip, tripData, 'exp');
-		if (ti.cur) {
-			ti.lg.removeLayer(ti.cur);
-		}
-		if (ti.exp) {
-			ti.lg.removeLayer(ti.exp);
-		}
-		ti.cur = cur;
-		ti.exp = exp;
-		if (cur) {
-			lg.addLayer(cur);
-		}
-		lg.addLayer(exp);
-	};
-	$scope.drawTripData = function(trip_id, is_initial) {
-		leafletData.getMap().then(function(map) {
-			var tripData = $scope.tripDatas[trip_id];
-			var shapes = tripData.shapes;
-			var stops = tripData.stop_times.map(function(st) {
-				return st.stop;
-			});
-			var line = MyLeaflet.drawShapes(shapes);
-			var markers = MyLeaflet.drawStops(stops);
-			var layers = [line];
-			layers.push.apply(layers, markers);
-			var lg = L.layerGroup(layers);
-			$scope.tripMapInfo[trip_id] = {
-				lg : lg
-			};
-			if (is_initial) {
-				$scope.leftCounter--;
-				$scope.progress = $scope.progressSegment * ($scope.trips.length - $scope.leftCounter);
-				if ($scope.leftCounter <= 0) {
-					$scope.refreshInitial();
-					$scope.intervalCounter = 0;
-					$timeout(function() {
-						$scope.updateTripsLive();
-					}, 500);
-					$interval(function() {
-						$scope.updateTripsLive();
-					}, 3000);
+	$scope.updateLocationsOnMap = function(map, objects) {
+		// remove old layers
+		$scope.locationLayers.forEach(function(l) {
+			map.removeLayer(l);
+		});
+		$scope.locationLayers = [];
+		objects.forEach(function(obj) {
+			var tripData = $scope.tripsData[obj.trip_id];
+			if (tripData) {
+				var cur = MyLeaflet.getTripMarker(obj, tripData, 'cur');
+				var exp = MyLeaflet.getTripMarker(obj, tripData, 'exp');
+				if (cur) {
+					$scope.locationLayers.push(cur);
+					map.addLayer(cur);
+					
 				}
+				$scope.locationLayers.push(exp);
+				map.addLayer(exp);
 			}
 		});
 	};
@@ -170,22 +139,6 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		leafletData.getMap().then(function(map) {
 			var box = [[31.06867403, 34.60432436], [33.00500359, 35.18816094]];
 			map.fitBounds(box);
-		});
-	};
-	$scope.refreshInitial = function() {
-		leafletData.getMap().then(function(map) {
-			if ($scope.trips.length > 0) {
-				var trip = $scope.trips[0];
-				$scope.input.showTrips[trip.trip_id] = true;
-				$scope.refreshLayers(map);
-				$scope.zoomToTrip(trip.trip_id);
-			} else {
-				var box = [[31.06867403, 34.60432436], [33.00500359, 35.18816094]];
-				map.fitBounds(box);
-			};
-			$timeout(function() {
-				$scope.initialDone = true;
-			}, 500);
 		});
 	};
 	$scope.resizeMap = function() {

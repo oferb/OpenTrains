@@ -1,7 +1,7 @@
 import json
 import common.ot_utils
 import datetime
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseBadRequest
 from django.conf import settings
 import urllib
 
@@ -48,9 +48,12 @@ def get_current_trips(req):
     current_trips = analysis.logic.get_current_trips()    
     return _prepare_list_resp(req, current_trips)
 
-def get_live_trips(req):
+def get_trips_location(req):
     import analysis.logic
-    live_trips = analysis.logic.get_live_trips()    
+    trip_ids = req.GET.get('trip_ids',None)
+    if not trip_ids:
+        return HttpResponseBadRequest('Must specify trip_ids')
+    live_trips = analysis.logic.get_trips_location(trip_ids.split(','))     
     result = dict(objects=live_trips)
     result['meta'] = dict(is_fake=settings.FAKE_CUR)
     return HttpResponse(content=json.dumps(result),content_type='application/json',status=200)

@@ -406,7 +406,7 @@ msgstr "איו נסיעות כרגע"
 
 #: common/static/common/ot_i18n.py:93
 msgid "Current Trains List"
-msgstr "רשימת רכבות עדכנית"
+msgstr "רשימת רכבות לזמן נוכחי"
 
 #: common/static/common/ot_i18n.py:95 common/static/common/ot_i18n.py:104
 msgid "Total # of reports (with loc)"

@@ -73,6 +73,12 @@ function($scope, MyHttp, MyUtils, MyLeaflet, $timeout, leafletData, $window, $in
 		$scope.layers.push(lg);
 		map.addLayer(lg);
 	};
+	$scope.updateTripsList = function() {
+        MyHttp.get('/api/1/trips/current/').success(function(data) {
+            $scope.isFake = data.meta.is_fake;
+            $scope.trips = data.objects;
+        });
+    };
 	$scope.initTrips = function() {
 		$scope.tripDatas = {};
 		$scope.trips = [];

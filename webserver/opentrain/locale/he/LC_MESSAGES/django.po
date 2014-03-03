@@ -402,7 +402,7 @@ msgstr "בעבודה"
 
 #: common/static/common/ot_i18n.py:92
 msgid "No Trips Now"
-msgstr "איו נסיעות כרגע"
+msgstr "אין נסיעות כרגע"
 
 #: common/static/common/ot_i18n.py:93
 msgid "Current Trains List"
@@ -426,11 +426,11 @@ msgstr "חפש דיווחים"
 
 #: common/static/common/ot_i18n.py:99
 msgid "Go Live"
-msgstr "מעקב חי"
+msgstr "מעקב זמן אמת"
 
 #: common/static/common/ot_i18n.py:100
 msgid "Stop Live"
-msgstr "הפסק מעקב חי"
+msgstr "הפסק מעקב זמן אמת"
 
 #: common/static/common/ot_i18n.py:101
 msgid "auto zoom"

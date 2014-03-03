@@ -5,9 +5,13 @@
 				<span ng-show="isFake">[{{ 'Simulated' | trans }}]</span>
 				<span ng-hide="isFake">[{{ 'WIP' | trans }}]</span>
 			</h2>
+			
 		</div>
 		<div ng-show="trips.length == 0">
 			<h4>{{ 'No Trips Now' | trans }}</h4>
+		</div>
+		<div ng-show="trips.length > 0">
+		    <h4>{{ 'Current Trains List' | trans }}</h4>
 		</div>
 		<div ng-repeat="trip in trips" ng-controller="TripController">
 			<img ng-show="trip.is_live" width="32" height="15" ng-src="/static/common/img/live.gif"></img>

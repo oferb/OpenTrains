@@ -90,6 +90,7 @@ ugettext_noop('Live Trains');
 ugettext_noop('Simulated');
 ugettext_noop('WIP');
 ugettext_noop('No Trips Now');
+ugettext_noop('Current Trains List')
 
 ugettext_noop("Total # of reports (with loc)")
 ugettext_noop("to")

@@ -47,7 +47,7 @@ def report_fake(filename,dev2,delay,server):
             for item in items:
                 item['device_id'] = dev2 # replace device_id
                 item['time'] = time.time() * 1000
-                if item['location_api']:
+                if item.get('location_api'):
                     item['location_api']['time'] = time.time() * 1000
                 time.sleep(delay)
                 items_sent += 1

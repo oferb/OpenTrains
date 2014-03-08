@@ -21,6 +21,7 @@ import bssid_tracker
 from redis_intf.client import get_redis_pipeline, get_redis_client, load_by_key, save_by_key 
 import json
 from utils import enum
+from redis import WatchError
 
 TRACKER_TTL = 1 * 60
 TRACKER_REPORT_FOR_TRIP_COUNT_LOWER_THAN = 3
@@ -278,7 +279,10 @@ def update_trips(tracker_id):
     #if len(trips) <= 100:
     save_by_key(get_train_tracker_trip_ids_key(tracker_id), trips)
     save_by_key(get_train_tracker_trip_ids_deviation_seconds_key(tracker_id), time_deviation_in_seconds)
-  
+    save_trips_to_db(tracker_id, trips, time_deviation_in_seconds)
+
+def save_trips_to_db(tracker_id, trips, time_deviation_in_seconds):
+    pass
         
 def update_stop_time(tracker_id, prev_stop_id, arrival_unix_timestamp, stop_id_and_departure_time):
     prev_stops_counter_key = get_train_tracker_tracked_stops_prev_stops_counter_key(tracker_id)
@@ -293,15 +297,21 @@ def update_stop_time(tracker_id, prev_stop_id, arrival_unix_timestamp, stop_id_a
                 p.zadd(get_train_tracker_tracked_stops_key(tracker_id), arrival_unix_timestamp, stop_id_and_departure_time)
                 p.set(prev_stops_counter_key, prev_stop_id)
                 res = p.execute()
+                save_stop_times_to_db(tracker_id, arrival_unix_timestamp, stop_id_and_departure_time)
                 done = True
             except WatchError:
                 done = False
                 p.unwatch()
         else:
             done = True
-            # Eran: I want to abort the watch. Should I use unwatch or discard? p.discard does not exist
             p.unwatch()
-            
+
+def save_stop_times_to_db(tracker_id, arrival_unix_timestamp, stop_id_and_departure_time):
+    stop_id, departure_unix_timestamp = stop_id_and_departure_time.split('_')
+    name = stops.all_stops[stop_id].name
+    departure = ot_utils.unix_time_to_localtime(int(departure_unix_timestamp)) if departure_unix_timestamp != '' else None 
+    arrival = ot_utils.unix_time_to_localtime(int(arrival_unix_timestamp))
+    # should save tracker_id, stop_id, arrival, departure (may be None) to db
 
 def add_prev_stop(tracker_id, stop_id, timestamp):
     next_id = cl.incr(get_train_tracker_prev_stops_counter_key(tracker_id))

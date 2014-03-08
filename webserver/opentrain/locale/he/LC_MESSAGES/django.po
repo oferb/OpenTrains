@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-28 12:08+0200\n"
+"POT-Creation-Date: 2014-03-03 15:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -402,49 +402,53 @@ msgstr "בעבודה"
 
 #: common/static/common/ot_i18n.py:92
 msgid "No Trips Now"
-msgstr "איו נסיעות כרגע"
+msgstr "אין נסיעות כרגע"
 
-#: common/static/common/ot_i18n.py:94 common/static/common/ot_i18n.py:103
+#: common/static/common/ot_i18n.py:93
+msgid "Current Trains List"
+msgstr "רשימת רכבות לזמן נוכחי"
+
+#: common/static/common/ot_i18n.py:95 common/static/common/ot_i18n.py:104
 msgid "Total # of reports (with loc)"
 msgstr "מספר דיווחים (עם מיקום)"
 
-#: common/static/common/ot_i18n.py:95
+#: common/static/common/ot_i18n.py:96
 msgid "to"
 msgstr "ל"
 
-#: common/static/common/ot_i18n.py:96
+#: common/static/common/ot_i18n.py:97
 msgid "on"
 msgstr "ב"
 
-#: common/static/common/ot_i18n.py:97
+#: common/static/common/ot_i18n.py:98
 msgid "Search Reports"
 msgstr "חפש דיווחים"
 
-#: common/static/common/ot_i18n.py:98
-msgid "Go Live"
-msgstr "מעקב חי"
-
 #: common/static/common/ot_i18n.py:99
-msgid "Stop Live"
-msgstr "הפסק מעקב חי"
+msgid "Go Live"
+msgstr "מעקב זמן אמת"
 
 #: common/static/common/ot_i18n.py:100
+msgid "Stop Live"
+msgstr "הפסק מעקב זמן אמת"
+
+#: common/static/common/ot_i18n.py:101
 msgid "auto zoom"
 msgstr "אוטו-זום"
 
-#: common/static/common/ot_i18n.py:101
+#: common/static/common/ot_i18n.py:102
 msgid "Please wait. Loading Reports, will take some time..."
 msgstr "נא המתן. טוען דיווחים, עשוי לקחת זמן מה..."
 
-#: common/static/common/ot_i18n.py:102
+#: common/static/common/ot_i18n.py:103
 msgid "Map for device id"
 msgstr "מפה עבור מזהה התקן"
 
-#: common/static/common/ot_i18n.py:105
+#: common/static/common/ot_i18n.py:106
 msgid "cur"
 msgstr "נוכחי"
 
-#: common/static/common/ot_i18n.py:106
+#: common/static/common/ot_i18n.py:107
 msgid "exp"
 msgstr "צפוי"
 
@@ -452,7 +456,7 @@ msgstr "צפוי"
 msgid "Open Train"
 msgstr "רכבת פתוחה"
 
-#: common/templates/common/base.html:68 gtfs/templates/gtfs/trip_map.html:14
+#: common/templates/common/base.html:68 gtfs/templates/gtfs/trip_map.html:15
 msgid "From"
 msgstr "מ"
 
@@ -565,10 +569,10 @@ msgstr "מגיע"
 msgid "Out"
 msgstr "יוצא"
 
-#: gtfs/templates/gtfs/trip_map.html:7
+#: gtfs/templates/gtfs/trip_map.html:7 gtfs/templates/gtfs/trip_map.html:14
 msgid "Trip Map for"
 msgstr "מפת מסלול עבור"
 
-#: gtfs/templates/gtfs/trip_map.html:14
+#: gtfs/templates/gtfs/trip_map.html:15
 msgid "To"
 msgstr "ל"

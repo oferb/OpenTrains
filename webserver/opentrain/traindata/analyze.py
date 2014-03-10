@@ -17,19 +17,41 @@ class TrainTrip():
     def __init__(self,date,train_num):
         self.date = date
         self.train_num = train_num
-        self.times = TrainData.objects.filter(date=date,train_num=train_num).order_by('exp_arrival')
-        
+        self.times = list(TrainData.objects.filter(date=date,train_num=train_num).order_by('exp_arrival'))
+        if not self.times:
+            raise Exception('no trip num %s on %s' % (train_num,date))
     def print_nice(self):
         print '--------------------------------------------------'
         print '%s @%s' % (self.train_num,self.date)
+        late = self.get_avg_late()
+        max_late = self.get_max_late()
+        last_late = self.get_last_late()
+        print 'Avg Late : %d mins %d secs' % (late / 60,late % 60)
+        print 'Max Late : %d mins %d secs' % (max_late / 60,max_late % 60)
+        print 'Last Late: %d mins %d secs' % (last_late / 60,last_late % 60)
+        print '--------------------------------------------------'
         for t in self.times:
-            print '%5d %-30s exp: %4s -> %4s act: %4s -> %4s' % (t.line,
-                                                                 t.stop.stop_name,
-                                                                 t.actual_arrival,
-                                                                 t.actual_departure,
-                                                                 t.exp_arrival,
-                                                                 t.exp_departure)
-                                           
+            print '%(line)5d %(stop_name)-30s %(actual_arrival)4s (%(exp_arrival)4s)  %(actual_departure)4s (%(exp_departure)4s)' % ( 
+                                                            {'line' : t.line,
+                                                           'stop_name' : t.stop.stop_name,
+                                                            'actual_arrival' : t.actual_arrival,
+                                                             'actual_departure' : t.actual_departure,
+                                                            'exp_arrival' : t.exp_arrival,
+                                                            'exp_departure' : t.exp_departure})
+    def get_lates(self):
+        return [line.get_arrival_late() for line in self.times[1:]]
+        
+    def get_avg_late(self):
+        lates = self.get_lates()
+        return sum(lates)/len(lates)
+    
+    def get_last_late(self):
+        lates = self.get_lates()
+        return lates[-1]
+    
+    def get_max_late(self):
+        lates = self.get_lates()
+        return max(lates)                      
 
                      
 def _parse_date(date):
@@ -79,4 +101,10 @@ def get_trains_for_day(d):
     """ return all train nums for specific day """
     trains = TrainData.objects.filter(date=d).values_list('train_num',flat=True).distinct()
     return trains
+
+def get_trains_for_day_stop(d,stop):
+    """ return all train nums for specific day """
+    trains = TrainData.objects.filter(date=d,stop=stop).values_list('train_num',flat=True).distinct()
+    return trains
+
 

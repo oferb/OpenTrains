@@ -21,12 +21,13 @@ class TrainData(models.Model):
         return h * 60 + m
     
     def get_arrival_late(self):
+        """ returns arrival late in seconds """
         exp = self._to_mins_since_0(self.exp_arrival)
         actual = self._to_mins_since_0(self.actual_arrival)
         late = actual - exp
         if late <= 0:
             return 0
-        return late - 1
+        return late*60
     
     def __unicode__(self):
         return '%s %s %s %s' % (self.date,self.exp_arrival,self.train_num,self.stop_id)

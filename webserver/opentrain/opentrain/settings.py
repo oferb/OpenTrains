@@ -49,7 +49,8 @@ INSTALLED_APPS = (
     'redis_intf',
     'statici18n',
     'south',
-    'ot_api'
+    'ot_api',
+    'traindata'
 )
 
 MIDDLEWARE_CLASSES = (

@@ -15,9 +15,22 @@ LINE_RE = re.compile(r'^\s*' +
     
 class TrainTrip():
     def __init__(self,date,train_num):
+        self.date = date
         self.train_num = train_num
         self.times = TrainData.objects.filter(date=date,train_num=train_num).order_by('exp_arrival')
-            
+    
+    def print_nice(self):
+        print '--------------------------------------------------'
+        print '%s @%s' % (self.train_num,self.date)
+        for t in self.times:
+            print '%5d %-30s exp: %4s -> %4s act: %4s -> %4s' % (t.line,
+                                                                 t.stop.stop_name,
+                                                                 t.actual_arrival,
+                                                                 t.actual_departure,
+                                                                 t.exp_arrival,
+                                                                 t.exp_departure)
+                                           
+
                      
 def _parse_date(date):
     year = int(date[0:4])

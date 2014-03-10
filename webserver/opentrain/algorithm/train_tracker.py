@@ -306,10 +306,22 @@ def update_stop_time(tracker_id, prev_stop_id, arrival_unix_timestamp, stop_id_a
             done = True
             p.unwatch()
 
+def save_stop_time_to_db(tracker_id,trip_id,stop_id,arrival_time,departure_time):
+    from analysis.models import RealTimeStop
+    try:
+        rs = RealTimeStop.objects.get(tracker_id=tracker_id,stop_id=stop_id,trip_id=trip_id)
+    except RealTimeStop.DoesNotExist:
+        rs = RealTimeStop()
+    rs.tracker_id = tracker_id
+    rs.stop_id = stop_id
+    rs.arrival_time = arrival_time
+    rs.departure_time = departure_time
+    rs.save()
+    
 def save_stop_times_to_db(tracker_id, arrival_unix_timestamp, stop_id_and_departure_time):
     stop_id, departure_unix_timestamp = stop_id_and_departure_time.split('_')
     name = stops.all_stops[stop_id].name
-    departure = ot_utils.unix_time_to_localtime(int(departure_unix_timestamp)) if departure_unix_timestamp != '' else None 
+    departure = ot_utils.unix_time_to_localtime(int(departure_unix_timestamp)) if departure_unix_timestamp else None 
     arrival = ot_utils.unix_time_to_localtime(int(arrival_unix_timestamp))
     # should save tracker_id, stop_id, arrival, departure (may be None) to db
 

@@ -18,7 +18,7 @@ class TrainTrip():
         self.date = date
         self.train_num = train_num
         self.times = TrainData.objects.filter(date=date,train_num=train_num).order_by('exp_arrival')
-    
+        
     def print_nice(self):
         print '--------------------------------------------------'
         print '%s @%s' % (self.train_num,self.date)

@@ -82,6 +82,18 @@ class SingleWifiReport(models.Model):
     signal = models.IntegerField()
     def __unicode__(self):
         return self.SSID
+ 
+class RealTimeStop(models.Model):
+    tracker_id = models.CharField(max_length=40,db_index=True)
+    trip = models.ForeignKey('gtfs.Trip')
+    stop = models.ForeignKey('gtfs.Stop')
+    arrival_time = models.DateTimeField()
+    departure_time = models.DateTimeField(blank=True,null=True)
+    class Meta:
+        unique_together = (('tracker_id','trip','stop'),)
+        
+    def __unicode__(self):
+        return '%s %s @%s' % (self.tracker,self.stop,self.arrival_time)
     
 class AnalysisMarker(models.Model):
     label = models.CharField(max_length=30)

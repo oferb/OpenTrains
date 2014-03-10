@@ -71,14 +71,12 @@ def read_file(fname):
     TrainData.objects.bulk_create(tds)
     print 'Saved'
     
-def read_tmp():
-    read_file('traindata/data/tmp.txt')
-    
 def read_year_month(year,month):
+    """ read file of month/year """
     read_file('traindata/data/%02d_%s.txt' % (month,year))
     
-def get_trains_for_day(year,month,day):
-    d = datetime.date(year=year,month=month,day=day)
+def get_trains_for_day(d):
+    """ return all train nums for specific day """
     trains = TrainData.objects.filter(date=d).values_list('train_num',flat=True).distinct()
     return trains
 

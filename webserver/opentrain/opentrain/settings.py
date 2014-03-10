@@ -50,7 +50,8 @@ INSTALLED_APPS = (
     'statici18n',
     'south',
     'ot_api',
-    'traindata'
+    'traindata',
+    'client'
 )
 
 MIDDLEWARE_CLASSES = (
